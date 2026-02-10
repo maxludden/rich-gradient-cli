@@ -1,0 +1,22 @@
+[project]
+name = "rich-gradient-cli"
+version = "0.1.0"
+description = "CLI for printing text in gradient color using the rich-gradient library."
+readme = "README.md"
+authors = [
+    { name = "Maxwell Ludden", email = "maxludden@me.com" }
+]
+requires-python = ">=3.14"
+dependencies = [
+    "typer>=0.12.3",
+    "rich>=13.9.4",
+    "rich-color-ext>=0.1.9",
+    "rich-gradient>=0.3.9",
+]
+
+[project.scripts]
+gradient = "rich_gradient_cli:app"
+
+[build-system]
+requires = ["uv_build>=0.10.0,<0.11.0"]
+build-backend = "uv_build"
