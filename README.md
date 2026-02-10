@@ -61,3 +61,5 @@ echo "# Hello\n\n- This is **bold**.\n- This is *italic*." | gradient markdown -
 ```
 
 ![Gradient Markdown Example](markdown-example.svg)
+
+

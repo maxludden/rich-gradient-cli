@@ -8,8 +8,8 @@ authors = [
 ]
 requires-python = ">=3.14"
 dependencies = [
-    "typer>=0.12.3",
-    "rich>=13.9.4",
+    "typer>=0.21.1",
+    "rich>=14.3.2",
     "rich-color-ext>=0.1.9",
     "rich-gradient>=0.3.9",
 ]
