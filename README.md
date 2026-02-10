@@ -1,6 +1,6 @@
 # rich-gradient-cli
 
-This is an example of a Markdown file that can be used to demonstrate the capabilities of the `rich-gradient-cli` tool. The tool allows you to create colorful gradients in your terminal output, making it easier to visualize data or simply add some flair to your command-line applications.
+ `rich-gradient-cli`  is a CLI for [`rich-gradient`](https://github.com/maxludden/rich-gradient). The tool allows you to create colorful gradients in your terminal output, making it easier to visualize data or simply add some flair to your command-line applications.
 
 ## Installation
 
@@ -20,6 +20,12 @@ pip install rich-gradient-cli
 
 ## Usage
 
+<video
+  src="docs/assets/rich-gradient-cli-help.mp4"
+  controls
+  muted
+  loop>
+</video>
 
 ### Print
 
@@ -62,4 +68,27 @@ echo "# Hello\n\n- This is **bold**.\n- This is *italic*." | gradient markdown -
 
 ![Gradient Markdown Example](markdown-example.svg)
 
+## Docs
 
+Build and preview the documentation locally with MkDocs:
+
+```bash
+uv pip install -e ".[docs]"
+mkdocs serve
+```
+
+
+
+<div align="center">
+  <a href="https://github.com/maxludden/maxludden" style="text-decoration:none; color:inherit;">
+      <p>Designed by Max Ludden</p>
+  </a>
+  <br />
+  <a href="https://github.com/maxludden/maxludden" style="text-decoration:none; color:inherit;">
+    <img
+      src="https://github.com/maxludden/maxludden/blob/f3913ecf11f90c97435e2b55d2e43dadd51c1fe4/Images/MaxLogo-animated.svg"
+      alt="Max Ludden's Logo"
+      width="20%"
+    />
+  </a>
+</div>

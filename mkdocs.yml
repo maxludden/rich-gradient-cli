@@ -1,0 +1,91 @@
+site_name: rich-gradient-cli
+site_description: CLI for rich-gradient
+site_url: https://maxludden.github.io/rich-gradient-cli
+repo_name: maxludden/rich-gradient-cli
+repo_url: https://github.com/maxludden/rich-gradient-cli
+
+nav:
+  - Home: index.md
+  - Usage: usage.md
+  - Commands: commands.md
+  - API: api.md
+
+theme:
+    name: material
+    logo: img/rich-gradient-icon.svg
+    favicon: img/rich-gradient-icon.svg
+    features:
+        - navigation.instant
+        - navigation.instant.prefetch
+        - navigation.tracking
+        - content.code.annotate
+        - toc.integrate
+        - toc.follow
+        - navigation.path
+        - navigation.top
+        - content.code.copy
+    font:
+        code: Fira Code
+        text: "Urbanist"
+    palette:
+        - media: "(prefers-color-scheme)"
+          scheme: astral-dark
+          toggle:
+              icon: material/brightness-auto
+              name: Switch to light mode
+        - media: "(prefers-color-scheme: light)"
+          scheme: astral-light
+          toggle:
+              icon: material/brightness-7
+              name: Switch to dark mode
+        - media: "(prefers-color-scheme: dark)"
+          scheme: astral-dark
+          toggle:
+              icon: material/brightness-4
+              name: Switch to system preference
+
+
+
+extra:
+    social:
+        - icon: fontawesome/brands/github
+          link: https://github.com/maxludden
+        - icon: fontawesome/brands/python
+          link: https://pypi.org/project/rich-gradient
+extra_css:
+    - "styles/style.css"
+    - "styles/extra.css"
+extra_javascript:
+    - "scripts/copy.js"
+markdown_extensions:
+    - abbr
+    - admonition
+    - attr_list
+    - def_list
+    - footnotes
+    - md_in_html
+    - toc:
+          permalink: true
+    - pymdownx.highlight:
+          anchor_linenums: true
+          line_spans: __span
+          pygments_lang_class: true
+    - pymdownx.inlinehilite
+    - pymdownx.snippets
+    - pymdownx.superfences
+    - pymdownx.details
+
+
+plugins:
+  - search
+  - mkdocstrings:
+      handlers:
+        python:
+          paths:
+            - src
+          options:
+            docstring_style: google
+            show_if_no_docstring: true
+            merge_init_into_class: true
+            separate_signature: true
+            show_signature_annotations: true
