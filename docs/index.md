@@ -50,3 +50,17 @@ echo "# Hello\n\n- This is **bold**.\n- This is *italic*." | gradient markdown -
 ```
 
 ![Gradient Markdown Example](assets/markdown-example.svg)
+
+<div align="center">
+  <a href="https://github.com/maxludden/maxludden" style="text-decoration:none; color:inherit;">
+      <p>Designed by Max Ludden</p>
+  </a>
+  <br />
+  <a href="https://github.com/maxludden/maxludden" style="text-decoration:none; color:inherit;">
+    <img
+      src="assets/MaxLogo-animated.svg"
+      alt="Max Ludden's Logo"
+      width="20%"
+    />
+  </a>
+</div>
