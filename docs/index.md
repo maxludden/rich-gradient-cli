@@ -34,7 +34,7 @@ gradient print --colors 'red,#ff9900,#ffff00' \
 ## Examples
 
 ```bash
-gradient rule --colors 'blue,#00ff00,cyan' "Blue to Green to Cyan Rule"
+gradient rule --colors 'blue,#00ff00,cyan' --title "Blue to Green to Cyan Rule"
 ```
 
 ![Gradient Rule Example](assets/rule-example.svg)

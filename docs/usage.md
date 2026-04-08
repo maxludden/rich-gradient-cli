@@ -10,6 +10,8 @@ uv add rich-gradient-cli
 pip install rich-gradient-cli
 ```
 
+Requires Python `>=3.10`.
+
 ## Basics
 
 The CLI is installed as `gradient`.
@@ -18,15 +20,33 @@ The CLI is installed as `gradient`.
 gradient --help
 ```
 
-The default command is `print`, so you can pass text directly.
+Show the installed version:
+
+```bash
+gradient --version
+```
+
+The default command is `print`, so you can pass text directly without writing `print`.
 
 ```bash
 gradient "Hello world"
 ```
 
+Equivalent explicit form:
+
+```bash
+gradient print "Hello world"
+```
+
 ## Reading from stdin
 
-Any command that accepts text can read from stdin with `-`.
+`print` can read piped input directly:
+
+```bash
+echo "Hello" | gradient
+```
+
+Commands that accept positional text can also read from stdin with `-`.
 
 ```bash
 echo "Hello" | gradient print -
@@ -34,6 +54,10 @@ echo "Hello" | gradient print -
 
 ```bash
 echo "# Title" | gradient markdown -
+```
+
+```bash
+echo "Failure details" | gradient panel - --title "Error"
 ```
 
 ## SVG export
@@ -47,3 +71,5 @@ gradient print "SVG output" --svg output.svg
 ```bash
 gradient panel "Panel SVG" --svg panel.svg
 ```
+
+`markdown` and `panel` do not allow `--svg` with `--animate`.

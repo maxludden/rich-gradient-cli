@@ -8,6 +8,8 @@ Render gradient text.
 gradient print --colors 'red,#ff9900,#ffff00' "Hello gradient"
 ```
 
+Arguments: `TEXT...` (optional). If omitted, `print` reads from stdin when piped.
+
 | Option | Description |
 | --- | --- |
 | `-c, --colors` | Comma-separated gradient colors. |
@@ -26,8 +28,10 @@ gradient print --colors 'red,#ff9900,#ffff00' "Hello gradient"
 Render a gradient rule.
 
 ```bash
-gradient rule --colors 'blue,#00ff00,cyan' "Blue to Green to Cyan Rule"
+gradient rule --colors 'blue,#00ff00,cyan' --title "Blue to Green to Cyan Rule"
 ```
+
+This command has no positional arguments; use `--title` for rule text.
 
 | Option | Description |
 | --- | --- |
@@ -49,6 +53,8 @@ Render a gradient panel.
 ```bash
 gradient panel --colors "red,#ff9999" -t "Error" --title-style "bold #ffffff" --title-align left 'This is an error message with a red to pink gradient background.'
 ```
+
+Argument: `TEXT` (required). Use `-` to read from stdin.
 
 | Option | Description |
 | --- | --- |
@@ -77,6 +83,8 @@ gradient panel --colors "red,#ff9999" -t "Error" --title-style "bold #ffffff" --
 | `-d, --duration` | Animation duration in seconds. |
 | `--svg` | Save output as SVG. |
 
+Note: `panel` returns an error if `--svg` and `--animate` are used together.
+
 ## markdown
 
 Render gradient markdown.
@@ -84,6 +92,8 @@ Render gradient markdown.
 ```bash
 echo "# Hello" | gradient markdown -
 ```
+
+Argument: `MARKDOWN` (required). Use `-` to read from stdin.
 
 | Option | Description |
 | --- | --- |
@@ -99,3 +109,5 @@ echo "# Hello" | gradient markdown -
 | `--animate` | Animate gradient. |
 | `-d, --duration` | Animation duration in seconds. |
 | `--svg` | Save output as SVG. |
+
+Note: `markdown` returns an error if `--svg` and `--animate` are used together.
