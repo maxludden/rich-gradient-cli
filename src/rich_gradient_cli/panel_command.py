@@ -6,7 +6,7 @@ import sys
 from typing import Any, Literal, Optional, Tuple, cast
 
 import typer
-from rich.align import Align, AlignMethod, VerticalAlignMethod
+from rich.align import Align, AlignMethod
 
 from rich_gradient.animated_panel import AnimatedPanel
 from rich_gradient.panel import Panel
@@ -60,7 +60,6 @@ def panel_command(
     title: Optional[str] = typer.Option(
         None,
         "-t",
-        "-title",
         "--title",
         metavar="TITLE",
         help="Title of the panel.",

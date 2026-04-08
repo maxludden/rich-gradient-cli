@@ -3,17 +3,27 @@
 from __future__ import annotations
 
 import sys
+from pathlib import Path
 from typing import Any, Sequence
 
-import click
-import typer
+import click  # ty:ignore[unresolved-import]
+import typer  # ty:ignore[unresolved-import]
 
-from .common import VERSION
-from .help import RichTyperCommand, RichTyperGroup
-from .markdown_command import markdown_command
-from .panel_command import panel_command
-from .rule_command import rule_command
-from .text_command import print_command
+if __package__ in {None, ""}:
+    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+    from rich_gradient_cli.common import VERSION
+    from rich_gradient_cli.help import RichTyperCommand, RichTyperGroup
+    from rich_gradient_cli.markdown_command import markdown_command
+    from rich_gradient_cli.panel_command import panel_command
+    from rich_gradient_cli.rule_command import rule_command
+    from rich_gradient_cli.text_command import print_command
+else:
+    from .common import VERSION
+    from .help import RichTyperCommand, RichTyperGroup
+    from .markdown_command import markdown_command
+    from .panel_command import panel_command
+    from .rule_command import rule_command
+    from .text_command import print_command
 
 
 class DefaultTyperGroup(RichTyperGroup):
@@ -32,6 +42,7 @@ class DefaultTyperGroup(RichTyperGroup):
         default_cmd_name: str = "print",
         **kwargs: Any,
     ) -> None:
+        """Initialize the group with a default command name fallback."""
         super().__init__(
             name=name,
             commands=commands,
@@ -42,11 +53,12 @@ class DefaultTyperGroup(RichTyperGroup):
             result_callback=result_callback,
             **kwargs,
         )
-        self.default_cmd_name = default_cmd_name
+        self.default_cmd_name: str = default_cmd_name
 
     def resolve_command(
         self, ctx: click.Context, args: list[str]
     ) -> tuple[str | None, click.Command | None, list[str]]:
+        """Resolve the command, routing unknown input to the default command."""
         if args:
             cmd = self.get_command(ctx, args[0])
             if cmd is None or args[0].startswith("-"):
@@ -93,4 +105,13 @@ app.command("markdown", cls=RichTyperCommand)(markdown_command)
 
 cli = app
 
-__all__ = ["app", "cli"]
+
+def entrypoint() -> None:
+    """Run the Typer CLI application."""
+    app()
+
+__all__ = ["app", "cli", "entrypoint"]
+
+
+if __name__ == "__main__":
+    entrypoint()

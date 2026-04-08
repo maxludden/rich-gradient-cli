@@ -27,6 +27,8 @@ from .common import (
 
 @dataclass(frozen=True)
 class HelpStyles:
+    """Style tokens used by the custom Rich help renderer."""
+
     border: str = "#2a4fff"
     option_name: str = "cyan"
     metavar: str = "bold #99ff00"
@@ -38,11 +40,13 @@ _STYLES = HelpStyles()
 
 
 def _usage_markup(command_path: str, pieces: Sequence[str]) -> str:
+    """Build a styled usage line from command path and usage pieces."""
     parts = command_path.split()
     prog = parts[0] if parts else ""
     subcommands = parts[1:]
 
     def color_token(token: str) -> str:
+        """Apply usage color rules to a single token."""
         if token.startswith("[") and token.endswith("]"):
             inner = token[1:-1]
             return (
@@ -72,6 +76,7 @@ def _usage_markup(command_path: str, pieces: Sequence[str]) -> str:
 
 
 def _split_option_name(name: str) -> Tuple[str, str]:
+    """Split an option help token into option flags and metavar."""
     parts = name.split()
     if not parts:
         return name, ""
@@ -82,6 +87,7 @@ def _split_option_name(name: str) -> Tuple[str, str]:
 
 
 def _normalize_metavar(metavar: str) -> str:
+    """Normalize Click metavars by removing wrappers and ellipsis suffixes."""
     value = metavar.strip()
     if value.startswith("[") and value.endswith("]..."):
         value = value[1:-4]
@@ -95,6 +101,7 @@ def _normalize_metavar(metavar: str) -> str:
 def _build_arguments_table(
     args: Iterable[click.Argument], ctx: click.Context
 ) -> Optional[Table]:
+    """Build a Rich table describing positional arguments."""
     rows: List[Tuple[str, str]] = []
     for arg in args:
         metavar = _normalize_metavar(arg.make_metavar(ctx))
@@ -114,6 +121,7 @@ def _build_arguments_table(
 def _build_options_table(
     options: Iterable[click.Option], ctx: click.Context
 ) -> Optional[Table]:
+    """Build a Rich table describing command options."""
     rows: List[Tuple[str, str, Text]] = []
     for opt in options:
         record = opt.get_help_record(ctx)
@@ -137,6 +145,7 @@ def _build_options_table(
 
 
 def _build_commands_table(group: click.Group) -> Optional[Table]:
+    """Build a Rich table describing available subcommands."""
     if not group.commands:
         return None
 
@@ -221,6 +230,7 @@ class RichTyperCommand(TyperCommand):
     """Custom TyperCommand that uses Rich for help rendering."""
 
     def get_help(self, ctx: click.Context) -> str:  # type: ignore[override]
+        """Return Rich-rendered help text for this command."""
         return render_help(self, ctx).rstrip("\n")
 
 
@@ -228,4 +238,5 @@ class RichTyperGroup(TyperGroup):
     """Custom TyperGroup that uses Rich for help rendering."""
 
     def get_help(self, ctx: click.Context) -> str:  # type: ignore[override]
+        """Return Rich-rendered help text for this command group."""
         return render_help(self, ctx).rstrip("\n")
