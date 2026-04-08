@@ -19,3 +19,10 @@ site/
 
 # OS/editor noise
 .DS_Store
+site/index.html
+site/objects.inv
+site/sitemap.xml
+site/sitemap.xml.gz
+site/api/index.html
+site/search/search_index.json
+site/styles/style.css
