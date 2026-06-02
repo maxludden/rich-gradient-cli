@@ -10,6 +10,24 @@
 
 ## Commands
 
+::: rich_gradient_cli.gradient_command
+    options:
+      show_source: false
+      show_root_heading: true
+      heading_level: 2
+
+::: rich_gradient_cli.spectrum_command
+    options:
+      show_source: false
+      show_root_heading: true
+      heading_level: 2
+
+::: rich_gradient_cli.renderable_commands
+    options:
+      show_source: false
+      show_root_heading: true
+      heading_level: 2
+
 ::: rich_gradient_cli.text_command
     options:
       show_source: false

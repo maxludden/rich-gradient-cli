@@ -53,6 +53,10 @@ echo "Hello" | gradient print -
 ```
 
 ```bash
+echo "Hello" | gradient gradient -
+```
+
+```bash
 echo "# Title" | gradient markdown -
 ```
 
@@ -72,4 +76,78 @@ gradient print "SVG output" --svg output.svg
 gradient panel "Panel SVG" --svg panel.svg
 ```
 
-`markdown` and `panel` do not allow `--svg` with `--animate`.
+```bash
+gradient spectrum --svg spectrum.svg
+```
+
+`print`, `gradient`, `rule`, `markdown`, and `panel` do not allow `--svg` with `--animate`.
+
+## Highlighting
+
+Commands backed by `Gradient`, `Panel`, and `Markdown` can apply highlight rules.
+
+```bash
+gradient gradient "error: retry later" --highlight-word error="bold white on red"
+```
+
+```bash
+gradient markdown "# Status" --highlight-regex "Status=bold cyan"
+```
+
+## Spectrum output
+
+Use `spectrum` to inspect generated colors.
+
+```bash
+gradient spectrum --hues 7 --seed 42
+```
+
+```bash
+gradient spectrum --hues 7 --output hex
+```
+
+## Rich renderables
+
+Wrap common Rich renderables in gradients.
+
+```bash
+gradient columns alpha beta gamma --colors "red,blue"
+```
+
+```bash
+gradient tree project src/app.py docs/index.md --colors "lime,cyan"
+```
+
+```bash
+gradient syntax pyproject.toml --lexer toml --line-numbers --colors "yellow,magenta"
+```
+
+```bash
+cat data.csv | gradient table - --colors "cyan,magenta"
+```
+
+## Rich-style file viewing
+
+Use `view` when you want behavior closer to `rich-cli`: render files, URLs, or stdin with Rich's Markdown, JSON, CSV table, and syntax-highlighting renderers.
+
+```bash
+gradient view README.md
+```
+
+```bash
+gradient view pyproject.toml --lexer toml --line-numbers --guides
+```
+
+```bash
+cat data.json | gradient view - --json --force-terminal
+```
+
+You can also export the rendered output.
+
+```bash
+gradient view README.md --export-html readme.html
+```
+
+```bash
+gradient view README.md --export-svg readme.svg
+```

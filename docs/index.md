@@ -1,6 +1,8 @@
 # rich-gradient-cli
 
-`rich-gradient-cli` is a command-line interface for the [`rich-gradient`](https://github.com/maxludden/rich-gradient) library. It lets you render colorful gradients in terminal text, rules, panels, and markdown output.
+`rich-gradient-cli` is a command-line interface for the [`rich-gradient`](https://github.com/maxludden/rich-gradient) library. It lets you render colorful gradients in terminal text, generic gradients, spectrum tables, Rich columns, trees, syntax, tables, rules, panels, and markdown output.
+
+It also includes a `view` command for `rich-cli`-style file rendering: Markdown, JSON, CSV/TSV, syntax-highlighted source, stdin, URLs, pager output, and HTML/SVG export.
 
 ## Quickstart
 
@@ -19,6 +21,8 @@ gradient print --colors 'red,#ff9900,#ffff00' \
 ## Why it exists
 
 - Make terminal output easier to scan with color transitions
+- Inspect generated spectrum colors from the terminal
+- Wrap Rich columns, trees, syntax, and tables in gradients
 - Render rich gradient panels and rules without custom code
 - Pipe and transform text or markdown from other CLI tools
 
@@ -50,6 +54,16 @@ echo "# Hello\n\n- This is **bold**.\n- This is *italic*." | gradient markdown -
 ```
 
 ![Gradient Markdown Example](assets/markdown-example.svg)
+
+```bash
+gradient gradient --colors 'magenta,cyan' --highlight-word error='bold white on red' "Highlight error text"
+gradient spectrum --hues 7 --seed 42 --output hex
+gradient columns alpha beta gamma --colors 'red,blue'
+gradient syntax pyproject.toml --lexer toml --line-numbers --colors 'yellow,magenta'
+gradient view README.md
+gradient view pyproject.toml --lexer toml --line-numbers
+gradient view README.md --export-html readme.html
+```
 
 <div align="center">
   <a href="https://github.com/maxludden/maxludden" style="text-decoration:none; color:inherit;">

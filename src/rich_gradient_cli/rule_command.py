@@ -4,9 +4,11 @@ from __future__ import annotations
 
 from typing import Literal, Optional, cast
 
+import click
 import typer
 from rich.align import AlignMethod
 
+from rich_gradient.animated_rule import AnimatedRule
 from rich_gradient.rule import Rule
 
 from .common import console, export_svg, parse_colors, parse_style
@@ -87,6 +89,21 @@ def rule_command(
         metavar="THICKNESS",
         help="Thickness of the rule line (choices 0-3).",
     ),
+    characters: Optional[str] = typer.Option(
+        None,
+        "--characters",
+        metavar="CHARACTERS",
+        help="Characters used to draw the rule line.",
+    ),
+    style: Optional[str] = typer.Option(
+        None,
+        "--style",
+        metavar="STYLE",
+        help=(
+            "The style to apply to the rule. [dim italic]*Only non-color styles "
+            "will be applied as the gradient's colors override color styles.[/]"
+        ),
+    ),
     align: Literal["left", "center", "right"] = typer.Option(
         "center",
         "-a",
@@ -102,11 +119,54 @@ def rule_command(
         metavar="SVG",
         help="Save output as an SVG file.",
     ),
+    animate: bool = typer.Option(
+        False,
+        "--animate",
+        help="Animate the rule gradient.",
+    ),
+    duration: Optional[float] = typer.Option(
+        None,
+        "-d",
+        "--duration",
+        metavar="DURATION",
+        help="Duration of the rule animation in seconds (only used if --animate).",
+    ),
+    repeat_scale: float = typer.Option(
+        4.0,
+        "--repeat-scale",
+        metavar="REPEAT_SCALE",
+        help="Scale factor controlling the animated gradient repeat span.",
+        show_default=True,
+    ),
 ) -> None:
     """Display a gradient rule in the console."""
     _colors = parse_colors(colors)
     _bgcolors = parse_colors(bgcolors)
     _title_style = parse_style(title_style)
+    _style = parse_style(style)
+
+    if animate and svg:
+        raise click.UsageError("--svg is not supported with --animate.")
+    if animate and characters:
+        raise click.UsageError("--characters is not supported with --animate.")
+    if animate and console.is_terminal is True:
+        animated = AnimatedRule(
+            title=title or "",
+            title_style=_title_style,
+            colors=_colors,
+            rainbow=rainbow,
+            hues=hues,
+            bg_colors=_bgcolors,
+            thickness=thickness,
+            style=_style,
+            end=end,
+            align=cast(AlignMethod, align),
+            repeat_scale=repeat_scale,
+            animate=True,
+            duration=duration,
+        )
+        animated.run()
+        return
 
     rule = Rule(
         title=title or "",
@@ -116,6 +176,8 @@ def rule_command(
         hues=hues,
         bg_colors=_bgcolors,
         thickness=thickness,
+        characters=characters,
+        style=_style,
         end=end,
         align=cast(AlignMethod, align),
     )

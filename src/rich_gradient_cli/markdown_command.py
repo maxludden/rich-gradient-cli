@@ -2,15 +2,22 @@
 
 from __future__ import annotations
 
-from typing import Any, Literal, Optional, cast
+from typing import Any, List, Literal, Optional, cast
 
+import click
 import typer
 from rich.align import AlignMethod, VerticalAlignMethod
 
 from rich_gradient.animated_markdown import AnimatedMarkdown
 from rich_gradient.markdown import Markdown
 
-from .common import console, export_svg, parse_colors, parse_style
+from .common import (
+    console,
+    export_svg,
+    parse_colors,
+    parse_mapping_options,
+    parse_style,
+)
 
 
 def markdown_command(
@@ -82,6 +89,30 @@ def markdown_command(
         show_default=True,
         case_sensitive=False,
     ),
+    expand: bool = typer.Option(
+        True,
+        "--expand/--no-expand",
+        help="Whether to expand markdown renderables to fill the console width.",
+    ),
+    repeat_scale: float = typer.Option(
+        4.0,
+        "--repeat-scale",
+        metavar="REPEAT_SCALE",
+        help="Scale factor controlling the gradient repeat span.",
+        show_default=True,
+    ),
+    highlight_words: Optional[List[str]] = typer.Option(
+        None,
+        "--highlight-word",
+        metavar="WORD=STYLE",
+        help="Highlight a word or phrase with a Rich style. May be repeated.",
+    ),
+    highlight_regex: Optional[List[str]] = typer.Option(
+        None,
+        "--highlight-regex",
+        metavar="PATTERN=STYLE",
+        help="Highlight a regex pattern with a Rich style. May be repeated.",
+    ),
     no_wrap: bool = typer.Option(
         False,
         "--no-wrap",
@@ -119,10 +150,16 @@ def markdown_command(
     if markdown == "-":
         markdown = typer.get_text_stream("stdin").read().rstrip("\n")
         if not markdown:
-            raise typer.UsageError("Missing markdown argument.")
+            raise click.UsageError("Missing markdown argument.")
 
     _colors = parse_colors(colors)
     _bgcolors = parse_colors(bgcolors)
+    try:
+        highlight_word_map = parse_mapping_options(highlight_words)
+        highlight_regex_map = parse_mapping_options(highlight_regex)
+    except ValueError as error:
+        raise typer.BadParameter(str(error)) from error
+
     markdown_kwargs: dict[str, Any] = {}
     if style:
         markdown_kwargs["style"] = parse_style(style)
@@ -131,7 +168,7 @@ def markdown_command(
     vertical_value = cast(VerticalAlignMethod, vertical_justify)
 
     if animate and svg:
-        raise typer.UsageError("--svg is not supported with --animate.")
+        raise click.UsageError("--svg is not supported with --animate.")
     if animate and console.is_terminal is True:
         console.clear()
         animated = AnimatedMarkdown(
@@ -141,6 +178,10 @@ def markdown_command(
             hues=hues,
             justify=justify_value,
             vertical_justify=vertical_value,
+            expand=expand,
+            repeat_scale=repeat_scale,
+            highlight_words=highlight_word_map,
+            highlight_regex=highlight_regex_map,
             bg_colors=_bgcolors,
             markdown_kwargs=markdown_kwargs or None,
             animate=True,
@@ -154,9 +195,13 @@ def markdown_command(
         colors=_colors,
         rainbow=rainbow,
         hues=hues,
+        expand=expand,
         justify=justify_value,
         vertical_justify=vertical_value,
+        repeat_scale=repeat_scale,
         bg_colors=_bgcolors,
+        highlight_words=highlight_word_map,
+        highlight_regex=highlight_regex_map,
         markdown_kwargs=markdown_kwargs or None,
     )
     if svg:

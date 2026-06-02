@@ -3,11 +3,13 @@
 from __future__ import annotations
 
 import sys
-from typing import List, Literal, Optional, cast
+from typing import Any, List, Literal, Optional, cast
 
+import click
 import typer
 from rich.console import JustifyMethod, OverflowMethod
 
+from rich_gradient.animated_text import AnimatedText
 from rich_gradient.text import Text
 
 from .common import console, export_svg, parse_colors, parse_style
@@ -79,6 +81,18 @@ def print_command(
         help="Disable wrapping of text.",
         show_default=True,
     ),
+    tab_size: int = typer.Option(
+        4,
+        "--tab-size",
+        metavar="TAB_SIZE",
+        help="Number of spaces used to render tab characters.",
+        show_default=True,
+    ),
+    markup: bool = typer.Option(
+        True,
+        "--markup/--no-markup",
+        help="Parse Rich markup tags in input text.",
+    ),
     end: str = typer.Option(
         "\n",
         "--end",
@@ -99,6 +113,26 @@ def print_command(
         metavar="SVG",
         help="Save output as an SVG file.",
     ),
+    animate: bool = typer.Option(
+        False,
+        "-a",
+        "--animate",
+        help="Animate the gradient text.",
+    ),
+    duration: Optional[float] = typer.Option(
+        None,
+        "-d",
+        "--duration",
+        metavar="DURATION",
+        help="Duration of the text animation in seconds (only used if --animate).",
+    ),
+    repeat_scale: float = typer.Option(
+        4.0,
+        "--repeat-scale",
+        metavar="REPEAT_SCALE",
+        help="Scale factor controlling the animated gradient repeat span.",
+        show_default=True,
+    ),
 ) -> None:
     """Print text in gradient color to the console."""
     if text:
@@ -118,6 +152,31 @@ def print_command(
     fg_list = parse_colors(colors)
     bg_list = parse_colors(bgcolors)
     style_obj = parse_style(style)
+    if animate and svg:
+        raise click.UsageError("--svg is not supported with --animate.")
+    if animate and console.is_terminal is True:
+        animated = AnimatedText(
+            content,
+            colors=fg_list,
+            rainbow=rainbow,
+            hues=hues,
+            justify=cast(Any, justify),
+            bg_colors=bg_list,
+            text_kwargs={
+                "style": style_obj,
+                "overflow": overflow,
+                "no_wrap": no_wrap,
+                "end": end,
+                "tab_size": tab_size,
+            },
+            markup=markup,
+            repeat_scale=repeat_scale,
+            animate=True,
+            duration=duration,
+        )
+        animated.run()
+        return
+
     gradient = Text(
         content,
         colors=fg_list,
@@ -128,7 +187,9 @@ def print_command(
         overflow=cast(OverflowMethod, overflow),
         end=end,
         no_wrap=no_wrap,
+        tab_size=tab_size,
         bg_colors=bg_list,
+        markup=markup,
     )
     if svg:
         export_svg(gradient, svg, end="")

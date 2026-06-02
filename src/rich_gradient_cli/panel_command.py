@@ -3,15 +3,23 @@
 from __future__ import annotations
 
 import sys
-from typing import Any, Literal, Optional, Tuple, cast
+from typing import Any, List, Literal, Optional, cast
 
+import click
 import typer
 from rich.align import Align, AlignMethod
 
 from rich_gradient.animated_panel import AnimatedPanel
 from rich_gradient.panel import Panel
 
-from .common import console, export_svg, parse_colors, parse_style
+from .common import (
+    console,
+    export_svg,
+    parse_colors,
+    parse_mapping_options,
+    parse_padding,
+    parse_style,
+)
 
 
 def panel_command(
@@ -121,6 +129,11 @@ def panel_command(
         metavar="PADDING",
         help="Padding inside the panel (1, 2, or 4 comma-separated integers).",
     ),
+    safe_box: bool = typer.Option(
+        False,
+        "--safe-box",
+        help="Use box characters that are safe for legacy Windows terminals.",
+    ),
     vertical_justify: Literal["top", "middle", "bottom"] = typer.Option(
         "top",
         "-V",
@@ -165,6 +178,18 @@ def panel_command(
         metavar="HEIGHT",
         help="Height of the panel; content determines by default.",
     ),
+    highlight_words: Optional[List[str]] = typer.Option(
+        None,
+        "--highlight-word",
+        metavar="WORD=STYLE",
+        help="Highlight a word or phrase with a Rich style. May be repeated.",
+    ),
+    highlight_regex: Optional[List[str]] = typer.Option(
+        None,
+        "--highlight-regex",
+        metavar="PATTERN=STYLE",
+        help="Highlight a regex pattern with a Rich style. May be repeated.",
+    ),
     end: str = typer.Option(
         "\n",
         "--end",
@@ -196,6 +221,13 @@ def panel_command(
         metavar="DURATION",
         help="Duration of the panel animation in seconds (only used if --animate).",
     ),
+    repeat_scale: float = typer.Option(
+        4.0,
+        "--repeat-scale",
+        metavar="REPEAT_SCALE",
+        help="Scale factor controlling the animated gradient repeat span.",
+        show_default=True,
+    ),
     svg: Optional[str] = typer.Option(
         None,
         "--svg",
@@ -207,15 +239,18 @@ def panel_command(
     if renderable == "-":
         renderable = typer.get_text_stream("stdin").read().rstrip("\n")
         if not renderable:
-            raise typer.UsageError("Missing text argument.")
+            raise click.UsageError("Missing text argument.")
 
     fg_list = parse_colors(colors)
     bg_list = parse_colors(bgcolors)
     style_obj = parse_style(style)
     _text_justify = cast(AlignMethod, text_justify)
-    padding_tuple: Optional[Tuple[int, ...]] = None
-    if padding:
-        padding_tuple = tuple(int(x) for x in padding.split(",") if x.strip())
+    try:
+        padding_value = parse_padding(padding)
+        highlight_word_map = parse_mapping_options(highlight_words)
+        highlight_regex_map = parse_mapping_options(highlight_regex)
+    except ValueError as error:
+        raise typer.BadParameter(str(error)) from error
 
     from rich import box as rich_box
 
@@ -229,7 +264,7 @@ def panel_command(
     box_style = box_map.get(box.upper(), rich_box.ROUNDED)
 
     if animate and svg:
-        raise typer.UsageError("--svg is not supported with --animate.")
+        raise click.UsageError("--svg is not supported with --animate.")
     if animate and console.is_terminal is True:
         animated_panel: AnimatedPanel = AnimatedPanel(
             Align(renderable, align=_text_justify),
@@ -245,13 +280,17 @@ def panel_command(
             subtitle_align=cast(AlignMethod, subtitle_align),
             style=style_obj,
             border_style=parse_style(border_style),
-            padding=cast(Any, padding_tuple),
+            padding=cast(Any, padding_value),
             vertical_justify=cast(Any, vertical_justify),
             justify=cast(AlignMethod, justify),
             expand=expand,
             width=width,
             height=height,
             box=box_style,
+            safe_box=safe_box,
+            highlight_words=highlight_word_map,
+            highlight_regex=highlight_regex_map,
+            repeat_scale=repeat_scale,
             animate=True,
             duration=duration,
         )
@@ -272,13 +311,16 @@ def panel_command(
         subtitle_align=cast(AlignMethod, subtitle_align),
         style=style_obj,
         border_style=parse_style(border_style),
-        padding=cast(Any, padding_tuple),
+        padding=cast(Any, padding_value),
         vertical_justify=cast(Any, vertical_justify),
         justify=cast(AlignMethod, justify),
         expand=expand,
         width=width,
         height=height,
         box=box_style,
+        safe_box=safe_box,
+        highlight_words=highlight_word_map,
+        highlight_regex=highlight_regex_map,
     )
     if svg:
         export_svg(panel, svg, end=end)

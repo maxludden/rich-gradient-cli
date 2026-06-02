@@ -37,6 +37,33 @@ gradient print --colors 'red,#ff9900,#ffff00' "This is gradient text that starts
 
 ![Gradient Text Example](print-example.svg)
 
+### Gradient
+
+Use `gradient` for the generic `rich-gradient` renderable, including highlight rules and animation:
+
+```bash
+gradient gradient --colors 'magenta,cyan' --highlight-word error='bold white on red' "Highlight error text"
+```
+
+### Spectrum
+
+Inspect generated spectrum colors as a rich table, hex values, names, or CSV:
+
+```bash
+gradient spectrum --hues 7 --seed 42
+gradient spectrum --hues 7 --output hex
+```
+
+### Rich renderables
+
+Wrap common Rich renderables in gradients without writing Python:
+
+```bash
+gradient columns alpha beta gamma --colors 'red,blue'
+gradient tree project src/app.py docs/index.md --colors 'lime,cyan'
+gradient syntax pyproject.toml --lexer toml --line-numbers --colors 'yellow,magenta'
+cat data.csv | gradient table - --colors 'cyan,magenta'
+```
 
 ### Rule
 
@@ -67,6 +94,17 @@ echo "# Hello\n\n- This is **bold**.\n- This is *italic*." | gradient markdown -
 ```
 
 ![Gradient Markdown Example](markdown-example.svg)
+
+### Rich-style viewing
+
+Use `view` for `rich-cli`-style file rendering. It auto-detects Markdown, JSON, CSV/TSV, and syntax-highlighted source files; it also accepts `-` for stdin and `http://` or `https://` URLs.
+
+```bash
+gradient view README.md
+gradient view pyproject.toml --lexer toml --line-numbers --guides
+cat data.json | gradient view - --json --force-terminal
+gradient view README.md --export-html readme.html
+```
 
 ## Docs
 

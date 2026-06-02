@@ -167,7 +167,7 @@ def render_help(command: click.Command, ctx: click.Context) -> str:
         file=io.StringIO(),
     )
 
-    console.print(Text.from_markup(HEADER_TEXT))
+    console.print(Text.from_markup(HEADER_TEXT), justify="center")
     console.print()
 
     usage_line = _usage_markup(ctx.command_path, command.collect_usage_pieces(ctx))

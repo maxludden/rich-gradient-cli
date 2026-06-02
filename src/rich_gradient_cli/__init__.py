@@ -12,18 +12,36 @@ import typer  # ty:ignore[unresolved-import]
 if __package__ in {None, ""}:
     sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
     from rich_gradient_cli.common import VERSION
+    from rich_gradient_cli.gradient_command import gradient_command
     from rich_gradient_cli.help import RichTyperCommand, RichTyperGroup
     from rich_gradient_cli.markdown_command import markdown_command
     from rich_gradient_cli.panel_command import panel_command
+    from rich_gradient_cli.renderable_commands import (
+        columns_command,
+        syntax_command,
+        table_command,
+        tree_command,
+    )
     from rich_gradient_cli.rule_command import rule_command
+    from rich_gradient_cli.spectrum_command import spectrum_command
     from rich_gradient_cli.text_command import print_command
+    from rich_gradient_cli.view_command import view_command
 else:
     from .common import VERSION
+    from .gradient_command import gradient_command
     from .help import RichTyperCommand, RichTyperGroup
     from .markdown_command import markdown_command
     from .panel_command import panel_command
+    from .renderable_commands import (
+        columns_command,
+        syntax_command,
+        table_command,
+        tree_command,
+    )
     from .rule_command import rule_command
+    from .spectrum_command import spectrum_command
     from .text_command import print_command
+    from .view_command import view_command
 
 
 class DefaultTyperGroup(RichTyperGroup):
@@ -72,7 +90,7 @@ app = typer.Typer(
     add_completion=False,
     help="Create gradient-rich text, panels, and markdown.",
     rich_markup_mode="rich",
-    context_settings={"help_option_names": ["-h", "--help"], "color": True},
+    context_settings={"help_option_names": ["--help"], "color": True},
 )
 
 
@@ -98,9 +116,16 @@ def main(
 
 
 app.command("print", cls=RichTyperCommand)(print_command)
+app.command("gradient", cls=RichTyperCommand)(gradient_command)
+app.command("columns", cls=RichTyperCommand)(columns_command)
 app.command("panel", cls=RichTyperCommand)(panel_command)
 app.command("rule", cls=RichTyperCommand)(rule_command)
 app.command("markdown", cls=RichTyperCommand)(markdown_command)
+app.command("spectrum", cls=RichTyperCommand)(spectrum_command)
+app.command("syntax", cls=RichTyperCommand)(syntax_command)
+app.command("table", cls=RichTyperCommand)(table_command)
+app.command("tree", cls=RichTyperCommand)(tree_command)
+app.command("view", cls=RichTyperCommand)(view_command)
 
 
 cli = app

@@ -2,16 +2,22 @@
 
 from __future__ import annotations
 
+from importlib.metadata import PackageNotFoundError, version
 from pathlib import Path
-from typing import List, Optional
+from typing import Any, List, Mapping, Optional, Sequence, cast
 
 from rich.console import Console, RenderableType
 from rich.padding import Padding
 from rich.style import Style
+from rich_gradient.animated_gradient import AnimatedGradient
+from rich_gradient.gradient import Gradient
 from rich_gradient.theme import GRADIENT_TERMINAL_THEME
 
 console = Console()
-VERSION = "0.3.10"
+try:
+    VERSION = version("rich-gradient-cli")
+except PackageNotFoundError:
+    VERSION = "0.0.0"
 
 HEADER_TEXT = (
     "[#ff5500]r[/][#ff6f00]i[/][#ff8300]c[/]"
@@ -55,6 +61,35 @@ def parse_style(style: Optional[str]) -> Style:
     return Style.parse(style)
 
 
+def parse_mapping_options(values: Optional[Sequence[str]]) -> Optional[Mapping[str, str]]:
+    """Parse repeated KEY=VALUE CLI options into a mapping."""
+    if not values:
+        return None
+
+    parsed: dict[str, str] = {}
+    for value in values:
+        key, separator, item_value = value.partition("=")
+        key = key.strip()
+        item_value = item_value.strip()
+        if not separator or not key or not item_value:
+            raise ValueError(f"Expected KEY=VALUE, got {value!r}.")
+        parsed[key] = item_value
+    return parsed
+
+
+def parse_padding(padding: Optional[str]) -> int | tuple[int, ...] | None:
+    """Parse Rich padding shorthand from a CLI string."""
+    if padding is None:
+        return None
+
+    parts = tuple(int(part) for part in padding.split(",") if part.strip())
+    if len(parts) not in {1, 2, 4}:
+        raise ValueError("Padding must contain 1, 2, or 4 comma-separated integers.")
+    if len(parts) == 1:
+        return parts[0]
+    return parts
+
+
 def export_svg(
     renderable: RenderableType, svg_path: str, *, end: str = "\n", no_wrap: bool = False
 ) -> None:
@@ -72,11 +107,78 @@ def export_svg(
     )
 
 
+def render_gradient_output(
+    renderable: RenderableType,
+    *,
+    colors: Optional[str] = None,
+    bgcolors: Optional[str] = None,
+    rainbow: bool = False,
+    hues: int = 5,
+    expand: bool = True,
+    justify: str = "left",
+    vertical_justify: str = "middle",
+    repeat_scale: float = 2.0,
+    highlight_words: Optional[Sequence[str]] = None,
+    highlight_regex: Optional[Sequence[str]] = None,
+    end: str = "\n",
+    animate: bool = False,
+    duration: Optional[float] = None,
+    svg: Optional[str] = None,
+) -> None:
+    """Render any Rich renderable through rich-gradient's Gradient wrapper."""
+    fg_list = parse_colors(colors)
+    bg_list = parse_colors(bgcolors)
+    highlight_word_map = parse_mapping_options(highlight_words)
+    highlight_regex_map = parse_mapping_options(highlight_regex)
+
+    if animate and svg:
+        raise ValueError("--svg is not supported with --animate.")
+    if animate and console.is_terminal is True:
+        animated = AnimatedGradient(
+            cast(Any, renderable),
+            colors=cast(Any, fg_list),
+            bg_colors=cast(Any, bg_list),
+            hues=hues,
+            rainbow=rainbow,
+            expand=expand,
+            justify=cast(Any, justify),
+            vertical_justify=cast(Any, vertical_justify),
+            repeat_scale=repeat_scale,
+            highlight_words=highlight_word_map,
+            highlight_regex=highlight_regex_map,
+            animate=True,
+            duration=duration,
+        )
+        animated.run()
+        return
+
+    gradient = Gradient(
+        cast(Any, renderable),
+        colors=cast(Any, fg_list),
+        bg_colors=cast(Any, bg_list),
+        hues=hues,
+        rainbow=rainbow,
+        expand=expand,
+        justify=cast(Any, justify),
+        vertical_justify=cast(Any, vertical_justify),
+        repeat_scale=repeat_scale,
+        highlight_words=highlight_word_map,
+        highlight_regex=highlight_regex_map,
+    )
+    if svg:
+        export_svg(gradient, svg, end=end)
+        return
+    console.print(gradient, end=end)
+
+
 __all__ = [
     "VERSION",
     "console",
     "parse_colors",
+    "parse_mapping_options",
+    "parse_padding",
     "parse_style",
+    "render_gradient_output",
     "HEADER_TEXT",
     "FOOTER_TEXT",
     "USAGE_PREFIX",
