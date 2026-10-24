@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file.
 
+## Unreleased
+
+### Fixed
+
+- Fixed `gradient` crashing with `AttributeError` when text is piped in with no arguments (e.g. `echo hi | gradient`).
+- Fixed `gradient syntax` printing a traceback for a missing or unreadable file; it now reports a usage error.
+- Fixed `gradient tree --path --max-depth N` listing files one level deeper than directories.
+- Fixed `gradient tree . --path` showing an empty root label; it now uses the real directory name.
+- Fixed the `view --print` test expecting plain text under `--force-terminal`.
+
+### Added
+
+- Added regression tests for piped stdin routing, missing `syntax` files, and `tree --path` depth and root label.
+
 ## 0.2.0 - 2026-06-02
 
 ### Added
