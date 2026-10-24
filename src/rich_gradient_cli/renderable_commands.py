@@ -200,7 +200,9 @@ def _iter_directory_paths(path: Path, *, max_depth: int) -> Iterable[str]:
         current = Path(dirpath)
         depth = len(current.parts) - base_depth
         if depth >= max_depth:
+            # Entries here would be deeper than max_depth levels.
             dirnames[:] = []
+            continue
         for dirname in sorted(dirnames):
             yield str((current / dirname).relative_to(path))
         for filename in sorted(filenames):
@@ -245,7 +247,7 @@ def tree_command(
     """Render a Rich Tree through a gradient wrapper."""
     root_path = Path(root)
     tree = Tree(
-        root_path.name if path else root,
+        (root_path.resolve().name or str(root_path)) if path else root,
         style=style,
         guide_style=guide_style,
         expanded=expanded,
@@ -335,20 +337,23 @@ def syntax_command(
             padding=cast(Any, padding_value or 0),
         )
     else:
-        syntax = Syntax.from_path(
-            source,
-            lexer=lexer,
-            theme=theme,
-            dedent=dedent,
-            line_numbers=line_numbers,
-            start_line=start_line,
-            code_width=code_width,
-            tab_size=tab_size,
-            word_wrap=word_wrap,
-            background_color=background_color,
-            indent_guides=indent_guides,
-            padding=cast(Any, padding_value or 0),
-        )
+        try:
+            syntax = Syntax.from_path(
+                source,
+                lexer=lexer,
+                theme=theme,
+                dedent=dedent,
+                line_numbers=line_numbers,
+                start_line=start_line,
+                code_width=code_width,
+                tab_size=tab_size,
+                word_wrap=word_wrap,
+                background_color=background_color,
+                indent_guides=indent_guides,
+                padding=cast(Any, padding_value or 0),
+            )
+        except OSError as error:
+            raise typer.BadParameter(f"Unable to read file: {error}") from error
     _render_with_gradient(
         syntax,
         colors=colors,

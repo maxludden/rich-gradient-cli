@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import sys
 from pathlib import Path
-from typing import Any, Sequence
+from typing import Any, Sequence, cast
 
 import click  # ty:ignore[unresolved-import]
 import typer  # ty:ignore[unresolved-import]
@@ -110,7 +110,13 @@ def main(
         raise typer.Exit()
     if ctx.invoked_subcommand is None:
         if ctx.args or not sys.stdin.isatty():
-            print_command(text=list(ctx.args) if ctx.args else None)
+            # Invoke the click command (not the bare function) so option
+            # defaults are resolved instead of leaking typer.Option objects.
+            click_ctx = cast(click.Context, ctx)
+            group = cast(click.Group, click_ctx.command)
+            print_cmd = group.get_command(click_ctx, "print")
+            assert print_cmd is not None
+            click_ctx.invoke(print_cmd, text=list(ctx.args) if ctx.args else None)
             raise typer.Exit()
         typer.echo(ctx.get_help())
 

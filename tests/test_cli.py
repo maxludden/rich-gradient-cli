@@ -72,11 +72,56 @@ def test_view_reads_markdown_from_stdin() -> None:
 def test_view_print_treats_resource_as_markup_text() -> None:
     result = runner.invoke(
         app,
-        ["view", "Hello, [bold]World[/]!", "--print", "--force-terminal"],
+        ["view", "Hello, [bold]World[/]!", "--print"],
     )
 
     assert result.exit_code == 0
     assert "Hello, World!" in result.stdout
+    assert "[bold]" not in result.stdout
+
+
+def test_no_arguments_with_piped_stdin_prints_gradient_text() -> None:
+    result = runner.invoke(app, [], input="piped text\n")
+
+    assert result.exit_code == 0
+    assert "piped text" in result.stdout
+
+
+def test_syntax_command_reports_missing_file(tmp_path) -> None:
+    result = runner.invoke(app, ["syntax", str(tmp_path / "missing.py")])
+
+    assert result.exit_code != 0
+    assert not isinstance(result.exception, FileNotFoundError)
+    assert "Unable to read file" in result.output
+
+
+def test_tree_path_respects_max_depth(tmp_path) -> None:
+    deep = tmp_path / "a" / "b" / "c"
+    deep.mkdir(parents=True)
+    (tmp_path / "top.txt").touch()
+    (tmp_path / "a" / "mid.txt").touch()
+    (deep / "deep.txt").touch()
+    (tmp_path / "a" / "b" / "level3.txt").touch()
+
+    result = runner.invoke(
+        app, ["tree", str(tmp_path), "--path", "--max-depth", "2", "--no-expand"]
+    )
+
+    assert result.exit_code == 0
+    assert "top.txt" in result.stdout
+    assert "mid.txt" in result.stdout
+    assert "level3.txt" not in result.stdout
+    assert "deep.txt" not in result.stdout
+
+
+def test_tree_path_labels_current_directory(tmp_path, monkeypatch) -> None:
+    (tmp_path / "file.txt").touch()
+    monkeypatch.chdir(tmp_path)
+
+    result = runner.invoke(app, ["tree", ".", "--path", "--no-expand"])
+
+    assert result.exit_code == 0
+    assert result.stdout.splitlines()[0].strip() == tmp_path.name
 
 
 def test_gradient_command_renders_text() -> None:
