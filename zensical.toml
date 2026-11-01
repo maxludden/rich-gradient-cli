@@ -42,6 +42,14 @@ text = "Inter"
 code = "Roboto Mono"
 
 [[project.theme.palette]]
+media = "(prefers-color-scheme)"
+scheme = "astral-light"
+primary = "custom"
+accent = "custom"
+toggle.icon = "lucide/sun-moon"
+toggle.name = "Switch to light mode"
+
+[[project.theme.palette]]
 media = "(prefers-color-scheme: light)"
 scheme = "astral-light"
 primary = "custom"
@@ -55,7 +63,7 @@ scheme = "astral-dark"
 primary = "custom"
 accent = "custom"
 toggle.icon = "lucide/moon"
-toggle.name = "Switch to light mode"
+toggle.name = "Switch to system preference"
 
 [project.plugins.mkdocstrings.handlers.python]
 paths = ["src"]

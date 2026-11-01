@@ -75,7 +75,10 @@ jobs:
       - uses: astral-sh/setup-uv@d4b2f3b6ecc6e67c4457f6d3e41ec42d3d0fcb86 # v5
       - name: Check dist version matches release tag
         run: |
-          version="${GITHUB_REF_NAME#v}"
+          # Built files carry the PEP 440 normalized version, so normalize the tag too.
+          version=$(uv run --no-project --with packaging python -c \
+            'import sys; from packaging.version import Version; print(Version(sys.argv[1]))' \
+            "${GITHUB_REF_NAME#v}")
           for f in dist/*; do
             case "$(basename "$f")" in
               *"-${version}-"*|*"-${version}.tar.gz") ;;

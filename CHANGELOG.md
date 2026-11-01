@@ -16,7 +16,7 @@ All notable changes to this project will be documented in this file.
 - Renamed `docs/assets/` to `docs/img/` (links to `docs/assets/...` no longer resolve) and replaced `MaxLogo-animated.svg` with the static `MaxLogo.svg`.
 - Removed the `ty:ignore[unresolved-import]` comments on the `click`/`typer` imports; `mypy` is the project's type checker.
 - The release workflow now tests on Python 3.10 and 3.12 and checks that the built distributions match the release tag before publishing.
-- Docs palette toggle now cycles light and dark only (removed a duplicate `astral-dark` entry).
+- Docs palette toggle cycles auto, light and dark; the auto entry now uses `astral-light` instead of duplicating `astral-dark`.
 - Pointed the docs "edit this page" links at `edit/master/docs/`.
 - Bumped the package version to 0.3.0.
 
