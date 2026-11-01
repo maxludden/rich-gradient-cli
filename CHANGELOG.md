@@ -9,6 +9,8 @@ All notable changes to this project will be documented in this file.
 - Added a GitHub Actions workflow that builds and publishes to PyPI (trusted publishing) when a release is published. It first checks that the tag matches the package version, then runs ruff, mypy, pytest and a docs build.
 - Added VS Code tasks to build and serve the docs with Zensical and to build the package with `uv`.
 - Added a VS Code launch configuration that runs the CLI as a module.
+- Added `.vscode/settings.json` with the project interpreter and watcher/search/analysis excludes for `.venv`, `site`, `dist` and tool caches, to keep VS Code responsive.
+- Tuned `.vscode/settings.json` for speed: Pylance checks open files only, and the `.cache`, `.git/objects` and `typings` paths are excluded from watching, search and analysis.
 
 ### Changed
 
