@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="maxlogo" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 586 586" width="586" height="586" role="img"
+  aria-labelledby="maxlogo-title maxlogo-desc" xml:lang="en">
+  <title id="maxlogo-title">MaxLogo</title>
+  <desc id="maxlogo-desc">
+    A personal logo for Max Ludden, consisting of three elements:
+    1. A circle with a dynamic, animated gradient background.
+    2. A black and white glyph combining the capital letters `M`, `A`, and `X`.
+    3. The surname `LUDDEN` in white characters below the glyph.
+  </desc>
+  <metadata>
+    <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:dc="http://purl.org/dc/elements/1.1/"
+      xmlns:dcterms="http://purl.org/dc/terms/">
+      <rdf:Description rdf:about="">
+        <dc:title>MaxLogo</dc:title>
+        <dc:creator>Max Ludden</dc:creator>
+        <dc:publisher>Max Ludden</dc:publisher>
+        <dcterms:rightsHolder>Max Ludden</dcterms:rightsHolder>
+        <dc:date>2026-08-13</dc:date>
+        <dc:identifier>MaxLogo-3.0.2</dc:identifier>
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:language>en</dc:language>
+        <dc:description>Personal identity mark for Max Ludden: an animated gradient
+          circle behind a monogram glyph combining the letters M, A and X, with the
+          surname LUDDEN set below.</dc:description>
+        <dc:rights>Copyright © 2026 Max Ludden. All rights reserved. MaxLogo™ and the
+          MAX monogram are unregistered trademarks of Max Ludden. This mark is not
+          licensed for reuse: it may not be reproduced, modified, recolored, or
+          incorporated into any other work, nor used to identify any other person,
+          product, service, or organization, without prior written permission from the
+          rights holder.</dc:rights>
+      </rdf:Description>
+    </rdf:RDF>
+  </metadata>
+  <defs>
+    <linearGradient id='a' gradientUnits='objectBoundingBox' x1='0' y1='0' x2='1' y2='1'>
+      <stop offset='0' stop-color='#ff00ff'>
+        <animate attributeName="stop-color"
+          values="#ff00ff;#af00ff;#5f00ff;#0090ff;#00ffff;#00ff00;#99ff00;#ffff00;#ff8800;#ff0000;#ff00ff;" dur="20s"
+          repeatCount="indefinite">
+        </animate>
+      </stop>
+      <stop offset='50%' stop-color='#af00ff'>
+        <animate attributeName="stop-color"
+          values="#af00ff;#5f00ff;#0088ff;#00ffff;#00ff00;#99ff00;#ffff00;#ff8800;#ff0000;#ff00ff;#af00ff;" dur="20s"
+          repeatCount="indefinite">
+        </animate>
+      </stop>
+      <stop offset='100%' stop-color='#5f00ff'>
+        <animate attributeName="stop-color"
+          values="#5f00ff;#0090ff;#00ffff;#00ff00;#99ff00;#ffff00;#ff8800;#ff0000;#ff00ff;#af00ff;#5f00ff;" dur="20s"
+          repeatCount="indefinite">
+        </animate>
+      </stop>
+      <animateTransform attributeName="gradientTransform" type="rotate" from="0 .5 .5" to="360 .5 .5" dur="20s"
+        repeatCount="indefinite" />
+    </linearGradient>
+    <linearGradient id='b' gradientUnits='objectBoundingBox' x1='0' y1='1' x2='1' y2='1'>
+      <stop offset='0' stop-color='#ff00ff'>
+        <animate attributeName="stop-color"
+          values="#ff00ff;#af00ff;#5f00ff;#0090ff;#00ffff;#00ff00;#99ff00;#ffff00;#ff8800;#ff0000;#ff00ff;" dur="20s"
+          repeatCount="indefinite">
+        </animate>
+      </stop>
+      <stop offset='100%' stop-color='#af00ff' stop-opacity="0.1">
+        <!-- This stop in gradient b drops opacity to 10% to allow gradient a to viewed through it -->
+        <animate attributeName="stop-color"
+          values="#af00ff;#5f00ff;#0088ff;#00ffff;#00ff00;#99ff00;#ffff00;#ff8800;#ff0000;#ff00ff;#af00ff;" dur="20s"
+          repeatCount="indefinite">
+        </animate>
+      </stop>
+      <animateTransform attributeName="gradientTransform" type="rotate" values="360 .5 .5;0 .5 .5" class="ignore"
+        dur="20s" repeatCount="indefinite" />
+    </linearGradient>
+    <style>
+      #maxlogo #left-ludden {
+        fill: #222;
+      }
+
+      #maxlogo #right {
+        fill: #eee;
+      }
+
+      @media (prefers-color-scheme: dark) {
+
+        #maxlogo #left-ludden {
+          fill: #eee;
+        }
+
+        #maxlogo #right {
+          fill: #222;
+        }
+      }
+
+      #maxlogo #shadow {
+        fill: #22222259;
+      }
+
+      #maxlogo #gradient-a {
+        fill: url(#a);
+      }
+
+      #maxlogo #gradient-b {
+        fill: url(#b);
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+
+        #maxlogo animate,
+        #maxlogo animateTransform {
+          display: none;
+        }
+      }
+    </style>
+  </defs>
+  <circle id="gradient-a" cx="293" cy="293" r="285" />
+  <circle id="gradient-b" cx="293" cy="293" r="285" />
+  <path id="shadow"
+    d="M274.4,365.03h0s0,0,0,0h.01s-.01,0-.01,0ZM271.94,438.87c-1.28-1.28-2.75-2.28-4.42-3-1.66-.72-3.44-1.08-5.33-1.08h-5.68v27.75h5.68c1.87,0,3.64-.36,5.3-1.08,1.66-.72,3.14-1.71,4.43-2.98s2.3-2.75,3.03-4.42c.73-1.68,1.09-3.47,1.09-5.39h0c0-1.92-.36-3.71-1.09-5.38-.73-1.67-1.73-3.14-3.01-4.42ZM313.64,365.03h-39.23l19.61,27.22,19.61-27.22ZM572.01,351.35c-26.93,129.41-141.61,226.65-279.01,226.65-37.68,0-73.65-7.33-106.58-20.62l-42.39-84.43h29.44v-10.41h-19.05v-38.15h-4.22l-6.83-12.76h54.38v-152.99l64.98,90.21-11.58,16.18h.01l-19.49,27.23h0l-13.86,19.35h62.27l13.93-19.34,13.94,19.34h62.28s-44.93-62.77-44.93-62.77l64.98-90.2v152.98h54.38V94.64l127.35,256.71ZM228.98,424.4h-10.39v28.3h0c0,1.99-.36,3.8-1.07,5.43-.72,1.63-1.77,2.92-3.15,3.88-1.39.96-3.07,1.44-5.06,1.44s-3.64-.49-5.04-1.46c-1.4-.97-2.46-2.27-3.2-3.9s-1.11-3.43-1.11-5.39v-28.3h-10.39v28.3c0,3.91.84,7.46,2.51,10.67,1.67,3.2,3.99,5.75,6.96,7.65,2.97,1.9,6.39,2.84,10.27,2.84,2.91,0,5.56-.54,7.97-1.63,2.4-1.09,4.48-2.6,6.23-4.54s3.1-4.19,4.05-6.75c.95-2.55,1.42-5.3,1.42-8.24v-28.3ZM286.43,448.68c0-3.36-.63-6.49-1.89-9.42h0c-1.26-2.92-3-5.5-5.23-7.73-2.22-2.23-4.8-3.98-7.72-5.24s-6.05-1.89-9.4-1.89h-16.07v48.56h16.07c3.34,0,6.48-.63,9.4-1.89,2.92-1.26,5.49-3.01,7.72-5.24,2.23-2.23,3.97-4.8,5.23-7.73s1.89-6.06,1.89-9.42ZM341.8,448.68c0-3.36-.63-6.49-1.89-9.42h0c-1.26-2.92-3-5.5-5.23-7.73-2.22-2.23-4.8-3.98-7.72-5.24s-6.05-1.89-9.4-1.89h-16.07v48.56h16.07c3.34,0,6.48-.63,9.4-1.89,2.92-1.26,5.49-3.01,7.72-5.24,2.23-2.23,3.97-4.8,5.23-7.73s1.89-6.06,1.89-9.42ZM387.74,424.39h-30.89v48.56h30.89v-10.41h-20.5v-10.41h15.79v-10.4h-15.79v-6.94h20.5v-10.4ZM444.57,424.39h-10.39v29.76l-17.73-29.76h-11.22v48.56h10.39v-29.76l17.73,29.76h11.22v-48.56ZM294.02,392.26h0s0,0,0,0h0ZM327.3,438.87c-1.28-1.28-2.75-2.28-4.42-3-1.66-.72-3.44-1.08-5.33-1.08h-5.68v27.75h5.68c1.87,0,3.64-.36,5.3-1.08,1.66-.72,3.14-1.71,4.43-2.98s2.3-2.75,3.03-4.42c.73-1.68,1.09-3.47,1.09-5.39h0c0-1.92-.36-3.71-1.09-5.38-.73-1.67-1.73-3.14-3.01-4.42Z" />
+  <path id="left-ludden"
+    d="M274.41,365.03l19.62,27.23h-62.36l19.49-27.23h23.25ZM370.23,411.61L143.37,94.65v316.98h54.38v-152.99l76.65,106.39h62.47v27.23h-42.86l13.94,19.35h62.28ZM154.42,424.39h-10.39v48.56h29.44v-10.41h-19.05v-38.15ZM218.59,452.7c0,1.99-.36,3.8-1.07,5.43-.72,1.63-1.77,2.92-3.15,3.88-1.39.96-3.07,1.44-5.06,1.44s-3.64-.49-5.04-1.46-2.46-2.27-3.2-3.9c-.74-1.63-1.11-3.43-1.11-5.39v-28.3h-10.39v28.3c0,3.91.84,7.46,2.51,10.67,1.67,3.2,3.99,5.75,6.96,7.65s6.39,2.84,10.27,2.84c2.91,0,5.56-.54,7.97-1.63,2.4-1.09,4.48-2.6,6.23-4.54s3.1-4.19,4.05-6.75c.95-2.55,1.42-5.3,1.42-8.24v-28.3h-10.39v28.3h0ZM339.91,439.26c1.26,2.93,1.89,6.06,1.89,9.42s-.63,6.49-1.89,9.42-3,5.5-5.23,7.73-4.8,3.98-7.72,5.24-6.06,1.89-9.4,1.89h-16.07v-48.56h16.07c3.35,0,6.48.63,9.4,1.89,2.92,1.26,5.5,3.01,7.72,5.24,2.23,2.23,3.97,4.81,5.23,7.73h0ZM331.4,448.67c0-1.92-.36-3.71-1.09-5.38s-1.73-3.14-3.01-4.42c-1.28-1.28-2.75-2.28-4.42-3-1.66-.72-3.44-1.08-5.33-1.08h-5.68v27.75h5.68c1.87,0,3.64-.36,5.3-1.08,1.66-.72,3.14-1.71,4.43-2.98s2.3-2.75,3.03-4.42c.73-1.68,1.09-3.47,1.09-5.39h0ZM434.18,424.39v29.76l-17.73-29.76h-11.22v48.56h10.39v-29.76l17.73,29.76h11.22v-48.56h-10.39ZM284.54,439.26c1.26,2.93,1.89,6.06,1.89,9.42s-.63,6.49-1.89,9.42-3,5.5-5.23,7.73-4.8,3.98-7.72,5.24-6.06,1.89-9.4,1.89h-16.07v-48.56h16.07c3.35,0,6.48.63,9.4,1.89,2.92,1.26,5.5,3.01,7.72,5.24,2.23,2.23,3.97,4.81,5.23,7.73h0ZM276.04,448.67c0-1.92-.36-3.71-1.09-5.38s-1.73-3.14-3.01-4.42c-1.28-1.28-2.75-2.28-4.42-3-1.66-.72-3.44-1.08-5.33-1.08h-5.68v27.75h5.68c1.87,0,3.64-.36,5.3-1.08,1.66-.72,3.14-1.71,4.43-2.98s2.3-2.75,3.03-4.42c.73-1.68,1.09-3.47,1.09-5.39h0ZM356.85,472.95h30.89v-10.41h-20.5v-10.41h15.79v-10.4h-15.79v-6.94h20.5v-10.4h-30.89v48.56Z" />
+  <path id="right"
+    d="M231.67,392.26h62.35l-13.94,19.35h-62.27l13.86-19.35h0ZM294.02,392.26h42.86v-27.23h-23.24l-19.62,27.23ZM262.74,348.84l-11.59,16.19h23.25l-11.67-16.19h.01ZM294.02,305.13l31.28,43.71,64.98-90.2v152.98h54.38V94.64l-150.65,210.48h0Z" />
+</svg>

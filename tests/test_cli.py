@@ -1,5 +1,6 @@
 from importlib.metadata import version
 
+from rich.text import Text
 from typer.testing import CliRunner
 
 from rich_gradient_cli import app
@@ -76,7 +77,7 @@ def test_view_print_treats_resource_as_markup_text() -> None:
     )
 
     assert result.exit_code == 0
-    assert "Hello, World!" in result.stdout
+    assert "Hello, World!" in Text.from_ansi(result.stdout).plain
 
 
 def test_gradient_command_renders_text() -> None:
