@@ -4,16 +4,23 @@ All notable changes to this project will be documented in this file.
 
 ## 0.3.0 - 2026-11-01
 
+### Added
+
+- Added a GitHub Actions workflow that builds and publishes to PyPI (trusted publishing) when a release is published. It first checks that the tag matches the package version, then runs ruff, mypy, pytest and a docs build.
+- Added VS Code tasks to build and serve the docs with Zensical and to build the package with `uv`.
+- Added a VS Code launch configuration that runs the CLI as a module.
+
 ### Changed
 
-- Migrated the docs site config from `mkdocs.yml` (Material for MkDocs) to `zensical.toml`, matching `rich-gradient`; the `docs` extra now installs `zensical` instead of `mkdocs`/`mkdocs-material`.
+- Migrated the docs site config from `mkdocs.yml` (Material for MkDocs) to `zensical.toml`, matching `rich-gradient`; the `docs` extra now installs `zensical` instead of `mkdocs`/`mkdocs-material` and requires Python 3.11+.
 - Renamed `docs/assets/` to `docs/img/` (links to `docs/assets/...` no longer resolve) and replaced `MaxLogo-animated.svg` with the static `MaxLogo.svg`.
 - Removed the `ty:ignore[unresolved-import]` comments on the `click`/`typer` imports; `mypy` is the project's type checker.
+- Pointed the docs "edit this page" links at `edit/master/docs/`.
 - Bumped the package version to 0.3.0.
-- Added VS Code tasks to build/serve the docs with Zensical and to build and publish the package to PyPI with `uv`.
-- Added a GitHub Actions workflow that builds and publishes to PyPI (trusted publishing) when a release is published. It first checks that the tag matches the package version, then runs ruff, mypy, pytest and a docs build.
-- Fixed `test_view_print_treats_resource_as_markup_text` by parsing ANSI output with `Text.from_ansi` before asserting, and pointed the docs "edit this page" links at `edit/master/docs/`.
-- Added a VS Code launch configuration that runs the CLI as a module.
+
+### Fixed
+
+- Fixed `test_view_print_treats_resource_as_markup_text` by parsing ANSI output with `Text.from_ansi` before asserting.
 
 ## 0.2.0 - 2026-06-02
 

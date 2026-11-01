@@ -20,6 +20,7 @@ dev = [
     "pytest>=8.4.2",
     "ruff>=0.15.0",
 ]
+# Docs tooling (mkdocstrings>=1.0.8, zensical) requires Python >= 3.11; on 3.10 this extra installs nothing.
 docs = [
     "mkdocstrings>=1.0.8; python_version >= '3.11'",
     "mkdocstrings-python>=2.0.2; python_version >= '3.11'",
