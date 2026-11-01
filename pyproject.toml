@@ -1,6 +1,6 @@
 [project]
 name = "rich-gradient-cli"
-version = "0.2.0"
+version = "0.3.0"
 description = "CLI for printing text in gradient color using the rich-gradient library."
 readme = "README.md"
 authors = [
@@ -21,10 +21,9 @@ dev = [
     "ruff>=0.15.0",
 ]
 docs = [
-    "mkdocs>=1.6.1",
-    "mkdocs-material>=9.7.1",
-    "mkdocstrings>=1.0.3",
-    "mkdocstrings-python>=2.0.2",
+    "mkdocstrings>=1.0.8; python_version >= '3.11'",
+    "mkdocstrings-python>=2.0.2; python_version >= '3.11'",
+    "zensical>=0.0.68; python_version >= '3.11'",
 ]
 
 [project.scripts]

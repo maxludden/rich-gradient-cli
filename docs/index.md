@@ -16,7 +16,7 @@ gradient print --colors 'red,#ff9900,#ffff00' \
     transitions through orange, and ends in yellow!"
 ```
 
-![Gradient Text Example](assets/print-example.svg)
+![Gradient Text Example](img/print-example.svg)
 
 ## Why it exists
 
@@ -29,7 +29,7 @@ gradient print --colors 'red,#ff9900,#ffff00' \
 ## Commands at a glance
 
 <video
-  src="assets/rich-gradient-cli-help.mp4"
+  src="img/rich-gradient-cli-help.mp4"
   controls
   muted>
 </video>
@@ -41,19 +41,19 @@ gradient print --colors 'red,#ff9900,#ffff00' \
 gradient rule --colors 'blue,#00ff00,cyan' --title "Blue to Green to Cyan Rule"
 ```
 
-![Gradient Rule Example](assets/rule-example.svg)
+![Gradient Rule Example](img/rule-example.svg)
 
 ```bash
 gradient panel --colors "red,#ff9999" -t "Error" --title-style "bold #ffffff" --title-align left 'This is an error message with a red to pink gradient background.'
 ```
 
-![Gradient Panel Example](assets/panel-example.svg)
+![Gradient Panel Example](img/panel-example.svg)
 
 ```bash
 echo "# Hello\n\n- This is **bold**.\n- This is *italic*." | gradient markdown -
 ```
 
-![Gradient Markdown Example](assets/markdown-example.svg)
+![Gradient Markdown Example](img/markdown-example.svg)
 
 ```bash
 gradient gradient --colors 'magenta,cyan' --highlight-word error='bold white on red' "Highlight error text"
@@ -72,7 +72,7 @@ gradient view README.md --export-html readme.html
   <br />
   <a href="https://github.com/maxludden/maxludden" style="text-decoration:none; color:inherit;">
     <img
-      src="assets/MaxLogo-animated.svg"
+      src="img/MaxLogo.svg"
       alt="Max Ludden's Logo"
       width="20%"
     />

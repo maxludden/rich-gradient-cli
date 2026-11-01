@@ -6,8 +6,8 @@ import sys
 from pathlib import Path
 from typing import Any, Sequence
 
-import click  # ty:ignore[unresolved-import]
-import typer  # ty:ignore[unresolved-import]
+import click
+import typer
 
 if __package__ in {None, ""}:
     sys.path.insert(0, str(Path(__file__).resolve().parents[1]))

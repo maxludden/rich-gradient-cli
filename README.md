@@ -21,7 +21,7 @@ pip install rich-gradient-cli
 ## Usage
 
 <video
-  src="docs/assets/rich-gradient-cli-help.mp4"
+  src="docs/img/rich-gradient-cli-help.mp4"
   controls
   muted
   loop>
@@ -108,11 +108,11 @@ gradient view README.md --export-html readme.html
 
 ## Docs
 
-Build and preview the documentation locally with MkDocs:
+Build and preview the documentation locally with Zensical (requires Python 3.11+; the `docs` extra is skipped on 3.10):
 
 ```bash
 uv pip install -e ".[docs]"
-mkdocs serve
+zensical serve
 ```
 
 
@@ -124,7 +124,7 @@ mkdocs serve
   <br />
   <a href="https://github.com/maxludden/maxludden" style="text-decoration:none; color:inherit;">
     <img
-      src="docs/assets/MaxLogo-animated.svg"
+      src="docs/img/MaxLogo.svg"
       alt="Max Ludden's Logo"
       width="20%"
     />
