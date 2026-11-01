@@ -11,8 +11,6 @@ jobs:
   test:
     name: Test and lint (Python ${{ matrix.python-version }})
     runs-on: ubuntu-latest
-    permissions:
-      contents: read
     strategy:
       fail-fast: false
       matrix:
@@ -47,8 +45,6 @@ jobs:
     name: Build distributions
     needs: test
     runs-on: ubuntu-latest
-    permissions:
-      contents: read
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
         with:
@@ -77,5 +73,14 @@ jobs:
           name: dist
           path: dist/
       - uses: astral-sh/setup-uv@d4b2f3b6ecc6e67c4457f6d3e41ec42d3d0fcb86 # v5
+      - name: Check dist version matches release tag
+        run: |
+          version="${GITHUB_REF_NAME#v}"
+          for f in dist/*; do
+            case "$(basename "$f")" in
+              *"-${version}-"*|*"-${version}.tar.gz") ;;
+              *) echo "$f does not match release version ${version}" >&2; exit 1 ;;
+            esac
+          done
       - name: Publish with trusted publishing
         run: uv publish --trusted-publishing always

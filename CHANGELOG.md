@@ -15,6 +15,8 @@ All notable changes to this project will be documented in this file.
 - Migrated the docs site config from `mkdocs.yml` (Material for MkDocs) to `zensical.toml`, matching `rich-gradient`; the `docs` extra now installs `zensical` instead of `mkdocs`/`mkdocs-material` and requires Python 3.11+.
 - Renamed `docs/assets/` to `docs/img/` (links to `docs/assets/...` no longer resolve) and replaced `MaxLogo-animated.svg` with the static `MaxLogo.svg`.
 - Removed the `ty:ignore[unresolved-import]` comments on the `click`/`typer` imports; `mypy` is the project's type checker.
+- The release workflow now tests on Python 3.10 and 3.12 and checks that the built distributions match the release tag before publishing.
+- Docs palette toggle now cycles light and dark only (removed a duplicate `astral-dark` entry).
 - Pointed the docs "edit this page" links at `edit/master/docs/`.
 - Bumped the package version to 0.3.0.
 
