@@ -1,0 +1,73 @@
+<svg class="rich-terminal" viewBox="0 0 1238 74.4" xmlns="http://www.w3.org/2000/svg">
+    <!-- Generated with Rich https://www.textualize.io -->
+    <style>
+
+    @font-face {
+        font-family: "Fira Code";
+        src: local("FiraCode-Regular"),
+                url("https://cdnjs.cloudflare.com/ajax/libs/firacode/6.2.0/woff2/FiraCode-Regular.woff2") format("woff2"),
+                url("https://cdnjs.cloudflare.com/ajax/libs/firacode/6.2.0/woff/FiraCode-Regular.woff") format("woff");
+        font-style: normal;
+        font-weight: 400;
+    }
+    @font-face {
+        font-family: "Fira Code";
+        src: local("FiraCode-Bold"),
+                url("https://cdnjs.cloudflare.com/ajax/libs/firacode/6.2.0/woff2/FiraCode-Bold.woff2") format("woff2"),
+                url("https://cdnjs.cloudflare.com/ajax/libs/firacode/6.2.0/woff/FiraCode-Bold.woff") format("woff");
+        font-style: bold;
+        font-weight: 700;
+    }
+
+    .terminal-185916614-matrix {
+        font-family: Fira Code, monospace;
+        font-size: 20px;
+        line-height: 24.4px;
+        font-variant-east-asian: full-width;
+    }
+
+    .terminal-185916614-title {
+        font-size: 18px;
+        font-weight: bold;
+        font-family: arial;
+    }
+
+    .terminal-185916614-r1 { fill: #ff0000 }
+.terminal-185916614-r2 { fill: #ff4100 }
+.terminal-185916614-r3 { fill: #ff5900 }
+.terminal-185916614-r4 { fill: #ff6b00 }
+.terminal-185916614-r5 { fill: #ff7a00 }
+.terminal-185916614-r6 { fill: #ff8700 }
+.terminal-185916614-r7 { fill: #ff9300 }
+.terminal-185916614-r8 { fill: #ffa300 }
+.terminal-185916614-r9 { fill: #ffb600 }
+.terminal-185916614-r10 { fill: #ffc700 }
+.terminal-185916614-r11 { fill: #ffd700 }
+.terminal-185916614-r12 { fill: #ffe500 }
+.terminal-185916614-r13 { fill: #fff200 }
+.terminal-185916614-r14 { fill: #ffff00 }
+.terminal-185916614-r15 { fill: #d9d9d9 }
+    </style>
+
+    <defs>
+    <clipPath id="terminal-185916614-clip-terminal">
+      <rect x="0" y="0" width="1219.0" height="23.4" />
+    </clipPath>
+    
+    </defs>
+
+    <rect fill="#0c0c0c" stroke="rgba(255,255,255,0.35)" stroke-width="1" x="1" y="1" width="1236" height="72.4" rx="8"/><text class="terminal-185916614-title" fill="#d9d9d9" text-anchor="middle" x="618" y="27">gradient&#160;print</text>
+            <g transform="translate(26,22)">
+            <circle cx="0" cy="0" r="7" fill="#ff5f57"/>
+            <circle cx="22" cy="0" r="7" fill="#febc2e"/>
+            <circle cx="44" cy="0" r="7" fill="#28c840"/>
+            </g>
+        
+    <g transform="translate(9, 41)" clip-path="url(#terminal-185916614-clip-terminal)">
+    
+    <g class="terminal-185916614-matrix">
+    <text class="terminal-185916614-r1" x="0" y="20" textLength="12.2" clip-path="url(#terminal-185916614-line-0)">H</text><text class="terminal-185916614-r2" x="12.2" y="20" textLength="12.2" clip-path="url(#terminal-185916614-line-0)">e</text><text class="terminal-185916614-r3" x="24.4" y="20" textLength="12.2" clip-path="url(#terminal-185916614-line-0)">l</text><text class="terminal-185916614-r4" x="36.6" y="20" textLength="12.2" clip-path="url(#terminal-185916614-line-0)">l</text><text class="terminal-185916614-r5" x="48.8" y="20" textLength="12.2" clip-path="url(#terminal-185916614-line-0)">o</text><text class="terminal-185916614-r7" x="73.2" y="20" textLength="12.2" clip-path="url(#terminal-185916614-line-0)">g</text><text class="terminal-185916614-r8" x="85.4" y="20" textLength="12.2" clip-path="url(#terminal-185916614-line-0)">r</text><text class="terminal-185916614-r9" x="97.6" y="20" textLength="12.2" clip-path="url(#terminal-185916614-line-0)">a</text><text class="terminal-185916614-r10" x="109.8" y="20" textLength="12.2" clip-path="url(#terminal-185916614-line-0)">d</text><text class="terminal-185916614-r11" x="122" y="20" textLength="12.2" clip-path="url(#terminal-185916614-line-0)">i</text><text class="terminal-185916614-r12" x="134.2" y="20" textLength="12.2" clip-path="url(#terminal-185916614-line-0)">e</text><text class="terminal-185916614-r13" x="146.4" y="20" textLength="12.2" clip-path="url(#terminal-185916614-line-0)">n</text><text class="terminal-185916614-r14" x="158.6" y="20" textLength="12.2" clip-path="url(#terminal-185916614-line-0)">t</text><text class="terminal-185916614-r15" x="1220" y="20" textLength="12.2" clip-path="url(#terminal-185916614-line-0)">
+</text>
+    </g>
+    </g>
+</svg>

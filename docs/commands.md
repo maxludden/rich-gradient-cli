@@ -8,6 +8,10 @@ Render gradient text.
 gradient print --colors 'red,#ff9900,#ffff00' "Hello gradient"
 ```
 
+![gradient print example](img/commands/print-example.svg)
+
+See also the [`gradient print --help`](img/commands/print-help.svg) screenshot.
+
 Arguments: `TEXT...` (optional). If omitted, `print` reads from stdin when piped.
 
 | Option | Description |
@@ -38,6 +42,10 @@ Render text through rich-gradient's generic `Gradient` renderable.
 gradient gradient --colors 'magenta,cyan' --highlight-word error='bold white on red' "Highlight error text"
 ```
 
+![gradient gradient example](img/commands/gradient-example.svg)
+
+See also the [`gradient gradient --help`](img/commands/gradient-help.svg) screenshot.
+
 Argument: `TEXT` (required). Use `-` to read from stdin.
 
 | Option | Description |
@@ -67,6 +75,10 @@ Render rich-gradient's `Spectrum` colors.
 gradient spectrum --hues 7 --seed 42
 ```
 
+![gradient spectrum example](img/commands/spectrum-example.svg)
+
+See also the [`gradient spectrum --help`](img/commands/spectrum-help.svg) screenshot.
+
 | Option | Description |
 | --- | --- |
 | `-h, --hues` | Number of spectrum colors. |
@@ -83,6 +95,10 @@ Render Rich `Columns` through `Gradient`.
 ```bash
 gradient columns alpha beta gamma --colors 'red,blue'
 ```
+
+![gradient columns example](img/commands/columns-example.svg)
+
+See also the [`gradient columns --help`](img/commands/columns-help.svg) screenshot.
 
 Arguments: `ITEM...` (optional). If omitted, `columns` reads one item per stdin line.
 
@@ -119,6 +135,10 @@ Render Rich `Tree` through `Gradient`.
 gradient tree project src/app.py docs/index.md --colors 'lime,cyan'
 ```
 
+![gradient tree example](img/commands/tree-example.svg)
+
+See also the [`gradient tree --help`](img/commands/tree-help.svg) screenshot.
+
 Arguments: `ROOT BRANCH...`. Branch values are slash-delimited paths. Use `--path` to render a directory tree from `ROOT`.
 
 | Option | Description |
@@ -152,6 +172,10 @@ Render Rich `Syntax` through `Gradient`.
 ```bash
 gradient syntax pyproject.toml --lexer toml --line-numbers --colors 'yellow,magenta'
 ```
+
+![gradient syntax example](img/commands/syntax-example.svg)
+
+See also the [`gradient syntax --help`](img/commands/syntax-help.svg) screenshot.
 
 Argument: `PATH_OR_CODE` (required). Use `-` or `--code` to render inline/stdin code.
 
@@ -192,6 +216,10 @@ Render CSV data as a Rich `Table` through `Gradient`.
 cat data.csv | gradient table - --colors 'cyan,magenta'
 ```
 
+![gradient table example](img/commands/table-example.svg)
+
+See also the [`gradient table --help`](img/commands/table-help.svg) screenshot.
+
 Argument: `CSV_OR_ROWS` (required). Pass a CSV file path, inline CSV text, or `-` for stdin.
 
 | Option | Description |
@@ -227,6 +255,10 @@ Render a gradient rule.
 gradient rule --colors 'blue,#00ff00,cyan' --title "Blue to Green to Cyan Rule"
 ```
 
+![gradient rule example](img/commands/rule-example.svg)
+
+See also the [`gradient rule --help`](img/commands/rule-help.svg) screenshot.
+
 This command has no positional arguments; use `--title` for rule text.
 
 | Option | Description |
@@ -256,6 +288,10 @@ Render a gradient panel.
 ```bash
 gradient panel --colors "red,#ff9999" -t "Error" --title-style "bold #ffffff" --title-align left 'This is an error message with a red to pink gradient background.'
 ```
+
+![gradient panel example](img/commands/panel-example.svg)
+
+See also the [`gradient panel --help`](img/commands/panel-help.svg) screenshot.
 
 Argument: `TEXT` (required). Use `-` to read from stdin.
 
@@ -300,6 +336,10 @@ Render gradient markdown.
 echo "# Hello" | gradient markdown -
 ```
 
+![gradient markdown example](img/commands/markdown-example.svg)
+
+See also the [`gradient markdown --help`](img/commands/markdown-help.svg) screenshot.
+
 Argument: `MARKDOWN` (required). Use `-` to read from stdin.
 
 | Option | Description |
@@ -330,6 +370,10 @@ Render files, URLs, stdin, or markup with Rich-CLI-style behavior.
 ```bash
 gradient view README.md
 ```
+
+![gradient view example](img/commands/view-example.svg)
+
+See also the [`gradient view --help`](img/commands/view-help.svg) screenshot.
 
 ```bash
 gradient view pyproject.toml --lexer toml --line-numbers --guides
