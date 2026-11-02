@@ -11,6 +11,7 @@ from __future__ import annotations
 import os
 import subprocess
 import sys
+import tempfile
 from pathlib import Path
 
 from rich.console import Console
@@ -41,10 +42,11 @@ EXAMPLES: dict[str, tuple[list[str], str | None]] = {
     "rule": (["rule", "--colors", "blue,#00ff00,cyan", "--title", "Blue to Green to Cyan Rule"], None),
     "markdown": (["markdown", "-", "--colors", "magenta,cyan"], "# Hello\n\nSome **bold** and *italic* text.\n\n- one\n- two\n"),
     "spectrum": (["spectrum", "--hues", "7", "--seed", "42"], None),
-    "syntax": (["syntax", "src/rich_gradient_cli/__main__.py", "--lexer", "python",
+    "syntax": (["syntax", "pyproject.toml", "--lexer", "toml",
                 "--line-numbers", "--colors", "yellow,magenta"], None),
     "table": (["table", "-", "--colors", "cyan,magenta"], CSV),
     "tree": (["tree", "project", "src/app.py", "docs/index.md", "--colors", "lime,cyan"], None),
+    "telemetry": (["telemetry", "status"], None),
     "view": (["view", "sample.md", "--head", "12"], None),
 }
 
@@ -52,14 +54,22 @@ EXAMPLES: dict[str, tuple[list[str], str | None]] = {
 def run(argv: list[str], stdin: str | None) -> str:
     """Run ``gradient`` with ``argv`` and return its ANSI-coloured stdout."""
     env = {**os.environ, "FORCE_COLOR": "1", "COLUMNS": str(WIDTH), "COLORTERM": "truecolor"}
-    env.pop("NO_COLOR", None)
-    result = subprocess.run(
-        [sys.executable, "-m", "rich_gradient_cli", *argv],
-        input=stdin, capture_output=True, text=True, cwd=ROOT, env=env, check=False,
-    )
+    for name in ("NO_COLOR", "AMPLITUDE_API_KEY"):
+        env.pop(name, None)
+    with tempfile.TemporaryDirectory() as config_home:
+        env["XDG_CONFIG_HOME"] = config_home  # never read the user's real telemetry config
+        result = _run_cli(argv, stdin, env)
     if result.returncode != 0:
         raise RuntimeError(f"{argv} failed ({result.returncode}): {result.stderr}")
     return result.stdout.rstrip("\n")
+
+
+def _run_cli(argv: list[str], stdin: str | None, env: dict[str, str]) -> subprocess.CompletedProcess[str]:
+    """Run the CLI module; ``argv`` comes only from the static ``EXAMPLES`` table."""
+    return subprocess.run(  # nosec B603 # nosemgrep
+        [sys.executable, "-m", "rich_gradient_cli", *argv],
+        input=stdin, capture_output=True, text=True, cwd=ROOT, env=env, check=False,
+    )
 
 
 def export(ansi: str, title: str, path: Path) -> None:

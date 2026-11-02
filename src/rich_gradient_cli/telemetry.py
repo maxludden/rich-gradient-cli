@@ -10,15 +10,19 @@ from __future__ import annotations
 
 import json
 import os
+import tempfile
 import uuid
 from pathlib import Path
 from typing import Any
 
 import typer
 
+from .help import RichTyperCommand, RichTyperGroup
+
 EVENT_NAME = "Command Run"
 API_KEY_ENV = "AMPLITUDE_API_KEY"
 REGION_ENV = "AMPLITUDE_SERVER_ZONE"
+FLUSH_TIMEOUT_SECONDS = 5.0
 
 
 def config_path() -> Path:
@@ -37,10 +41,17 @@ def _load() -> dict[str, Any]:
 
 
 def _save(data: dict[str, Any]) -> None:
-    """Write the config file, creating its directory if needed."""
+    """Atomically write the config file, creating its directory if needed."""
     path = config_path()
     path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_text(json.dumps(data), encoding="utf-8")
+    fd, tmp_name = tempfile.mkstemp(dir=path.parent, suffix=".tmp")
+    try:
+        with os.fdopen(fd, "w", encoding="utf-8") as handle:
+            json.dump(data, handle)
+        os.replace(tmp_name, path)
+    except BaseException:
+        Path(tmp_name).unlink(missing_ok=True)
+        raise
 
 
 def is_enabled() -> bool:
@@ -67,10 +78,11 @@ def track_command(command: str) -> None:
     The process is short-lived, so the event is flushed and awaited before
     returning. Telemetry must never break the CLI: all failures are swallowed.
     """
-    api_key = os.environ.get(API_KEY_ENV)
-    if not api_key or not is_enabled():
-        return
     try:
+        api_key = os.environ.get(API_KEY_ENV)
+        config = _load()
+        if not api_key or not (config.get("enabled") and config.get("install_id")):
+            return
         from amplitude import Amplitude, BaseEvent
 
         client = Amplitude(api_key)
@@ -78,38 +90,40 @@ def track_command(command: str) -> None:
         client.track(
             BaseEvent(
                 event_type=EVENT_NAME,
-                user_id=str(_load()["install_id"]),
+                user_id=str(config["install_id"]),
                 event_properties={"command": command},
             )
         )
         for future in client.flush() or []:
             if future is not None:
-                future.result()
+                future.result(timeout=FLUSH_TIMEOUT_SECONDS)
         client.shutdown()
     except Exception:  # noqa: BLE001 - telemetry must never affect the CLI
         return
 
 
 telemetry_app = typer.Typer(
-    help="Manage opt-in anonymous usage telemetry.", no_args_is_help=True
+    cls=RichTyperGroup,
+    help="Manage opt-in anonymous usage telemetry.",
+    no_args_is_help=True,
 )
 
 
-@telemetry_app.command("enable")
+@telemetry_app.command("enable", cls=RichTyperCommand)
 def enable_command() -> None:
     """Opt in to anonymous usage telemetry (command name only)."""
     enable()
     typer.echo("Telemetry enabled. Only the subcommand name is sent, with a random ID.")
 
 
-@telemetry_app.command("disable")
+@telemetry_app.command("disable", cls=RichTyperCommand)
 def disable_command() -> None:
     """Opt out of telemetry and delete the stored install ID."""
     disable()
     typer.echo("Telemetry disabled.")
 
 
-@telemetry_app.command("status")
+@telemetry_app.command("status", cls=RichTyperCommand)
 def status_command() -> None:
     """Show whether telemetry is enabled."""
     typer.echo("enabled" if is_enabled() else "disabled")

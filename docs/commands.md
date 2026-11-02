@@ -1,5 +1,7 @@
 # Commands
 
+See the [`gradient --help`](img/commands/root-help.svg) screenshot for the full command list.
+
 ## print
 
 Render gradient text.
@@ -426,3 +428,23 @@ Auto-detection uses the resource extension: Markdown (`.md`), JSON (`.json`), CS
 | `-o, --export-html` | Write rendered output as HTML. |
 | `--export-svg` | Write rendered output as SVG. |
 | `--pager` | Display output in a pager. |
+
+## telemetry
+
+Manage opt-in, anonymous usage telemetry. It is **off by default**. When enabled and `AMPLITUDE_API_KEY` is set, each command run sends a `Command Run` event containing only the subcommand name and a random install ID.
+
+```bash
+gradient telemetry enable
+gradient telemetry status
+gradient telemetry disable
+```
+
+![gradient telemetry example](img/commands/telemetry-example.svg)
+
+See also the [`gradient telemetry --help`](img/commands/telemetry-help.svg) screenshot.
+
+| Subcommand | Description |
+| --- | --- |
+| `enable` | Opt in and create a random install ID. |
+| `disable` | Opt out and delete the install ID. |
+| `status` | Print `enabled` or `disabled`. |

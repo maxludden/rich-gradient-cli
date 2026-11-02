@@ -86,6 +86,9 @@ class DefaultTyperGroup(RichTyperGroup):
         return super().resolve_command(ctx, args)
 
 
+_invoked_command: str | None = None
+
+
 app = typer.Typer(
     cls=DefaultTyperGroup,
     invoke_without_command=True,
@@ -107,13 +110,15 @@ def main(
     ),
 ) -> None:
     """CLI entry callback for version handling and default routing."""
+    global _invoked_command
     if version:
         typer.echo(f"gradient version {VERSION}")
         raise typer.Exit()
     if ctx.invoked_subcommand and ctx.invoked_subcommand != "telemetry":
-        ctx.call_on_close(lambda: track_command(str(ctx.invoked_subcommand)))
+        _invoked_command = ctx.invoked_subcommand
     if ctx.invoked_subcommand is None:
         if ctx.args or not sys.stdin.isatty():
+            _invoked_command = "print"
             print_command(text=list(ctx.args) if ctx.args else None)
             raise typer.Exit()
         typer.echo(ctx.get_help())
@@ -137,8 +142,20 @@ cli = app
 
 
 def entrypoint() -> None:
-    """Run the Typer CLI application."""
-    app()
+    """Run the Typer CLI application, then send opt-in telemetry on success."""
+    try:
+        app()
+    except SystemExit as exc:
+        if exc.code in (0, None):
+            _track_success()
+        raise
+    _track_success()
+
+
+def _track_success() -> None:
+    """Send the opt-in telemetry event for a command that completed normally."""
+    if _invoked_command and "--help" not in sys.argv[1:]:
+        track_command(_invoked_command)
 
 __all__ = ["app", "cli", "entrypoint"]
 

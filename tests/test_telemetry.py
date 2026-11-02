@@ -1,5 +1,6 @@
 """Tests for the opt-in telemetry module."""
 
+import uuid
 from pathlib import Path
 
 import pytest
@@ -25,12 +26,29 @@ def test_disabled_by_default() -> None:
 
 def test_enable_creates_stable_random_id_and_disable_removes_it() -> None:
     first = telemetry.enable()
-    assert len(first) >= 5
+    assert str(uuid.UUID(first)) == first
     assert telemetry.enable() == first
     assert telemetry.is_enabled()
     telemetry.disable()
     assert not telemetry.is_enabled()
     assert "install_id" not in telemetry._load()
+    assert telemetry.enable() != first
+
+
+def test_fresh_configs_get_different_ids(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    ids = set()
+    for name in ("a", "b"):
+        monkeypatch.setenv("XDG_CONFIG_HOME", str(tmp_path / name))
+        ids.add(telemetry.enable())
+    assert len(ids) == 2
+
+
+def test_track_swallows_config_errors(monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.setenv(telemetry.API_KEY_ENV, "key")
+    monkeypatch.setattr(telemetry, "config_path", lambda: (_ for _ in ()).throw(RuntimeError))
+    telemetry.track_command("print")  # must not raise
 
 
 def test_track_is_noop_without_opt_in_or_key(monkeypatch: pytest.MonkeyPatch) -> None:
@@ -47,3 +65,4 @@ def test_track_is_noop_without_opt_in_or_key(monkeypatch: pytest.MonkeyPatch) ->
 def test_cli_commands_still_work_with_telemetry_off() -> None:
     result = runner.invoke(app, ["print", "hello"])
     assert result.exit_code == 0
+    assert "hello" in result.stdout
