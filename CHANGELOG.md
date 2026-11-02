@@ -2,10 +2,17 @@
 
 All notable changes to this project will be documented in this file.
 
+## Unreleased
+
+### Added
+
+- Added opt-in, anonymous usage telemetry via Amplitude (`amplitude-analytics`). It is off by default; `gradient telemetry enable|disable|status` manages it. When enabled and `AMPLITUDE_API_KEY` is set, each subcommand run sends a `Command Run` event with the subcommand name and a random install ID.
+
 ## 0.3.0 - 2026-11-01
 
 ### Added
 
+- Added `scripts/generate_command_svgs.py`, which generates an example SVG and a `--help` SVG for every `gradient` command (plus the root `--help`) into `docs/img/commands/`, and embedded them in `docs/commands.md`.
 - Added a GitHub Actions workflow that builds and publishes to PyPI (trusted publishing) when a release is published. It first checks that the tag matches the package version, then runs ruff, mypy, pytest and a docs build.
 - Added VS Code tasks to build and serve the docs with Zensical and to build the package with `uv`.
 - Added a VS Code launch configuration that runs the CLI as a module.

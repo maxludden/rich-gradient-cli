@@ -24,6 +24,7 @@ if __package__ in {None, ""}:
     )
     from rich_gradient_cli.rule_command import rule_command
     from rich_gradient_cli.spectrum_command import spectrum_command
+    from rich_gradient_cli.telemetry import telemetry_app, track_command
     from rich_gradient_cli.text_command import print_command
     from rich_gradient_cli.view_command import view_command
 else:
@@ -40,6 +41,7 @@ else:
     )
     from .rule_command import rule_command
     from .spectrum_command import spectrum_command
+    from .telemetry import telemetry_app, track_command
     from .text_command import print_command
     from .view_command import view_command
 
@@ -108,6 +110,8 @@ def main(
     if version:
         typer.echo(f"gradient version {VERSION}")
         raise typer.Exit()
+    if ctx.invoked_subcommand and ctx.invoked_subcommand != "telemetry":
+        ctx.call_on_close(lambda: track_command(str(ctx.invoked_subcommand)))
     if ctx.invoked_subcommand is None:
         if ctx.args or not sys.stdin.isatty():
             print_command(text=list(ctx.args) if ctx.args else None)
@@ -126,6 +130,7 @@ app.command("syntax", cls=RichTyperCommand)(syntax_command)
 app.command("table", cls=RichTyperCommand)(table_command)
 app.command("tree", cls=RichTyperCommand)(tree_command)
 app.command("view", cls=RichTyperCommand)(view_command)
+app.add_typer(telemetry_app, name="telemetry")
 
 
 cli = app

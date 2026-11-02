@@ -7,6 +7,15 @@ resolution-markers = [
 ]
 
 [[package]]
+name = "amplitude-analytics"
+version = "1.3.0"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/cb/86/08c31c588dc6601bdac591e3a709cf964ca9a5f32fcb8d2eb0be93fdfcf5/amplitude_analytics-1.3.0.tar.gz", hash = "sha256:47e685b5b49c95997cae059f7277b4792dbefe11c170e165d67c6a3f785b8e98", size = 22488, upload-time = "2026-10-15T20:48:05.429Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/43/27/84be23d103c72a45543020860dc3b04c427efad3c6f2d464ff40d83bf4c3/amplitude_analytics-1.3.0-py3-none-any.whl", hash = "sha256:eaf46d249d772d9be4e32777cf3b28b42a01f45bdb89e702b0078e10f5d62bbf", size = 24917, upload-time = "2026-10-15T20:48:04.187Z" },
+]
+
+[[package]]
 name = "click"
 version = "8.3.1"
 source = { registry = "https://pypi.org/simple" }
@@ -715,6 +724,7 @@ name = "rich-gradient-cli"
 version = "0.3.0"
 source = { editable = "." }
 dependencies = [
+    { name = "amplitude-analytics" },
     { name = "rich" },
     { name = "rich-color-ext" },
     { name = "rich-gradient" },
@@ -735,6 +745,7 @@ docs = [
 
 [package.metadata]
 requires-dist = [
+    { name = "amplitude-analytics", specifier = ">=1.3.0" },
     { name = "mkdocstrings", marker = "python_full_version >= '3.11' and extra == 'docs'", specifier = ">=1.0.8" },
     { name = "mkdocstrings-python", marker = "python_full_version >= '3.11' and extra == 'docs'", specifier = ">=2.0.2" },
     { name = "mypy", marker = "extra == 'dev'", specifier = ">=1.18.2" },
