@@ -52,3 +52,8 @@ disable = [
     "unused-argument",
     "W0613"
 ]
+
+[dependency-groups]
+dev = [
+    "pytest>=9.0.2",
+]

@@ -36,4 +36,9 @@
             "packageManager": "ms-python.python:uv"
         }
     ],
+    "python.testing.pytestArgs": [
+        "tests"
+    ],
+    "python.testing.unittestEnabled": false,
+    "python.testing.pytestEnabled": true,
 }
