@@ -1,121 +1,63 @@
 # rich-gradient-cli
 
- `rich-gradient-cli`  is a CLI for [`rich-gradient`](https://github.com/maxludden/rich-gradient). The tool allows you to create colorful gradients in your terminal output, making it easier to visualize data or simply add some flair to your command-line applications.
+`gradient` is a single-command CLI for [`rich-gradient`](https://github.com/maxludden/rich-gradient), modeled on [`rich-cli`](https://github.com/Textualize/rich-cli): point it at a file, a URL, `-` for stdin, or literal text and it renders the result with a gradient.
+
+```text
+gradient [OPTIONS] [PATH,TEXT,URL, or '-']
+```
 
 ## Installation
 
-You can install rich-gradient-cli from PyPI
-
-### uv (recommended)
-
 ```shell
-uv add rich-gradient-cli
+uv tool install rich-gradient-cli   # or: pip install rich-gradient-cli
 ```
 
-### pip
-
-```shell
-pip install rich-gradient-cli
-```
+Requires Python 3.11+.
 
 ## Usage
 
-<video
-  src="docs/img/rich-gradient-cli-help.mp4"
-  controls
-  muted
-  loop>
-</video>
-
-### Print
-
-To use the `rich-gradient-cli`, you can run the following command in your terminal:
+The renderable is chosen from the file extension (`.md`, `.rst`, `.ipynb`, `.json`, `.csv`/`.tsv`, source code) or by a mode flag, exactly like `rich-cli`. Literal text and stdin are printed as gradient text.
 
 ```bash
-gradient print --colors 'red,#ff9900,#ffff00' "This is gradient text that starts red, transitions through orange, and ends in yellow\!"
+gradient --colors 'red,#ff9900,#ffff00' "Gradient text that runs red, orange, yellow!"
+gradient README.md                        # Markdown, auto-detected
+gradient pyproject.toml -n -g             # syntax with line numbers and guides
+gradient data.csv --colors cyan,magenta   # table
+gradient notebook.ipynb                   # Jupyter notebook
+cat doc.rst | gradient - --rst            # reStructuredText from stdin
+gradient https://example.com/page.md      # URL
+gradient "Title" --rule --colors blue,cyan
+gradient "Heads up" --panel rounded --title Notice
+gradient str --inspect                    # inspect a Python object
+gradient --spectrum --hues 7
+gradient --tree src                       # directory tree
+gradient README.md --export-svg out.svg   # also: -o out.html, --pager
 ```
 
-![Gradient Text Example](print-example.svg)
+![Gradient text](docs/img/commands/text-example.svg)
 
-### Gradient
+### Options at a glance
 
-Use `gradient` for the generic `rich-gradient` renderable, including highlight rules and animation:
+Shared flags keep their `rich-cli` spelling (`-p --print`, `-u --rule`, `-m --markdown`, `-J --json`, `-a --panel BOX`, `-d --padding`, `-s --style`, `-S --panel-style`, `-l/-c/-r` block alignment, `-L/-C/-R/-F` text justify, `-w/-W` width, `-h/-t` head/tail, `-n -g -x -y -j`, `-o --export-html`, `--export-svg`, `--pager`, `-v --version`). Gradient-specific options are long-only: `--colors`, `--bgcolors`, `--rainbow`, `--hues`, `--repeat-scale`, `--highlight-word`, `--highlight-regex`, `--animate`, `--duration`.
 
-```bash
-gradient gradient --colors 'magenta,cyan' --highlight-word error='bold white on red' "Highlight error text"
-```
+See [docs/options.md](docs/options.md) or run `gradient --help` for the grouped list.
 
-### Spectrum
+### From `0.3` subcommands
 
-Inspect generated spectrum colors as a rich table, hex values, names, or CSV:
+Versions up to 0.3 used subcommands (`gradient print`, `gradient panel`, `gradient view`, ...). They were replaced by flags on the one command; see the [CHANGELOG](CHANGELOG.md) for the mapping.
 
-```bash
-gradient spectrum --hues 7 --seed 42
-gradient spectrum --hues 7 --output hex
-```
+### Telemetry
 
-### Rich renderables
-
-Wrap common Rich renderables in gradients without writing Python:
-
-```bash
-gradient columns alpha beta gamma --colors 'red,blue'
-gradient tree project src/app.py docs/index.md --colors 'lime,cyan'
-gradient syntax pyproject.toml --lexer toml --line-numbers --colors 'yellow,magenta'
-cat data.csv | gradient table - --colors 'cyan,magenta'
-```
-
-### Rule
-
-You can also create gradient rules using the `rule` command:
-
-```bash
-gradient rule --colors 'blue,#00ff00,cyan' "Blue to Green to Cyan Rule"
-```
-
-![Gradient Rule Example](rule-example.svg)
-
-### Panel
-
-To create a gradient panel, you can use the `panel` command:
-
-```bash
-gradient panel --colors "red,#ff9999" -t "Error" --title-style "bold #ffffff" --title-align left 'This is an error message with a red to pink gradient background.'
-```
-
-![Gradient Panel Example](panel-example.svg)
-
-### Markdown
-
-You can also render Markdown with gradients:
-
-```bash
-echo "# Hello\n\n- This is **bold**.\n- This is *italic*." | gradient markdown -
-```
-
-![Gradient Markdown Example](markdown-example.svg)
-
-### Rich-style viewing
-
-Use `view` for `rich-cli`-style file rendering. It auto-detects Markdown, JSON, CSV/TSV, reStructuredText (`.rst`), Jupyter notebooks (`.ipynb`), and syntax-highlighted source files, and `--inspect` inspects a Python object (e.g. `gradient view rich.console.Console --inspect`); it also accepts `-` for stdin and `http://` or `https://` URLs.
-
-```bash
-gradient view README.md
-gradient view pyproject.toml --lexer toml --line-numbers --guides
-cat data.json | gradient view - --json --force-terminal
-gradient view README.md --export-html readme.html
-```
+Anonymous usage telemetry is **off by default**. `gradient --telemetry enable|disable|status` manages it; when enabled and `AMPLITUDE_API_KEY` is set, a `Command Run` event with the render mode and a random install ID is sent after a command succeeds.
 
 ## Docs
 
-Build and preview the documentation locally with Zensical (requires Python 3.11+; the `docs` extra is skipped on 3.10):
+Build and preview the documentation locally with [Zensical](https://zensical.org):
 
 ```bash
 uv pip install -e ".[docs]"
 zensical serve
 ```
-
-
 
 <div align="center">
   <a href="https://github.com/maxludden/maxludden" style="text-decoration:none; color:inherit;">

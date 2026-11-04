@@ -1,148 +1,22 @@
-"""rich-gradient CLI entry point."""
+"""rich-gradient-cli: render text, files, URLs, and stdin with rich-gradient.
 
-from __future__ import annotations
+The package exposes a single Typer application, :data:`app`, installed as the
+``gradient`` console script.
+"""
 
 import sys
-from pathlib import Path
-from typing import Any, Sequence
 
-import click
-import typer
-
-if __package__ in {None, ""}:
-    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-    from rich_gradient_cli.common import VERSION
-    from rich_gradient_cli.gradient_command import gradient_command
-    from rich_gradient_cli.help import RichTyperCommand, RichTyperGroup
-    from rich_gradient_cli.markdown_command import markdown_command
-    from rich_gradient_cli.panel_command import panel_command
-    from rich_gradient_cli.renderable_commands import (
-        columns_command,
-        syntax_command,
-        table_command,
-        tree_command,
-    )
-    from rich_gradient_cli.rule_command import rule_command
-    from rich_gradient_cli.spectrum_command import spectrum_command
-    from rich_gradient_cli.telemetry import telemetry_app, track_command
-    from rich_gradient_cli.text_command import print_command
-    from rich_gradient_cli.view_command import view_command
-else:
-    from .common import VERSION
-    from .gradient_command import gradient_command
-    from .help import RichTyperCommand, RichTyperGroup
-    from .markdown_command import markdown_command
-    from .panel_command import panel_command
-    from .renderable_commands import (
-        columns_command,
-        syntax_command,
-        table_command,
-        tree_command,
-    )
-    from .rule_command import rule_command
-    from .spectrum_command import spectrum_command
-    from .telemetry import telemetry_app, track_command
-    from .text_command import print_command
-    from .view_command import view_command
-
-
-class DefaultTyperGroup(RichTyperGroup):
-    """Route unknown commands/options to the default command."""
-
-    def __init__(
-        self,
-        name: str | None = None,
-        commands: dict[str, click.Command] | Sequence[click.Command] | None = None,
-        invoke_without_command: bool = False,
-        no_args_is_help: bool | None = None,
-        subcommand_metavar: str | None = None,
-        chain: bool = False,
-        result_callback: Any | None = None,
-        *,
-        default_cmd_name: str = "print",
-        **kwargs: Any,
-    ) -> None:
-        """Initialize the group with a default command name fallback."""
-        super().__init__(
-            name=name,
-            commands=commands,
-            invoke_without_command=invoke_without_command,
-            no_args_is_help=no_args_is_help,
-            subcommand_metavar=subcommand_metavar,
-            chain=chain,
-            result_callback=result_callback,
-            **kwargs,
-        )
-        self.default_cmd_name: str = default_cmd_name
-
-    def resolve_command(
-        self, ctx: click.Context, args: list[str]
-    ) -> tuple[str | None, click.Command | None, list[str]]:
-        """Resolve the command, routing unknown input to the default command."""
-        if args:
-            cmd = self.get_command(ctx, args[0])
-            if cmd is None or args[0].startswith("-"):
-                args.insert(0, self.default_cmd_name)
-        return super().resolve_command(ctx, args)
-
-
-_invoked_command: str | None = None
-
-
-app = typer.Typer(
-    cls=DefaultTyperGroup,
-    invoke_without_command=True,
-    add_completion=False,
-    help="Create gradient-rich text, panels, and markdown.",
-    rich_markup_mode="rich",
-    context_settings={"help_option_names": ["--help"], "color": True},
-)
-
-
-@app.callback()
-def main(
-    ctx: typer.Context,
-    version: bool = typer.Option(
-        False,
-        "--version",
-        help="Show the version and exit.",
-        is_eager=True,
-    ),
-) -> None:
-    """CLI entry callback for version handling and default routing."""
-    global _invoked_command
-    if version:
-        typer.echo(f"gradient version {VERSION}")
-        raise typer.Exit()
-    if ctx.invoked_subcommand and ctx.invoked_subcommand != "telemetry":
-        _invoked_command = ctx.invoked_subcommand
-    if ctx.invoked_subcommand is None:
-        if ctx.args or not sys.stdin.isatty():
-            _invoked_command = "print"
-            print_command(text=list(ctx.args) if ctx.args else None)
-            raise typer.Exit()
-        typer.echo(ctx.get_help())
-
-
-app.command("print", cls=RichTyperCommand)(print_command)
-app.command("gradient", cls=RichTyperCommand)(gradient_command)
-app.command("columns", cls=RichTyperCommand)(columns_command)
-app.command("panel", cls=RichTyperCommand)(panel_command)
-app.command("rule", cls=RichTyperCommand)(rule_command)
-app.command("markdown", cls=RichTyperCommand)(markdown_command)
-app.command("spectrum", cls=RichTyperCommand)(spectrum_command)
-app.command("syntax", cls=RichTyperCommand)(syntax_command)
-app.command("table", cls=RichTyperCommand)(table_command)
-app.command("tree", cls=RichTyperCommand)(tree_command)
-app.command("view", cls=RichTyperCommand)(view_command)
-app.add_typer(telemetry_app, name="telemetry")
-
-
-cli = app
+from . import cli
+from .cli import VERSION, app
+from .telemetry import track_command
 
 
 def entrypoint() -> None:
-    """Run the Typer CLI application, then send opt-in telemetry on success."""
+    """Console-script entry point for ``gradient``.
+
+    Runs the app, then sends the opt-in telemetry event only when the command
+    completed successfully (not for ``--help``, ``--telemetry`` or usage errors).
+    """
     try:
         app()
     except SystemExit as exc:
@@ -153,12 +27,10 @@ def entrypoint() -> None:
 
 
 def _track_success() -> None:
-    """Send the opt-in telemetry event for a command that completed normally."""
-    if _invoked_command and "--help" not in sys.argv[1:]:
-        track_command(_invoked_command)
-
-__all__ = ["app", "cli", "entrypoint"]
+    """Send the render-mode telemetry event for a command that completed normally."""
+    if cli.invoked_mode and "--help" not in sys.argv[1:]:
+        track_command(cli.invoked_mode)
 
 
-if __name__ == "__main__":
-    entrypoint()
+__version__ = VERSION
+__all__ = ["VERSION", "app", "entrypoint"]

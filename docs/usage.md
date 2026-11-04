@@ -3,151 +3,84 @@
 ## Installation
 
 ```bash
-uv add rich-gradient-cli
+uv tool install rich-gradient-cli     # or: pip install rich-gradient-cli
 ```
+
+## Text
+
+Literal text and stdin are printed as gradient text. Rich console markup is parsed unless you pass `--no-markup`.
 
 ```bash
-pip install rich-gradient-cli
+gradient --colors 'red,#ff9900,#ffff00' "Hello [b]gradient[/b]"
+echo "piped text" | gradient - --colors cyan,magenta
 ```
 
-Requires Python `>=3.10`.
+![Gradient text](img/commands/text-example.svg)
 
-## Basics
-
-The CLI is installed as `gradient`.
+Highlight words or patterns with `--highlight-word WORD=STYLE` and `--highlight-regex PATTERN=STYLE`:
 
 ```bash
-gradient --help
+gradient --colors magenta,cyan --highlight-word 'error=bold white on red' "Highlight error text"
 ```
 
-Show the installed version:
+![Highlight](img/commands/highlight-example.svg)
+
+## Files and URLs
+
+The mode is picked from the extension; any other file is syntax-highlighted. `http(s)://` URLs and `-` (stdin) work everywhere.
 
 ```bash
-gradient --version
+gradient README.md
+gradient doc.rst
+gradient notebook.ipynb
+gradient data.csv
+gradient config.json
+gradient pyproject.toml -n -g --head 20
+gradient https://example.com/page.md
 ```
 
-The default command is `print`, so you can pass text directly without writing `print`.
+![Markdown](img/commands/markdown-example.svg)
+![JSON](img/commands/json-example.svg)
+![CSV](img/commands/csv-example.svg)
+![reStructuredText](img/commands/rst-example.svg)
+![Syntax](img/commands/syntax-example.svg)
+
+## Panels and rules
+
+`--panel BOX` wraps any renderable in a gradient panel (`ascii`, `ascii2`, `square`, `rounded`, `heavy`, `double`, `none`). `--rule` draws a rule titled with the text.
 
 ```bash
-gradient "Hello world"
+gradient "Something went wrong" --panel rounded --title Error --colors red,'#ff9999'
+gradient "Section" --rule --colors blue,cyan
 ```
 
-Equivalent explicit form:
+![Panel](img/commands/panel-example.svg)
+![Rule](img/commands/rule-example.svg)
+
+## Trees, columns, spectrum and inspect
 
 ```bash
-gradient print "Hello world"
+gradient --tree src
+printf 'a\nb\nc\n' | gradient - --columns
+gradient --spectrum --hues 7 --spectrum-output hex
+gradient str --inspect
 ```
 
-## Reading from stdin
+![Tree](img/commands/tree-example.svg)
+![Inspect](img/commands/inspect-example.svg)
 
-`print` can read piped input directly:
+## Animation
+
+`--animate` animates the gradient in an interactive terminal (add `--duration SECONDS` to stop automatically). When output is not a terminal, a single static frame is printed. It cannot be combined with `--export-*` or `--pager`.
+
+## Export and paging
 
 ```bash
-echo "Hello" | gradient
+gradient README.md --export-svg readme.svg
+gradient README.md -o readme.html
+gradient README.md --pager
 ```
 
-Commands that accept positional text can also read from stdin with `-`.
+## Telemetry
 
-```bash
-echo "Hello" | gradient print -
-```
-
-```bash
-echo "Hello" | gradient gradient -
-```
-
-```bash
-echo "# Title" | gradient markdown -
-```
-
-```bash
-echo "Failure details" | gradient panel - --title "Error"
-```
-
-## SVG export
-
-Use `--svg` to export a renderable to an SVG file.
-
-```bash
-gradient print "SVG output" --svg output.svg
-```
-
-```bash
-gradient panel "Panel SVG" --svg panel.svg
-```
-
-```bash
-gradient spectrum --svg spectrum.svg
-```
-
-`print`, `gradient`, `rule`, `markdown`, and `panel` do not allow `--svg` with `--animate`.
-
-## Highlighting
-
-Commands backed by `Gradient`, `Panel`, and `Markdown` can apply highlight rules.
-
-```bash
-gradient gradient "error: retry later" --highlight-word error="bold white on red"
-```
-
-```bash
-gradient markdown "# Status" --highlight-regex "Status=bold cyan"
-```
-
-## Spectrum output
-
-Use `spectrum` to inspect generated colors.
-
-```bash
-gradient spectrum --hues 7 --seed 42
-```
-
-```bash
-gradient spectrum --hues 7 --output hex
-```
-
-## Rich renderables
-
-Wrap common Rich renderables in gradients.
-
-```bash
-gradient columns alpha beta gamma --colors "red,blue"
-```
-
-```bash
-gradient tree project src/app.py docs/index.md --colors "lime,cyan"
-```
-
-```bash
-gradient syntax pyproject.toml --lexer toml --line-numbers --colors "yellow,magenta"
-```
-
-```bash
-cat data.csv | gradient table - --colors "cyan,magenta"
-```
-
-## Rich-style file viewing
-
-Use `view` when you want behavior closer to `rich-cli`: render files, URLs, or stdin with Rich's Markdown, JSON, CSV table, and syntax-highlighting renderers.
-
-```bash
-gradient view README.md
-```
-
-```bash
-gradient view pyproject.toml --lexer toml --line-numbers --guides
-```
-
-```bash
-cat data.json | gradient view - --json --force-terminal
-```
-
-You can also export the rendered output.
-
-```bash
-gradient view README.md --export-html readme.html
-```
-
-```bash
-gradient view README.md --export-svg readme.svg
-```
+Off by default. `gradient --telemetry enable|disable|status`; events are sent only when `AMPLITUDE_API_KEY` is also set.

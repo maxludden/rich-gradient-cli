@@ -4,31 +4,34 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project
 
-`rich-gradient-cli` is the terminal CLI for [`rich-gradient`](../rich-gradient) (a separate sibling package/dependency). It wraps `rich-gradient`'s renderables (Text, Gradient, Panel, Rule, Markdown, Spectrum, and generic Rich renderables like Table/Tree/Columns/Syntax) as Typer subcommands, plus a `view` command that does `rich-cli`-style auto-detected file rendering.
+`rich-gradient-cli` is the terminal CLI for [`rich-gradient`](../rich-gradient) (a separate sibling package/dependency). It is a **single command**, `gradient`, modeled on [`rich-cli`](https://github.com/Textualize/rich-cli): `gradient [OPTIONS] [PATH,TEXT,URL, or '-']`. The renderable is auto-detected from the file extension or forced with a mode flag, and shared flags keep `rich-cli`'s spelling (`-p --print`, `-u --rule`, `-m`, `-J`, `-a --panel BOX`, `-d`, `-s`, `-S`, `-l/-c/-r`, `-L/-C/-R/-F`, `-w/-W`, `-h/-t`, `-n -g -x -y -j`, `-o`, `--export-svg`, `--pager`, `-v`). Gradient-specific options are long-only.
 
 ## Commands
 
 Use `uv` for everything.
 
-- Install: `uv sync` (or `uv pip install -e ".[dev]"`)
+- Install: `uv sync --extra dev`
 - Run tests: `uv run pytest`
 - Run a single test: `uv run pytest tests/test_cli.py -k test_name`
 - Lint: `uv run ruff check .`
 - Type check: `uv run mypy`
-- Docs (local preview): `uv pip install -e ".[docs]"` then `zensical serve` (Python 3.11+ only; the `docs` extra is skipped on 3.10)
-- Manual CLI smoke test: `uv run gradient print --colors 'red,orange' "hello"` (the console-script entrypoint is `gradient`, defined in `pyproject.toml` as `gradient = "rich_gradient_cli:entrypoint"`)
+- Docs (local preview): `uv pip install -e ".[docs]"` then `zensical serve`
+- Regenerate doc screenshots: `uv run python scripts/generate_command_svgs.py`
+- Smoke test: `uv run gradient --colors 'red,orange' "hello"` (entrypoint is `gradient = "rich_gradient_cli:entrypoint"`)
 
 ## Architecture
 
-- **`__init__.py`** builds the Typer `app` and registers every subcommand (`print`, `gradient`, `columns`, `panel`, `rule`, `markdown`, `spectrum`, `syntax`, `table`, `tree`, `view`). It uses a custom `DefaultTyperGroup` (subclass of `RichTyperGroup` from `help.py`) so that when no subcommand is given, unrecognized args are routed to the `print` command by default — e.g. `gradient "hello"` behaves like `gradient print "hello"`.
-- Each `*_command.py` module (`text_command.py`, `gradient_command.py`, `panel_command.py`, `rule_command.py`, `markdown_command.py`, `spectrum_command.py`) implements one Typer subcommand and is responsible for parsing its own CLI flags into `rich-gradient` constructor args.
-- **`renderable_commands.py`** holds the generic Rich-renderable wrappers (`columns_command`, `syntax_command`, `table_command`, `tree_command`) that don't need their own file.
-- **`common.py`** has the shared argument-parsing helpers (color lists, styles, etc.) — reuse these instead of re-parsing color/style strings in a new command.
-- **`help.py`** defines `RichTyperCommand`/`RichTyperGroup`, the shared Rich-themed help rendering used by every registered command — use these classes (not bare `typer.Typer`/`click.Command`) when adding a new subcommand so help output stays consistent.
-- **`view_command.py`** (largest module) is the `rich-cli`-style file viewer: auto-detects Markdown/JSON/CSV/TSV/source files, accepts `-` for stdin and `http://`/`https://` URLs, and supports `--export-html`.
-- This package only depends on `rich-gradient` for rendering — it does not duplicate gradient/color math. If a bug looks like it's in color interpolation rather than CLI argument handling, it likely belongs in the `rich-gradient` repo instead.
+- **`cli.py`** defines the Typer `app` and the single `main` command: all options (grouped with `rich_help_panel`), mutual-exclusion checks, and the render/export/pager flow. Usage errors exit 2, runtime errors exit 1.
+- **`resource.py`** resolves the positional argument (file, URL, `-`/stdin, or literal text) into a `Resource` and picks a `Mode` from the extension.
+- **`render.py`** turns a `Resource` + `RenderConfig` into a plain Rich renderable per `Mode` (text, markdown, rst, ipynb, syntax, json, csv, tree, columns, inspect, rule) and wraps it in a `rich-gradient` `Gradient`/`Panel` (or the animated variants).
+- **`options.py`** parses raw option strings (colors, padding, styles, `WORD=STYLE` mappings, panel boxes).
+- **`export.py`** writes SVG/HTML via a recording console.
+- **`telemetry.py`** is opt-in anonymous usage telemetry (`--telemetry enable|disable|status`; needs `AMPLITUDE_API_KEY` too). `__init__.entrypoint` sends the event only after a successful run.
+- This package depends on `rich-gradient` for gradient/color math; interpolation bugs belong in that repo.
 
 ## Notes
 
-- The CLI used to live inside `rich-gradient` itself; it was split out into this package as of `rich-gradient` v0.3.12. Don't reintroduce CLI code into `rich-gradient` — extend it here.
-- `docs/` + `zensical.toml` back the published docs site; `site/` is a generated build artifact (not hand-edited, and per `.gitignore`/history is no longer tracked).
+- Python 3.11+ (required by `rich-gradient` 0.4).
+- The CLI used to have subcommands (`print`, `panel`, `view`, ...) up to 0.3; they were replaced by flags on the one command. Don't reintroduce subcommands.
+- `docs/` + `zensical.toml` back the published docs site; `site/` is a generated build artifact.
+- Add a `CHANGELOG.md` entry with every change.

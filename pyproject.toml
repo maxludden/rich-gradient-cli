@@ -1,17 +1,17 @@
 [project]
 name = "rich-gradient-cli"
 version = "0.3.0"
-description = "CLI for printing text in gradient color using the rich-gradient library."
+description = "Render files, URLs, stdin, and text with rich-gradient from the command line."
 readme = "README.md"
 authors = [
     { name = "Maxwell Ludden", email = "maxludden@me.com" }
 ]
-requires-python = ">=3.10"
+requires-python = ">=3.11"
 dependencies = [
     "typer>=0.21.1",
-    "rich>=14.3.2",
-    "rich-color-ext>=0.1.9",
-    "rich-gradient>=0.3.9",
+    "rich>=15.0.0",
+    "rich-color-ext>=3.0.0",
+    "rich-gradient>=0.4.1",
     "amplitude-analytics>=1.3.0",
     "rich-rst>=2.2.0",
 ]
@@ -22,11 +22,10 @@ dev = [
     "pytest>=8.4.2",
     "ruff>=0.15.0",
 ]
-# Docs tooling (mkdocstrings>=1.0.8, zensical) requires Python >= 3.11; on 3.10 this extra installs nothing.
 docs = [
-    "mkdocstrings>=1.0.8; python_version >= '3.11'",
-    "mkdocstrings-python>=2.0.2; python_version >= '3.11'",
-    "zensical>=0.0.68; python_version >= '3.11'",
+    "mkdocstrings>=1.0.8",
+    "mkdocstrings-python>=2.0.2",
+    "zensical>=0.0.68",
 ]
 
 [project.scripts]
@@ -36,16 +35,18 @@ gradient = "rich_gradient_cli:entrypoint"
 requires = ["uv_build>=0.10.0,<0.11.0"]
 build-backend = "uv_build"
 
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+
 [tool.mypy]
-python_version = "3.10"
-mypy_path = "typings"
-files = ["src", "typings"]
+python_version = "3.11"
+files = ["src"]
 ignore_missing_imports = true
 check_untyped_defs = true
 
 [tool.ruff]
-target-version = "py310"
-src = ["src", "typings"]
+target-version = "py311"
+src = ["src"]
 
 [tool.pylint.messages_control]
 disable = [

@@ -2,7 +2,7 @@
 
 Nothing is sent unless the user runs ``gradient telemetry enable`` *and* an
 ``AMPLITUDE_API_KEY`` is present in the environment. The only data sent is the
-event name ``Command Run``, the subcommand name, and a random install ID that
+event name ``Command Run``, the render mode, and a random install ID that
 is generated locally on enable and never derived from the machine or user.
 """
 
@@ -14,10 +14,6 @@ import tempfile
 import uuid
 from pathlib import Path
 from typing import Any
-
-import typer
-
-from .help import RichTyperCommand, RichTyperGroup
 
 EVENT_NAME = "Command Run"
 API_KEY_ENV = "AMPLITUDE_API_KEY"
@@ -102,28 +98,14 @@ def track_command(command: str) -> None:
         return
 
 
-telemetry_app = typer.Typer(
-    cls=RichTyperGroup,
-    help="Manage opt-in anonymous usage telemetry.",
-    no_args_is_help=True,
-)
-
-
-@telemetry_app.command("enable", cls=RichTyperCommand)
-def enable_command() -> None:
-    """Opt in to anonymous usage telemetry (command name only)."""
-    enable()
-    typer.echo("Telemetry enabled. Only the subcommand name is sent, with a random ID.")
-
-
-@telemetry_app.command("disable", cls=RichTyperCommand)
-def disable_command() -> None:
-    """Opt out of telemetry and delete the stored install ID."""
-    disable()
-    typer.echo("Telemetry disabled.")
-
-
-@telemetry_app.command("status", cls=RichTyperCommand)
-def status_command() -> None:
-    """Show whether telemetry is enabled."""
-    typer.echo("enabled" if is_enabled() else "disabled")
+def run_telemetry_action(action: str) -> str:
+    """Apply ``enable``, ``disable`` or ``status`` and return the message to show."""
+    if action == "enable":
+        enable()
+        return "Telemetry enabled. Only the render mode is sent, with a random ID."
+    if action == "disable":
+        disable()
+        return "Telemetry disabled."
+    if action == "status":
+        return "enabled" if is_enabled() else "disabled"
+    raise ValueError(f"Unknown telemetry action {action!r}.")

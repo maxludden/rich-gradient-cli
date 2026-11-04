@@ -20,7 +20,7 @@ def _isolated_config(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
 
 def test_disabled_by_default() -> None:
     assert not telemetry.is_enabled()
-    result = runner.invoke(app, ["telemetry", "status"])
+    result = runner.invoke(app, ["--telemetry", "status"])
     assert result.stdout.strip() == "disabled"
 
 
@@ -62,7 +62,15 @@ def test_track_is_noop_without_opt_in_or_key(monkeypatch: pytest.MonkeyPatch) ->
     assert calls == []
 
 
-def test_cli_commands_still_work_with_telemetry_off() -> None:
-    result = runner.invoke(app, ["print", "hello"])
+def test_telemetry_option_enables_and_disables() -> None:
+    assert runner.invoke(app, ["--telemetry", "enable"]).exit_code == 0
+    assert telemetry.is_enabled()
+    assert runner.invoke(app, ["--telemetry", "status"]).stdout.strip() == "enabled"
+    assert runner.invoke(app, ["--telemetry", "disable"]).exit_code == 0
+    assert not telemetry.is_enabled()
+
+
+def test_cli_still_works_with_telemetry_off() -> None:
+    result = runner.invoke(app, ["hello"])
     assert result.exit_code == 0
     assert "hello" in result.stdout
