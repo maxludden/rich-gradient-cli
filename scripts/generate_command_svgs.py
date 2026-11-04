@@ -1,4 +1,4 @@
-"""Generate example and ``--help`` SVG screenshots for every ``gradient`` command.
+"""Generate example and ``--help`` SVG screenshots for the single ``gradient`` command.
 
 Each command is run as a subprocess with forced colour output; the ANSI result
 is replayed into a recording Rich console and exported to ``docs/img/commands``.
@@ -26,35 +26,32 @@ CSV = "name,language,stars\nrich,python,50000\ntyper,python,15000\nuv,rust,40000
 
 # name -> (argv after ``gradient``, optional stdin)
 EXAMPLES: dict[str, tuple[list[str], str | None]] = {
-    "print": (["print", "--colors", "red,#ff9900,#ffff00", "Hello gradient"], None),
-    "gradient": (
-        ["gradient", "--colors", "magenta,cyan", "--highlight-word",
-         "error=bold white on red", "Highlight error text"],
+    "text": (["--colors", "red,#ff9900,#ffff00", "Hello gradient"], None),
+    "highlight": (
+        ["--colors", "magenta,cyan", "--highlight-word", "error=bold white on red",
+         "Highlight error text"],
         None,
     ),
-    "columns": (["columns", "alpha", "beta", "gamma", "delta", "epsilon", "--colors", "red,blue"], None),
-    "panel": (
-        ["panel", "--colors", "red,#ff9999", "-t", "Error", "--title-style",
-         "bold #ffffff", "--title-align", "left",
-         "This is an error message with a red to pink gradient background."],
-        None,
-    ),
-    "rule": (["rule", "--colors", "blue,#00ff00,cyan", "--title", "Blue to Green to Cyan Rule"], None),
-    "markdown": (["markdown", "-", "--colors", "magenta,cyan"], "# Hello\n\nSome **bold** and *italic* text.\n\n- one\n- two\n"),
-    "spectrum": (["spectrum", "--hues", "7", "--seed", "42"], None),
-    "syntax": (["syntax", "pyproject.toml", "--lexer", "toml",
-                "--line-numbers", "--colors", "yellow,magenta"], None),
-    "table": (["table", "-", "--colors", "cyan,magenta"], CSV),
-    "tree": (["tree", "project", "src/app.py", "docs/index.md", "--colors", "lime,cyan"], None),
-    "telemetry": (["telemetry", "status"], None),
-    "view": (["view", "sample.md", "--head", "12"], None),
+    "markdown": (["-", "--markdown", "--colors", "magenta,cyan"],
+                 "# Hello\n\nSome **bold** and *italic* text.\n\n- one\n- two\n"),
+    "panel": (["--panel", "rounded", "--title", "Error", "--colors", "red,#ff9999",
+               "This is an error message with a red to pink gradient background."], None),
+    "rule": (["--rule", "Blue to Green to Cyan", "--colors", "blue,#00ff00,cyan"], None),
+    "spectrum": (["--spectrum", "--hues", "7"], None),
+    "syntax": (["pyproject.toml", "--lexer", "toml", "--line-numbers", "--colors", "yellow,magenta"], None),
+    "json": (["-", "--json", "--colors", "cyan,magenta"], '{"name": "gradient", "tags": ["cli", "rich"], "stars": 5}'),
+    "csv": (["-", "--csv", "--colors", "cyan,magenta"], CSV),
+    "tree": (["--tree", "src", "--colors", "lime,cyan"], None),
+    "columns": (["-", "--columns", "--colors", "red,blue"], "alpha\nbeta\ngamma\ndelta\nepsilon\n"),
+    "rst": (["-", "--rst", "--colors", "orange,magenta"], "Title\n=====\n\nSome *emphasis* and a list:\n\n- one\n- two\n"),
+    "inspect": (["str", "--inspect", "--colors", "green,cyan"], None),
 }
 
 
 def run(argv: list[str], stdin: str | None) -> str:
     """Run ``gradient`` with ``argv`` and return its ANSI-coloured stdout."""
     env = {**os.environ, "FORCE_COLOR": "1", "COLUMNS": str(WIDTH), "COLORTERM": "truecolor"}
-    for name in ("NO_COLOR", "AMPLITUDE_API_KEY"):
+    for name in ("NO_COLOR", "AMPLITUDE_API_KEY", "GRADIENT_COLORS"):
         env.pop(name, None)
     with tempfile.TemporaryDirectory() as config_home:
         env["XDG_CONFIG_HOME"] = config_home  # never read the user's real telemetry config
@@ -82,12 +79,11 @@ def export(ansi: str, title: str, path: Path) -> None:
 def main() -> None:
     """Generate every SVG."""
     OUT.mkdir(parents=True, exist_ok=True)
-    jobs: dict[str, tuple[list[str], str | None]] = {"root-help": (["--help"], None)}
+    jobs: dict[str, tuple[list[str], str | None]] = {"help": (["--help"], None)}
     for name, (argv, stdin) in EXAMPLES.items():
         jobs[f"{name}-example"] = (argv, stdin)
-        jobs[f"{name}-help"] = ([argv[0], "--help"], None)
     for stem, (argv, stdin) in jobs.items():
-        export(run(argv, stdin), "gradient " + " ".join(argv[:1]), OUT / f"{stem}.svg")
+        export(run(argv, stdin), "gradient", OUT / f"{stem}.svg")
         print(f"wrote {stem}.svg")
 
 

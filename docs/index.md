@@ -1,80 +1,19 @@
 # rich-gradient-cli
 
-`rich-gradient-cli` is a command-line interface for the [`rich-gradient`](https://github.com/maxludden/rich-gradient) library. It lets you render colorful gradients in terminal text, generic gradients, spectrum tables, Rich columns, trees, syntax, tables, rules, panels, and markdown output.
-
-It also includes a `view` command for `rich-cli`-style file rendering: Markdown, JSON, CSV/TSV, syntax-highlighted source, stdin, URLs, pager output, and HTML/SVG export.
-
-## Quickstart
+`gradient` is a single-command CLI for [`rich-gradient`](https://github.com/maxludden/rich-gradient), modeled on [`rich-cli`](https://github.com/Textualize/rich-cli). Give it a file, a URL, `-` for stdin, or literal text and it renders the content with a gradient.
 
 ```bash
-uv add rich-gradient-cli
+uv tool install rich-gradient-cli
+gradient --colors 'red,#ff9900,#ffff00' "Hello gradient"
 ```
 
-```bash
-gradient print --colors 'red,#ff9900,#ffff00' \
-    "This is gradient text that starts red, \
-    transitions through orange, and ends in yellow!"
-```
+![Gradient text](img/commands/text-example.svg)
 
-![Gradient Text Example](img/print-example.svg)
+## How it works
 
-## Why it exists
+- One command: `gradient [OPTIONS] [PATH,TEXT,URL, or '-']`.
+- The renderable is auto-detected from the extension, or forced with a flag (`--markdown`, `--rst`, `--ipynb`, `--json`, `--csv`, `--syntax`, `--rule`, `--tree`, `--columns`, `--spectrum`, `--inspect`).
+- Layout, styling and export flags use the same short options as `rich-cli`.
+- Gradient flags (`--colors`, `--bgcolors`, `--rainbow`, `--animate`, ...) apply to whatever is rendered.
 
-- Make terminal output easier to scan with color transitions
-- Inspect generated spectrum colors from the terminal
-- Wrap Rich columns, trees, syntax, and tables in gradients
-- Render rich gradient panels and rules without custom code
-- Pipe and transform text or markdown from other CLI tools
-
-## Commands at a glance
-
-<video
-  src="img/rich-gradient-cli-help.mp4"
-  controls
-  muted>
-</video>
-
-
-## Examples
-
-```bash
-gradient rule --colors 'blue,#00ff00,cyan' --title "Blue to Green to Cyan Rule"
-```
-
-![Gradient Rule Example](img/rule-example.svg)
-
-```bash
-gradient panel --colors "red,#ff9999" -t "Error" --title-style "bold #ffffff" --title-align left 'This is an error message with a red to pink gradient background.'
-```
-
-![Gradient Panel Example](img/panel-example.svg)
-
-```bash
-echo "# Hello\n\n- This is **bold**.\n- This is *italic*." | gradient markdown -
-```
-
-![Gradient Markdown Example](img/markdown-example.svg)
-
-```bash
-gradient gradient --colors 'magenta,cyan' --highlight-word error='bold white on red' "Highlight error text"
-gradient spectrum --hues 7 --seed 42 --output hex
-gradient columns alpha beta gamma --colors 'red,blue'
-gradient syntax pyproject.toml --lexer toml --line-numbers --colors 'yellow,magenta'
-gradient view README.md
-gradient view pyproject.toml --lexer toml --line-numbers
-gradient view README.md --export-html readme.html
-```
-
-<div align="center">
-  <a href="https://github.com/maxludden/maxludden" style="text-decoration:none; color:inherit;">
-      <p>Designed by Max Ludden</p>
-  </a>
-  <br />
-  <a href="https://github.com/maxludden/maxludden" style="text-decoration:none; color:inherit;">
-    <img
-      src="img/MaxLogo.svg"
-      alt="Max Ludden's Logo"
-      width="20%"
-    />
-  </a>
-</div>
+See [Usage](usage.md) for examples and [Options](options.md) for every flag.

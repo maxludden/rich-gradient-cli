@@ -12,7 +12,7 @@ extra_css = ["styles/style.css", "styles/extra.css"]
 nav = [
     { "Home" = "index.md" },
     { "Usage" = "usage.md" },
-    { "Commands" = "commands.md" },
+    { "Options" = "options.md" },
     { "API" = "api.md" },
 ]
 

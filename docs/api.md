@@ -6,56 +6,53 @@
     options:
       show_source: false
       show_root_heading: true
-      heading_level: 2
+      heading_level: 3
 
-## Commands
+## Command
 
-::: rich_gradient_cli.gradient_command
+::: rich_gradient_cli.cli
     options:
       show_source: false
       show_root_heading: true
-      heading_level: 2
+      heading_level: 3
 
-::: rich_gradient_cli.spectrum_command
+## Rendering
+
+::: rich_gradient_cli.render
     options:
       show_source: false
       show_root_heading: true
-      heading_level: 2
+      heading_level: 3
 
-::: rich_gradient_cli.renderable_commands
+## Resources
+
+::: rich_gradient_cli.resource
     options:
       show_source: false
       show_root_heading: true
-      heading_level: 2
+      heading_level: 3
 
-::: rich_gradient_cli.text_command
+## Option parsing
+
+::: rich_gradient_cli.options
     options:
       show_source: false
       show_root_heading: true
-      heading_level: 2
+      heading_level: 3
 
-::: rich_gradient_cli.rule_command
+## Export
+
+::: rich_gradient_cli.export
     options:
       show_source: false
       show_root_heading: true
-      heading_level: 2
+      heading_level: 3
 
-::: rich_gradient_cli.panel_command
+## Telemetry
+
+::: rich_gradient_cli.telemetry
     options:
       show_source: false
       show_root_heading: true
-      heading_level: 2
+      heading_level: 3
 
-::: rich_gradient_cli.markdown_command
-    options:
-      show_source: false
-      show_root_heading: true
-      heading_level: 2
-
-## Utilities
-
-::: rich_gradient_cli.common
-    options:
-      show_source: false
-      show_root_heading: true
-      heading_level: 2
