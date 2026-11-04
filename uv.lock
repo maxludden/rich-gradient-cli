@@ -728,6 +728,7 @@ dependencies = [
     { name = "rich" },
     { name = "rich-color-ext" },
     { name = "rich-gradient" },
+    { name = "rich-rst" },
     { name = "typer" },
 ]
 
@@ -758,6 +759,7 @@ requires-dist = [
     { name = "rich", specifier = ">=14.3.2" },
     { name = "rich-color-ext", specifier = ">=0.1.9" },
     { name = "rich-gradient", specifier = ">=0.3.9" },
+    { name = "rich-rst", specifier = ">=2.2.0" },
     { name = "ruff", marker = "extra == 'dev'", specifier = ">=0.15.0" },
     { name = "typer", specifier = ">=0.21.1" },
     { name = "zensical", marker = "python_full_version >= '3.11' and extra == 'docs'", specifier = ">=0.0.68" },
@@ -766,6 +768,20 @@ provides-extras = ["dev", "docs"]
 
 [package.metadata.requires-dev]
 dev = [{ name = "pytest", specifier = ">=9.0.2" }]
+
+[[package]]
+name = "rich-rst"
+version = "2.2.0"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "pygments", version = "2.19.2", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.11'" },
+    { name = "pygments", version = "2.21.0", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.11'" },
+    { name = "rich" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/cf/0e/faf7c7e36630561e3e9611730c47510cd972dd5fde8f95941ff78f76accd/rich_rst-2.2.0.tar.gz", hash = "sha256:b1e6a67f8f694a6f36035624bf73e2b1a0a4be13edaf3ba5e654d9758b61073a", size = 326270, upload-time = "2026-09-27T19:12:42.163Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/d1/4e/716b42bf066e180c1235783b46f095a5d871d05dca7006d2295aac29c491/rich_rst-2.2.0-py3-none-any.whl", hash = "sha256:1ea1c43813dc4a8d86475fce27ffb74e0ada3d4656c9f8130ba2a59868055fe9", size = 279274, upload-time = "2026-09-27T19:12:40.548Z" },
+]
 
 [[package]]
 name = "ruff"
