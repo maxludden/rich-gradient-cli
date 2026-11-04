@@ -24,6 +24,7 @@ if __package__ in {None, ""}:
     )
     from rich_gradient_cli.rule_command import rule_command
     from rich_gradient_cli.spectrum_command import spectrum_command
+    from rich_gradient_cli.telemetry import telemetry_app, track_command
     from rich_gradient_cli.text_command import print_command
     from rich_gradient_cli.view_command import view_command
 else:
@@ -40,6 +41,7 @@ else:
     )
     from .rule_command import rule_command
     from .spectrum_command import spectrum_command
+    from .telemetry import telemetry_app, track_command
     from .text_command import print_command
     from .view_command import view_command
 
@@ -84,6 +86,9 @@ class DefaultTyperGroup(RichTyperGroup):
         return super().resolve_command(ctx, args)
 
 
+_invoked_command: str | None = None
+
+
 app = typer.Typer(
     cls=DefaultTyperGroup,
     invoke_without_command=True,
@@ -105,11 +110,15 @@ def main(
     ),
 ) -> None:
     """CLI entry callback for version handling and default routing."""
+    global _invoked_command
     if version:
         typer.echo(f"gradient version {VERSION}")
         raise typer.Exit()
+    if ctx.invoked_subcommand and ctx.invoked_subcommand != "telemetry":
+        _invoked_command = ctx.invoked_subcommand
     if ctx.invoked_subcommand is None:
         if ctx.args or not sys.stdin.isatty():
+            _invoked_command = "print"
             print_command(text=list(ctx.args) if ctx.args else None)
             raise typer.Exit()
         typer.echo(ctx.get_help())
@@ -126,14 +135,27 @@ app.command("syntax", cls=RichTyperCommand)(syntax_command)
 app.command("table", cls=RichTyperCommand)(table_command)
 app.command("tree", cls=RichTyperCommand)(tree_command)
 app.command("view", cls=RichTyperCommand)(view_command)
+app.add_typer(telemetry_app, name="telemetry")
 
 
 cli = app
 
 
 def entrypoint() -> None:
-    """Run the Typer CLI application."""
-    app()
+    """Run the Typer CLI application, then send opt-in telemetry on success."""
+    try:
+        app()
+    except SystemExit as exc:
+        if exc.code in (0, None):
+            _track_success()
+        raise
+    _track_success()
+
+
+def _track_success() -> None:
+    """Send the opt-in telemetry event for a command that completed normally."""
+    if _invoked_command and "--help" not in sys.argv[1:]:
+        track_command(_invoked_command)
 
 __all__ = ["app", "cli", "entrypoint"]
 

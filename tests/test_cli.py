@@ -1,3 +1,4 @@
+import json
 from importlib.metadata import version
 
 from rich.text import Text
@@ -164,3 +165,60 @@ def test_table_command_renders_csv_from_stdin() -> None:
     assert result.exit_code == 0
     assert "name" in result.stdout
     assert "Ada" in result.stdout
+
+
+def test_view_auto_detects_rst_file(tmp_path) -> None:
+    rst_path = tmp_path / "doc.rst"
+    rst_path.write_text("Title\n=====\n\nSome *emphasis* text.\n", encoding="utf-8")
+    result = runner.invoke(app, ["view", str(rst_path), "--force-terminal"])
+    assert result.exit_code == 0
+    assert "Title" in result.output
+    assert "emphasis" in result.output
+
+
+def test_view_renders_ipynb_file(tmp_path) -> None:
+    notebook = {
+        "metadata": {"kernelspec": {"language": "python"}},
+        "cells": [
+            {"cell_type": "markdown", "source": ["# Heading"]},
+            {
+                "cell_type": "code",
+                "execution_count": 1,
+                "source": ["print('hi')"],
+                "outputs": [
+                    {"output_type": "stream", "name": "stdout", "text": ["hi\n"]}
+                ],
+            },
+        ],
+    }
+    path = tmp_path / "nb.ipynb"
+    path.write_text(json.dumps(notebook), encoding="utf-8")
+    result = runner.invoke(app, ["view", str(path), "--force-terminal"])
+    assert result.exit_code == 0
+    assert "Heading" in result.output
+    assert "print" in result.output
+    assert "hi" in result.output
+
+
+def test_view_ipynb_rejects_invalid_notebook(tmp_path) -> None:
+    path = tmp_path / "bad.ipynb"
+    path.write_text("not json", encoding="utf-8")
+    result = runner.invoke(app, ["view", str(path)])
+    assert result.exit_code != 0
+
+
+def test_view_inspect_dotted_path() -> None:
+    result = runner.invoke(app, ["view", "rich.console.Console", "--inspect"])
+    assert result.exit_code == 0
+    assert "Console" in result.output
+
+
+def test_view_inspect_expression() -> None:
+    result = runner.invoke(app, ["view", "[1, 2, 3]", "--inspect"])
+    assert result.exit_code == 0
+    assert "list" in result.output
+
+
+def test_view_inspect_bad_expression() -> None:
+    result = runner.invoke(app, ["view", "no_such_thing_xyz", "--inspect"])
+    assert result.exit_code != 0

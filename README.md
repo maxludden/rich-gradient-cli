@@ -97,7 +97,7 @@ echo "# Hello\n\n- This is **bold**.\n- This is *italic*." | gradient markdown -
 
 ### Rich-style viewing
 
-Use `view` for `rich-cli`-style file rendering. It auto-detects Markdown, JSON, CSV/TSV, and syntax-highlighted source files; it also accepts `-` for stdin and `http://` or `https://` URLs.
+Use `view` for `rich-cli`-style file rendering. It auto-detects Markdown, JSON, CSV/TSV, reStructuredText (`.rst`), Jupyter notebooks (`.ipynb`), and syntax-highlighted source files, and `--inspect` inspects a Python object (e.g. `gradient view rich.console.Console --inspect`); it also accepts `-` for stdin and `http://` or `https://` URLs.
 
 ```bash
 gradient view README.md

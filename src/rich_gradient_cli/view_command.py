@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import csv
+import importlib
 import io
 import json
 import sys
@@ -18,7 +19,14 @@ import click
 import typer
 from rich import box
 from rich.align import Align
-from rich.console import Console, ConsoleOptions, RenderResult, RenderableType
+from rich._inspect import Inspect
+from rich.console import (
+    Console,
+    ConsoleOptions,
+    Group,
+    RenderResult,
+    RenderableType,
+)
 from rich.json import JSON
 from rich.markdown import Markdown
 from rich.padding import Padding
@@ -41,6 +49,9 @@ class ResourceFormat(Enum):
     JSON = "json"
     CSV = "csv"
     RULE = "rule"
+    RST = "rst"
+    IPYNB = "ipynb"
+    INSPECT = "inspect"
 
 
 COMMON_LEXERS = {
@@ -58,6 +69,7 @@ COMMON_LEXERS = {
 
 CSV_EXTENSIONS = {".csv", ".tsv"}
 MARKDOWN_EXTENSIONS = {".md", ".markdown"}
+RST_EXTENSIONS = {".rst"}
 
 
 class ForceWidth:
@@ -110,6 +122,10 @@ def _detect_format(resource: str, explicit: ResourceFormat) -> ResourceFormat:
         return ResourceFormat.JSON
     if suffix in CSV_EXTENSIONS:
         return ResourceFormat.CSV
+    if suffix in RST_EXTENSIONS:
+        return ResourceFormat.RST
+    if suffix == ".ipynb":
+        return ResourceFormat.IPYNB
     return ResourceFormat.SYNTAX
 
 
@@ -232,6 +248,115 @@ def _is_number(value: str) -> bool:
     return True
 
 
+def _resolve_object(expression: str) -> Any:
+    """Resolve a dotted ``module.attr`` path, falling back to ``eval``.
+
+    Mirrors ``rich --inspect``: the argument is a Python expression such as
+    ``str`` or ``rich.console.Console``. Dotted paths are imported without
+    ``eval``; anything else is evaluated with ``rich`` and the standard
+    library importable by name.
+    """
+    expression = expression.strip()
+    parts = expression.split(".")
+    if all(part.isidentifier() for part in parts):
+        for split in range(len(parts), 0, -1):
+            try:
+                obj: Any = importlib.import_module(".".join(parts[:split]))
+            except ImportError:
+                continue
+            try:
+                for attr in parts[split:]:
+                    obj = getattr(obj, attr)
+            except AttributeError:
+                break
+            return obj
+        import builtins
+
+        if hasattr(builtins, parts[0]):
+            obj = getattr(builtins, parts[0])
+            for attr in parts[1:]:
+                obj = getattr(obj, attr)
+            return obj
+    try:
+        return eval(expression, {})  # noqa: S307 - user-supplied CLI expression
+    except Exception as error:
+        raise typer.BadParameter(f"Unable to evaluate {expression!r}: {error}") from error
+
+
+def _render_ipynb(
+    data: str,
+    *,
+    lexer: Optional[str],
+    theme: str,
+    hyperlinks: bool,
+    head: Optional[int],
+    tail: Optional[int],
+    line_numbers: bool,
+    guides: bool,
+    no_wrap: bool,
+) -> RenderableType:
+    """Render a Jupyter notebook's cells and outputs."""
+    try:
+        notebook = json.loads(data)
+        cells_data = notebook["cells"]
+    except (json.JSONDecodeError, KeyError, TypeError) as error:
+        raise typer.BadParameter(f"Unable to parse notebook: {error}") from error
+    language = lexer or notebook.get("metadata", {}).get("kernelspec", {}).get(
+        "language", "text"
+    )
+
+    cells: list[RenderableType] = []
+    blank_before = True
+    for cell in cells_data:
+        if blank_before:
+            cells.append("")
+        if "execution_count" in cell:
+            count = cell["execution_count"] or " "
+            cells.append(f"[green]In [[#66ff00]{count}[/#66ff00]]:[/green]")
+        source = "".join(cell.get("source", ""))
+        renderable: RenderableType
+        if cell.get("cell_type") == "code":
+            renderable = Panel(
+                Syntax(
+                    source,
+                    language,
+                    theme=theme,
+                    line_numbers=line_numbers,
+                    indent_guides=guides,
+                    word_wrap=not no_wrap,
+                    line_range=_line_range(head, tail, len(source.splitlines())),
+                ),
+                border_style="dim",
+            )
+        elif cell.get("cell_type") == "markdown":
+            renderable = Markdown(source, code_theme=theme, hyperlinks=hyperlinks)
+        else:
+            renderable = Text(source)
+        blank_before = True
+        cells.append(renderable)
+        for output in cell.get("outputs", []):
+            kind = output.get("output_type")
+            if kind == "stream":
+                renderable = Text.from_ansi("".join(output["text"]))
+                blank_before = False
+            elif kind == "error":
+                renderable = Text.from_ansi("\n".join(output["traceback"]).rstrip())
+                blank_before = True
+            elif kind == "execute_result":
+                count = output.get("execution_count") or " "
+                plain = output.get("data", {}).get("text/plain", "")
+                if isinstance(plain, list):
+                    plain = "".join(plain)
+                renderable = Text.from_markup(
+                    f"[red]Out[[#ee4b2b]{count}[/#ee4b2b]]:[/red]\n"
+                ) + Text.from_ansi(plain)
+                blank_before = True
+            else:
+                continue
+            cells.append(renderable)
+    return Group(*cells)
+
+
 def _render_resource(
     resource: str,
     *,
@@ -268,7 +393,36 @@ def _render_resource(
                 "center" if text_justify in {"default", "full"} else text_justify,
             ),
         )
+    if mode is ResourceFormat.INSPECT:
+        return Inspect(
+            _resolve_object(resource),
+            help=False,
+            dunder=False,
+            all=False,
+            methods=True,
+        )
     data = _read_resource(resource)
+    if mode is ResourceFormat.RST:
+        from rich_rst import RestructuredText
+
+        return RestructuredText(
+            data,
+            code_theme=theme,
+            default_lexer=lexer or "python",
+            show_errors=False,
+        )
+    if mode is ResourceFormat.IPYNB:
+        return _render_ipynb(
+            data,
+            lexer=lexer,
+            theme=theme,
+            hyperlinks=hyperlinks,
+            head=head,
+            tail=tail,
+            line_numbers=line_numbers,
+            guides=guides,
+            no_wrap=no_wrap,
+        )
     if mode is ResourceFormat.MARKDOWN:
         return Markdown(data, code_theme=theme, hyperlinks=hyperlinks)
     if mode is ResourceFormat.JSON:
@@ -348,6 +502,9 @@ def _selected_mode(
     json_: bool,
     csv_: bool,
     rule: bool,
+    rst: bool = False,
+    ipynb: bool = False,
+    inspect: bool = False,
 ) -> ResourceFormat:
     """Resolve mutually exclusive render mode flags."""
     selected = [
@@ -359,6 +516,9 @@ def _selected_mode(
             (json_, ResourceFormat.JSON),
             (csv_, ResourceFormat.CSV),
             (rule, ResourceFormat.RULE),
+            (rst, ResourceFormat.RST),
+            (ipynb, ResourceFormat.IPYNB),
+            (inspect, ResourceFormat.INSPECT),
         )
         if flag
     ]
@@ -412,6 +572,11 @@ def view_command(
     json_: bool = typer.Option(False, "--json", "-J", help="Render as JSON."),
     csv_: bool = typer.Option(False, "--csv", help="Render CSV or TSV as a table."),
     rule: bool = typer.Option(False, "--rule", "-u", help="Render a horizontal rule."),
+    rst: bool = typer.Option(False, "--rst", help="Render reStructuredText."),
+    ipynb: bool = typer.Option(False, "--ipynb", help="Render a Jupyter notebook."),
+    inspect: bool = typer.Option(
+        False, "--inspect", help="Inspect a Python object (e.g. 'str')."
+    ),
     head: Optional[int] = typer.Option(
         None,
         "--head",
@@ -536,6 +701,9 @@ def view_command(
             json_=json_,
             csv_=csv_,
             rule=rule,
+            rst=rst,
+            ipynb=ipynb,
+            inspect=inspect,
         ),
     )
     renderable = _render_resource(

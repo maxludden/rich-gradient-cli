@@ -1,0 +1,44 @@
+{
+    "python.defaultInterpreterPath": "${workspaceFolder}/.venv/bin/python",
+    "files.watcherExclude": {
+        "**/.venv/**": true,
+        "**/site/**": true,
+        "**/dist/**": true,
+        "**/.mypy_cache/**": true,
+        "**/.ruff_cache/**": true,
+        "**/.pytest_cache/**": true,
+        "**/__pycache__/**": true,
+        "**/.cache/**": true,
+        "**/.git/objects/**": true,
+        "**/.git/subtree-cache/**": true
+    },
+    "search.exclude": {
+        "**/.venv": true,
+        "**/site": true,
+        "**/dist": true,
+        "**/.mypy_cache": true,
+        "**/.ruff_cache": true,
+        "**/uv.lock": true,
+        "**/.cache": true,
+        "**/typings": true
+    },
+    "files.exclude": {
+        "**/__pycache__": true,
+        "**/.mypy_cache": true,
+        "**/.ruff_cache": true,
+        "**/.pytest_cache": true,
+        "**/.DS_Store": true
+    },
+    "python-envs.pythonProjects": [
+        {
+            "path": "..",
+            "envManager": "ms-python.python:venv",
+            "packageManager": "ms-python.python:uv"
+        }
+    ],
+    "python.testing.pytestArgs": [
+        "tests"
+    ],
+    "python.testing.unittestEnabled": false,
+    "python.testing.pytestEnabled": true,
+}

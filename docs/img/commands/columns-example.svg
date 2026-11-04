@@ -1,0 +1,159 @@
+<svg class="rich-terminal" viewBox="0 0 1238 74.4" xmlns="http://www.w3.org/2000/svg">
+    <!-- Generated with Rich https://www.textualize.io -->
+    <style>
+
+    @font-face {
+        font-family: "Fira Code";
+        src: local("FiraCode-Regular"),
+                url("https://cdnjs.cloudflare.com/ajax/libs/firacode/6.2.0/woff2/FiraCode-Regular.woff2") format("woff2"),
+                url("https://cdnjs.cloudflare.com/ajax/libs/firacode/6.2.0/woff/FiraCode-Regular.woff") format("woff");
+        font-style: normal;
+        font-weight: 400;
+    }
+    @font-face {
+        font-family: "Fira Code";
+        src: local("FiraCode-Bold"),
+                url("https://cdnjs.cloudflare.com/ajax/libs/firacode/6.2.0/woff2/FiraCode-Bold.woff2") format("woff2"),
+                url("https://cdnjs.cloudflare.com/ajax/libs/firacode/6.2.0/woff/FiraCode-Bold.woff") format("woff");
+        font-style: bold;
+        font-weight: 700;
+    }
+
+    .terminal-992489918-matrix {
+        font-family: Fira Code, monospace;
+        font-size: 20px;
+        line-height: 24.4px;
+        font-variant-east-asian: full-width;
+    }
+
+    .terminal-992489918-title {
+        font-size: 18px;
+        font-weight: bold;
+        font-family: arial;
+    }
+
+    .terminal-992489918-r1 { fill: #fe0010 }
+.terminal-992489918-r2 { fill: #fe001b }
+.terminal-992489918-r3 { fill: #fd0022 }
+.terminal-992489918-r4 { fill: #fc0028 }
+.terminal-992489918-r5 { fill: #fc002d }
+.terminal-992489918-r6 { fill: #fb0031 }
+.terminal-992489918-r7 { fill: #fb0035 }
+.terminal-992489918-r8 { fill: #fa0039 }
+.terminal-992489918-r9 { fill: #fa003c }
+.terminal-992489918-r10 { fill: #f9003f }
+.terminal-992489918-r11 { fill: #f80042 }
+.terminal-992489918-r12 { fill: #f80045 }
+.terminal-992489918-r13 { fill: #f70048 }
+.terminal-992489918-r14 { fill: #f7004a }
+.terminal-992489918-r15 { fill: #f6004d }
+.terminal-992489918-r16 { fill: #f5004f }
+.terminal-992489918-r17 { fill: #f50052 }
+.terminal-992489918-r18 { fill: #f40054 }
+.terminal-992489918-r19 { fill: #f30056 }
+.terminal-992489918-r20 { fill: #f30058 }
+.terminal-992489918-r21 { fill: #f2005a }
+.terminal-992489918-r22 { fill: #f2005c }
+.terminal-992489918-r23 { fill: #f1005e }
+.terminal-992489918-r24 { fill: #f00060 }
+.terminal-992489918-r25 { fill: #f00062 }
+.terminal-992489918-r26 { fill: #ef0063 }
+.terminal-992489918-r27 { fill: #ef0065 }
+.terminal-992489918-r28 { fill: #ee0067 }
+.terminal-992489918-r29 { fill: #ed0069 }
+.terminal-992489918-r30 { fill: #ed006a }
+.terminal-992489918-r31 { fill: #ec006c }
+.terminal-992489918-r32 { fill: #eb006e }
+.terminal-992489918-r33 { fill: #eb006f }
+.terminal-992489918-r34 { fill: #ea0071 }
+.terminal-992489918-r35 { fill: #e90072 }
+.terminal-992489918-r36 { fill: #e90074 }
+.terminal-992489918-r37 { fill: #e80075 }
+.terminal-992489918-r38 { fill: #e80077 }
+.terminal-992489918-r39 { fill: #e70078 }
+.terminal-992489918-r40 { fill: #e60079 }
+.terminal-992489918-r41 { fill: #e6007b }
+.terminal-992489918-r42 { fill: #e5007c }
+.terminal-992489918-r43 { fill: #e4007e }
+.terminal-992489918-r44 { fill: #e4007f }
+.terminal-992489918-r45 { fill: #e30080 }
+.terminal-992489918-r46 { fill: #e20082 }
+.terminal-992489918-r47 { fill: #e20083 }
+.terminal-992489918-r48 { fill: #e10084 }
+.terminal-992489918-r49 { fill: #e00085 }
+.terminal-992489918-r50 { fill: #e00087 }
+.terminal-992489918-r51 { fill: #df0088 }
+.terminal-992489918-r52 { fill: #de0089 }
+.terminal-992489918-r53 { fill: #de008a }
+.terminal-992489918-r54 { fill: #dd008c }
+.terminal-992489918-r55 { fill: #dc008d }
+.terminal-992489918-r56 { fill: #db008e }
+.terminal-992489918-r57 { fill: #db008f }
+.terminal-992489918-r58 { fill: #da0090 }
+.terminal-992489918-r59 { fill: #d90091 }
+.terminal-992489918-r60 { fill: #d90092 }
+.terminal-992489918-r61 { fill: #d80094 }
+.terminal-992489918-r62 { fill: #d70095 }
+.terminal-992489918-r63 { fill: #d70096 }
+.terminal-992489918-r64 { fill: #d60097 }
+.terminal-992489918-r65 { fill: #d50098 }
+.terminal-992489918-r66 { fill: #d40099 }
+.terminal-992489918-r67 { fill: #d4009a }
+.terminal-992489918-r68 { fill: #d3009b }
+.terminal-992489918-r69 { fill: #d2009c }
+.terminal-992489918-r70 { fill: #d2009d }
+.terminal-992489918-r71 { fill: #d1009e }
+.terminal-992489918-r72 { fill: #d0009f }
+.terminal-992489918-r73 { fill: #cf00a0 }
+.terminal-992489918-r74 { fill: #cf00a1 }
+.terminal-992489918-r75 { fill: #ce00a2 }
+.terminal-992489918-r76 { fill: #cd00a3 }
+.terminal-992489918-r77 { fill: #cc00a4 }
+.terminal-992489918-r78 { fill: #cc00a5 }
+.terminal-992489918-r79 { fill: #cb00a6 }
+.terminal-992489918-r80 { fill: #ca00a7 }
+.terminal-992489918-r81 { fill: #c900a8 }
+.terminal-992489918-r82 { fill: #c900a9 }
+.terminal-992489918-r83 { fill: #c800aa }
+.terminal-992489918-r84 { fill: #c700ab }
+.terminal-992489918-r85 { fill: #c600ac }
+.terminal-992489918-r86 { fill: #c500ad }
+.terminal-992489918-r87 { fill: #c500ae }
+.terminal-992489918-r88 { fill: #c400af }
+.terminal-992489918-r89 { fill: #c300b0 }
+.terminal-992489918-r90 { fill: #c200b0 }
+.terminal-992489918-r91 { fill: #c100b1 }
+.terminal-992489918-r92 { fill: #c100b2 }
+.terminal-992489918-r93 { fill: #c000b3 }
+.terminal-992489918-r94 { fill: #bf00b4 }
+.terminal-992489918-r95 { fill: #be00b5 }
+.terminal-992489918-r96 { fill: #bd00b6 }
+.terminal-992489918-r97 { fill: #bd00b7 }
+.terminal-992489918-r98 { fill: #bc00b7 }
+.terminal-992489918-r99 { fill: #bb00b8 }
+.terminal-992489918-r100 { fill: #ba00b9 }
+.terminal-992489918-r101 { fill: #d9d9d9 }
+    </style>
+
+    <defs>
+    <clipPath id="terminal-992489918-clip-terminal">
+      <rect x="0" y="0" width="1219.0" height="23.4" />
+    </clipPath>
+    
+    </defs>
+
+    <rect fill="#0c0c0c" stroke="rgba(255,255,255,0.35)" stroke-width="1" x="1" y="1" width="1236" height="72.4" rx="8"/><text class="terminal-992489918-title" fill="#d9d9d9" text-anchor="middle" x="618" y="27">gradient&#160;columns</text>
+            <g transform="translate(26,22)">
+            <circle cx="0" cy="0" r="7" fill="#ff5f57"/>
+            <circle cx="22" cy="0" r="7" fill="#febc2e"/>
+            <circle cx="44" cy="0" r="7" fill="#28c840"/>
+            </g>
+        
+    <g transform="translate(9, 41)" clip-path="url(#terminal-992489918-clip-terminal)">
+    
+    <g class="terminal-992489918-matrix">
+    <text class="terminal-992489918-r1" x="0" y="20" textLength="12.2" clip-path="url(#terminal-992489918-line-0)">a</text><text class="terminal-992489918-r2" x="12.2" y="20" textLength="12.2" clip-path="url(#terminal-992489918-line-0)">l</text><text class="terminal-992489918-r3" x="24.4" y="20" textLength="12.2" clip-path="url(#terminal-992489918-line-0)">p</text><text class="terminal-992489918-r4" x="36.6" y="20" textLength="12.2" clip-path="url(#terminal-992489918-line-0)">h</text><text class="terminal-992489918-r5" x="48.8" y="20" textLength="12.2" clip-path="url(#terminal-992489918-line-0)">a</text><text class="terminal-992489918-r7" x="73.2" y="20" textLength="12.2" clip-path="url(#terminal-992489918-line-0)">b</text><text class="terminal-992489918-r8" x="85.4" y="20" textLength="12.2" clip-path="url(#terminal-992489918-line-0)">e</text><text class="terminal-992489918-r9" x="97.6" y="20" textLength="12.2" clip-path="url(#terminal-992489918-line-0)">t</text><text class="terminal-992489918-r10" x="109.8" y="20" textLength="12.2" clip-path="url(#terminal-992489918-line-0)">a</text><text class="terminal-992489918-r12" x="134.2" y="20" textLength="12.2" clip-path="url(#terminal-992489918-line-0)">g</text><text class="terminal-992489918-r13" x="146.4" y="20" textLength="12.2" clip-path="url(#terminal-992489918-line-0)">a</text><text class="terminal-992489918-r14" x="158.6" y="20" textLength="12.2" clip-path="url(#terminal-992489918-line-0)">m</text><text class="terminal-992489918-r15" x="170.8" y="20" textLength="12.2" clip-path="url(#terminal-992489918-line-0)">m</text><text class="terminal-992489918-r16" x="183" y="20" textLength="12.2" clip-path="url(#terminal-992489918-line-0)">a</text><text class="terminal-992489918-r18" x="207.4" y="20" textLength="12.2" clip-path="url(#terminal-992489918-line-0)">d</text><text class="terminal-992489918-r19" x="219.6" y="20" textLength="12.2" clip-path="url(#terminal-992489918-line-0)">e</text><text class="terminal-992489918-r20" x="231.8" y="20" textLength="12.2" clip-path="url(#terminal-992489918-line-0)">l</text><text class="terminal-992489918-r21" x="244" y="20" textLength="12.2" clip-path="url(#terminal-992489918-line-0)">t</text><text class="terminal-992489918-r22" x="256.2" y="20" textLength="12.2" clip-path="url(#terminal-992489918-line-0)">a</text><text class="terminal-992489918-r24" x="280.6" y="20" textLength="12.2" clip-path="url(#terminal-992489918-line-0)">e</text><text class="terminal-992489918-r25" x="292.8" y="20" textLength="12.2" clip-path="url(#terminal-992489918-line-0)">p</text><text class="terminal-992489918-r26" x="305" y="20" textLength="12.2" clip-path="url(#terminal-992489918-line-0)">s</text><text class="terminal-992489918-r27" x="317.2" y="20" textLength="12.2" clip-path="url(#terminal-992489918-line-0)">i</text><text class="terminal-992489918-r28" x="329.4" y="20" textLength="12.2" clip-path="url(#terminal-992489918-line-0)">l</text><text class="terminal-992489918-r29" x="341.6" y="20" textLength="12.2" clip-path="url(#terminal-992489918-line-0)">o</text><text class="terminal-992489918-r30" x="353.8" y="20" textLength="12.2" clip-path="url(#terminal-992489918-line-0)">n</text><text class="terminal-992489918-r101" x="1220" y="20" textLength="12.2" clip-path="url(#terminal-992489918-line-0)">
+</text>
+    </g>
+    </g>
+</svg>
