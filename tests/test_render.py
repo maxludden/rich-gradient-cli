@@ -145,3 +145,37 @@ def test_tree_max_depth_exact(tmp_path) -> None:
     res = Resource(text="", name=str(tmp_path), path=tmp_path)
     out = _render(build_inner(Mode.TREE, res, RenderConfig(max_depth=2)))
     assert "b/" in out and "deep.txt" not in out
+
+
+def _styled_render(renderable: object, width: int = 40) -> Console:
+    """Render with truecolor so segment styles can be inspected."""
+    console = Console(width=width, force_terminal=True, color_system="truecolor", record=True, file=open("/dev/null", "w"))
+    console.print(renderable)
+    return console
+
+
+def test_expanded_panel_spans_full_width() -> None:
+    """An expanding panel fills the console so border and text share one ramp."""
+    console = Console(width=30, file=open("/dev/null", "w"))
+    cfg = RenderConfig(colors="red,blue", panel=True)
+    out = build_output(Mode.TEXT, _res("hi"), cfg, console, animated=False)
+    assert _render_width(out, 30) == 30
+
+
+def _render_width(renderable: object, width: int) -> int:
+    """Return the widest rendered line's cell width."""
+    console = Console(width=width, record=True, file=open("/dev/null", "w"))
+    console.print(renderable)
+    return max(len(line.rstrip()) for line in console.export_text().splitlines())
+
+
+def test_syntax_keeps_token_colors_but_gradients_plain_text() -> None:
+    """Highlighted tokens keep the theme colors; the rest takes the gradient."""
+    console = Console(width=40, file=open("/dev/null", "w"))
+    cfg = RenderConfig(colors="#ff0000,#0000ff", theme="monokai")
+    out = build_output(Mode.SYNTAX, _res('x = "a"', "a.py"), cfg, console, animated=False)
+    rec = _styled_render(out)
+    colors = {seg.style.color.name for seg in rec.render(out) if seg.style and seg.style.color}
+    # monokai string yellow survives alongside many gradient colors
+    assert "#e6db74" in colors
+    assert len(colors) > 3

@@ -27,7 +27,10 @@ from rich_gradient import Gradient, Panel, Pretty, Rule, Spectrum
 from rich_gradient.animated_gradient import AnimatedGradient
 from rich_gradient.animated_panel import AnimatedPanel
 from rich_gradient.animated_rule import AnimatedRule
+from rich.color import Color
+from rich.style import Style
 from rich.syntax import Syntax as RichSyntax
+from pygments.token import Token
 
 from .options import BOXES, parse_colors, parse_mapping, parse_padding
 from .resource import Mode, Resource, ResourceError
@@ -404,6 +407,36 @@ def build_rule(resource: Resource, cfg: RenderConfig, *, animated: bool) -> Rend
     return Rule(**kwargs)
 
 
+class _KeepTokens:
+    """Mixin for gradients that leave syntax-highlighted tokens alone.
+
+    Segments whose foreground differs from the syntax theme's base text color
+    (keywords, strings, comments, ...) keep their color; everything else (the
+    panel border, plain code, whitespace) takes the gradient.
+    """
+
+    base_color: Color | None = None
+
+    def _merge_styles(self, original: Style, gradient_style: Style) -> Style:
+        color = original.color
+        if color is not None and color != self.base_color:
+            return original
+        return original + gradient_style if original else gradient_style
+
+
+class _KeepTokensGradient(_KeepTokens, Gradient):
+    """``Gradient`` that preserves syntax token colors."""
+
+
+class _KeepTokensPanel(_KeepTokens, Panel):
+    """``Panel`` whose border takes the gradient but whose syntax keeps its colors."""
+
+
+def _syntax_base_color(cfg: RenderConfig) -> Color | None:
+    """Return the foreground color of un-highlighted code in the syntax theme."""
+    return RichSyntax.get_theme(cfg.theme).get_style_for_token(Token).color
+
+
 def build_output(
     mode: Mode,
     resource: Resource,
@@ -426,6 +459,9 @@ def build_output(
     expand = resolve_expand(mode, cfg)
     padding = parse_padding(cfg.padding)
     common = {**_gradient_kwargs(cfg), **_highlights(cfg)}
+    keep_tokens = mode in {Mode.SYNTAX, Mode.IPYNB}
+    panel_cls = _KeepTokensPanel if keep_tokens and not animated else Panel
+    gradient_cls = _KeepTokensGradient if keep_tokens and not animated else Gradient
 
     if cfg.panel:
         panel_kwargs: dict[str, Any] = {
@@ -441,6 +477,11 @@ def build_output(
         }
         if padding is not None:
             panel_kwargs["padding"] = padding
+        if expand:
+            # rich-gradient measures an expanding Rich panel at its content width
+            # and shrinks it, leaving the gradient spread over empty space; pin
+            # the panel to the full width so border and content share one ramp.
+            panel_kwargs["width"] = console.width
         if animated:
             return cast(
                 Runnable,
@@ -451,7 +492,10 @@ def build_output(
                     **panel_kwargs,
                 ),
             )
-        return Panel(inner, **panel_kwargs)
+        panel_out = panel_cls(inner, **panel_kwargs)
+        if keep_tokens:
+            panel_out.base_color = _syntax_base_color(cfg)  # type: ignore[attr-defined]
+        return _fit_width(panel_out, expand, console, cfg)
 
     if padding is not None:
         inner = Padding(inner, padding)
@@ -471,13 +515,29 @@ def build_output(
                 **gradient_kwargs,
             ),
         )
-    gradient = Gradient(cast(Any, inner), repeat_scale=cfg.repeat_scale, **gradient_kwargs)
+    gradient = gradient_cls(cast(Any, inner), repeat_scale=cfg.repeat_scale, **gradient_kwargs)
+    if keep_tokens:
+        gradient.base_color = _syntax_base_color(cfg)  # type: ignore[attr-defined]
+    return _fit_width(gradient, expand, console, cfg, measure=inner)
+
+
+def _fit_width(
+    renderable: Any,
+    expand: bool,
+    console: Console,
+    cfg: RenderConfig,
+    *,
+    measure: Any = None,
+) -> RenderableType:
+    """Shrink a non-expanding gradient to its content so the ramp spans it.
+
+    rich-gradient always spreads the ramp over the available width, so without
+    this a narrow panel or text block would only show the start of the gradient.
+    """
     if expand:
-        return gradient
-    # rich-gradient always spans the available width, so shrink that width to
-    # the content to make the gradient visible across it.
-    content_width = Measurement.get(console, console.options, inner).maximum
-    constrained = Constrain(gradient, min(content_width, console.width))
+        return cast(RenderableType, renderable)
+    content_width = Measurement.get(console, console.options, measure or renderable).maximum
+    constrained = Constrain(renderable, min(content_width, console.width))
     if cfg.align == "left":
         return constrained
     return Align(constrained, align=cast(Any, cfg.align))
