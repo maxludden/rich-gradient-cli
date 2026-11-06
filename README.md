@@ -40,17 +40,17 @@ gradient --tree src                       # directory tree
 gradient README.md --export-svg out.svg   # also: -o out.html, --pager
 ```
 
-![Gradient text](docs/img/commands/text-example.svg)
+![Gradient text](https://raw.githubusercontent.com/maxludden/rich-gradient-cli/master/docs/img/commands/text-example.svg)
 
 ### Options at a glance
 
 Shared flags keep their `rich-cli` spelling (`-p --print`, `-u --rule`, `-m --markdown`, `-J --json`, `-a --panel BOX`, `-d --padding`, `-s --style`, `-S --panel-style`, `-l/-c/-r` block alignment, `-L/-C/-R/-F` text justify, `-w/-W` width, `-h/-t` head/tail, `-n -g -x -y -j`, `-o --export-html`, `--export-svg`, `--pager`, `-v --version`). Gradient-specific options are long-only: `--colors`, `--bgcolors`, `--rainbow`, `--hues`, `--repeat-scale`, `--highlight-word`, `--highlight-regex`, `--animate`, `--duration`.
 
-See [docs/options.md](docs/options.md) or run `gradient --help` for the grouped list.
+See [docs/options.md](https://github.com/maxludden/rich-gradient-cli/blob/master/docs/options.md) or run `gradient --help` for the grouped list.
 
 ### From `0.3` subcommands
 
-Versions up to 0.3 used subcommands (`gradient print`, `gradient panel`, `gradient view`, ...). They were replaced by flags on the one command; see the [CHANGELOG](CHANGELOG.md) for the mapping.
+Versions up to 0.3 used subcommands (`gradient print`, `gradient panel`, `gradient view`, ...). They were replaced by flags on the one command; see the [CHANGELOG](https://github.com/maxludden/rich-gradient-cli/blob/master/CHANGELOG.md) for the mapping.
 
 ### Telemetry
 
@@ -72,7 +72,7 @@ zensical serve
   <br />
   <a href="https://github.com/maxludden/maxludden" style="text-decoration:none; color:inherit;">
     <img
-      src="docs/img/MaxLogo.svg"
+      src="https://raw.githubusercontent.com/maxludden/rich-gradient-cli/master/docs/img/MaxLogo.svg"
       alt="Max Ludden's Logo"
       width="20%"
     />

@@ -30,6 +30,12 @@ docs = [
     "zensical>=0.0.68",
 ]
 
+[project.urls]
+Homepage = "https://github.com/maxludden/rich-gradient-cli"
+Documentation = "https://maxludden.github.io/rich-gradient-cli"
+Repository = "https://github.com/maxludden/rich-gradient-cli"
+Changelog = "https://github.com/maxludden/rich-gradient-cli/blob/master/CHANGELOG.md"
+
 [project.scripts]
 gradient = "rich_gradient_cli:entrypoint"
 

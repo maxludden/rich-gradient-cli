@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 
 ## Unreleased
 
+### Fixed
+
+- README links and images now use absolute URLs so they work on PyPI (relative paths 404 there); added `[project.urls]` metadata.
+
 ### Changed
 
 - Regenerated all doc screenshots in the style of the rich-gradient site (rich-gradient's `GRADIENT_TERMINAL_THEME`, narrow window, vivid gradients, the command as the window title).
