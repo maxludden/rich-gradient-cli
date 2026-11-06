@@ -2,7 +2,7 @@
 
 All notable changes to this project will be documented in this file.
 
-## Unreleased
+## 0.4.0 - 2026-11-06
 
 ### Changed
 
@@ -15,12 +15,12 @@ All notable changes to this project will be documented in this file.
 
 ### Added
 
+- Added an MIT `LICENSE` file and declared `license = "MIT"` / `license-files` in `pyproject.toml`, so the license shows up on PyPI and in downstream packaging (e.g. the Homebrew tap formula).
+- Documented Homebrew installation (`brew install maxludden/tap/rich-gradient-cli`) in the README.
 - `--rst` (reStructuredText, auto-detected for `.rst`), `--ipynb` (Jupyter notebooks, auto-detected for `.ipynb`) and `--inspect` (inspect a Python object by dotted path or expression), plus the `rich-rst` dependency.
 - Panel `none` box and `-e/--expand/--no-expand`.
 - Added a `dev` dependency group with `pytest` and VS Code settings that enable pytest test discovery in `tests/`.
-- Added the remaining `rich-cli` render modes to `gradient view`: `--rst` (reStructuredText, auto-detected for `.rst`), `--ipynb` (Jupyter notebooks, auto-detected for `.ipynb`) and `--inspect` (inspect a Python object by dotted path or expression). Adds the `rich-rst` dependency.
-- Added opt-in, anonymous usage telemetry via Amplitude (`amplitude-analytics`). It is off by default; `gradient telemetry enable|disable|status` manages it. When enabled and `AMPLITUDE_API_KEY` is set, each subcommand run sends a `Command Run` event with the subcommand name and a random install ID. Events are sent only after a command completes successfully (not for `--help` or usage errors), flushing is bounded by a 5-second timeout, and the config is written atomically.
-- Documented the `telemetry` commands and the root `--help` screenshot in `docs/commands.md`, and added them to the SVG generator.
+- Added opt-in, anonymous usage telemetry via Amplitude (`amplitude-analytics`). It is off by default; `gradient --telemetry enable|disable|status` manages it. When enabled and `AMPLITUDE_API_KEY` is set, each successful run sends a `Command Run` event with the render mode and a random install ID. Events are sent only after a command completes successfully (not for `--help` or usage errors), flushing is bounded by a 5-second timeout, and the config is written atomically.
 
 ## 0.3.0 - 2026-11-01
 
