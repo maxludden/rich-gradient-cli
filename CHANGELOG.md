@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file.
 
+## Unreleased
+
+### Changed
+
+- Regenerated all doc screenshots in the style of the rich-gradient site (rich-gradient's `GRADIENT_TERMINAL_THEME`, narrow window, vivid gradients, the command as the window title).
+- `--rule-char` help now says it takes a single character (a longer string was always rejected).
+
+### Added
+
+- One screenshot per option in `docs/img/options/` (gradient, layout and content options), embedded in `docs/options.md`, plus new `print` and `ipynb` mode examples. `scripts/generate_command_svgs.py` generates them all.
+
 ## 0.4.1 - 2026-11-06
 
 ### Fixed

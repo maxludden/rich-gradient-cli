@@ -190,7 +190,7 @@ def main(
     line_numbers: Annotated[bool, typer.Option("--line-numbers", "-n", help="Show line numbers.", rich_help_panel=CONTENT)] = False,
     guides: Annotated[bool, typer.Option("--guides", "-g", help="Show indentation guides.", rich_help_panel=CONTENT)] = False,
     rule_style: Annotated[str, typer.Option("--rule-style", metavar="STYLE", help="Style for --rule.", rich_help_panel=CONTENT)] = "",
-    rule_char: Annotated[Optional[str], typer.Option("--rule-char", metavar="CHARACTER", help="Character(s) for --rule (overrides --thickness).", rich_help_panel=CONTENT)] = None,
+    rule_char: Annotated[Optional[str], typer.Option("--rule-char", metavar="CHARACTER", help="Single character for --rule (overrides --thickness).", rich_help_panel=CONTENT)] = None,
     thickness: Annotated[int, typer.Option("--thickness", min=0, max=3, help="Rule thickness, 0-3.", rich_help_panel=CONTENT)] = 2,
     delimiter: Annotated[Optional[str], typer.Option("--delimiter", metavar="CHAR", help="CSV delimiter (default: auto-detect).", rich_help_panel=CONTENT)] = None,
     no_header: Annotated[bool, typer.Option("--no-header", help="Treat the first CSV row as data.", rich_help_panel=CONTENT)] = False,
