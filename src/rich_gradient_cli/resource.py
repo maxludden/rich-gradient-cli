@@ -12,6 +12,8 @@ from urllib.parse import urlparse
 
 USER_AGENT = "rich-gradient-cli"
 URL_TIMEOUT = 10.0
+#: Largest response body (bytes) that will be downloaded from a URL.
+MAX_DOWNLOAD_BYTES = 10 * 1024 * 1024
 
 
 class ResourceError(Exception):
@@ -87,7 +89,12 @@ def _fetch(url: str) -> str:
     request = urllib.request.Request(url, headers={"User-Agent": USER_AGENT})
     try:
         with urllib.request.urlopen(request, timeout=URL_TIMEOUT) as response:  # noqa: S310
-            return _decode(response.read(), url)
+            data = response.read(MAX_DOWNLOAD_BYTES + 1)
+            if len(data) > MAX_DOWNLOAD_BYTES:
+                raise ResourceError(
+                    f"{url} is larger than {MAX_DOWNLOAD_BYTES // (1024 * 1024)} MB."
+                )
+            return _decode(data, url)
     except urllib.error.HTTPError as exc:
         raise ResourceError(f"Unable to fetch {url}: HTTP {exc.code} {exc.reason}") from exc
     except (urllib.error.URLError, TimeoutError, OSError) as exc:
@@ -110,15 +117,20 @@ def read_resource(resource: str | None, *, allow_directory: bool = False) -> Res
         ResourceError: On unreadable files, directories, bad UTF-8, or HTTP failures.
     """
     if resource is None or resource == "-":
-        return Resource(text=sys.stdin.read())
+        return Resource(text=_decode(sys.stdin.buffer.read(), "stdin"))
     if is_url(resource):
         return Resource(text=_fetch(resource), name=urlparse(resource).path)
     path = Path(resource).expanduser()
-    if path.is_dir():
+    try:
+        is_dir, is_file = path.is_dir(), path.is_file()
+    except (OSError, RuntimeError):
+        # Too long or otherwise invalid as a path (e.g. a paragraph): literal text.
+        is_dir = is_file = False
+    if is_dir:
         if allow_directory:
             return Resource(text="", name=str(path), path=path)
         raise ResourceError(f"{resource} is a directory; pass a file, or use --tree.")
-    if path.is_file():
+    if is_file:
         try:
             return Resource(text=_decode(path.read_bytes(), resource), name=path.name, path=path)
         except OSError as exc:

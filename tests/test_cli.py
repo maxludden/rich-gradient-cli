@@ -191,3 +191,24 @@ def test_inspect_bad_expression() -> None:
 def test_max_width_and_width_accepted() -> None:
     assert run("hello world", "-W", "20").exit_code == 0
     assert run("hello world", "-w", "20").exit_code == 0
+
+
+def test_width_and_max_width_both_applied() -> None:
+    """--max-width clamps --width instead of being ignored."""
+    result = run("-w", "120", "-W", "20", "--rule", "x")
+    assert result.exit_code == 0
+    assert max(len(line) for line in result.output.splitlines()) <= 20
+
+
+def test_export_missing_directory_checked_before_render(tmp_path: Path) -> None:
+    """A bad export destination is a usage error and prints nothing first."""
+    result = run("hi", "--export-svg", str(tmp_path / "nope" / "x.svg"))
+    assert result.exit_code == 2
+    assert "hi" not in result.output.split("Error")[0]
+
+
+def test_ignored_option_warns() -> None:
+    """Options that do nothing in the chosen mode produce a warning."""
+    result = run("hello", "--head", "1")
+    assert result.exit_code == 0
+    assert "ignored" in result.output

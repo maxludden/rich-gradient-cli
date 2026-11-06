@@ -103,15 +103,13 @@ def slice_lines(text: str, head: int | None, tail: int | None) -> str:
 
 def _text(resource: Resource, cfg: RenderConfig) -> RichText:
     """Build a plain Rich ``Text`` honoring markup, emoji, and wrapping flags."""
-    from rich.text import Text
-
     try:
         if cfg.markup:
-            text = Text.from_markup(
+            text = RichText.from_markup(
                 resource.text.rstrip("\n"), emoji=cfg.emoji, style=cfg.style
             )
         else:
-            text = Text(resource.text.rstrip("\n"), style=cfg.style)
+            text = RichText(resource.text.rstrip("\n"), style=cfg.style)
     except MarkupError as exc:
         raise ResourceError(f"Invalid markup: {exc} (use --no-markup to print verbatim).") from exc
     text.justify = cast(Any, cfg.text_align)
@@ -179,7 +177,7 @@ def _json(resource: Resource, cfg: RenderConfig) -> Pretty:
 def _tree(resource: Resource, cfg: RenderConfig) -> RichTree:
     """Build a tree from a directory, or from lines (first line is the root)."""
     if resource.path is not None and resource.path.is_dir():
-        root = RichTree(escape(resource.path.name or str(resource.path)))
+        root = RichTree(escape(resource.path.resolve().name or str(resource.path)))
         _walk(resource.path, root, cfg.max_depth)
         return root
     lines = [line for line in resource.text.splitlines() if line.strip()]
@@ -285,6 +283,10 @@ def resolve_object(expression: str) -> Any:
 
     Dotted paths are imported without ``eval``; any other expression is
     evaluated, exactly like ``rich --inspect``.
+
+    Warning:
+        Importing a dotted path executes that module, and any other expression
+        is passed to ``eval``. Never pass untrusted text to ``--inspect``.
 
     Raises:
         ResourceError: If the expression cannot be resolved.
@@ -483,7 +485,7 @@ def build_output(
 
 def spectrum_output(cfg: RenderConfig) -> RenderableType:
     """Render the palette as a table, or as plain ``names``/``hex``/``csv`` text."""
-    spectrum = Spectrum(hues=cfg.hues if cfg.hues <= 17 else 17)
+    spectrum = Spectrum(hues=cfg.hues)
     if cfg.spectrum_output == "names":
         return RichText("\n".join(spectrum.names))
     if cfg.spectrum_output == "hex":

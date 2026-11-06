@@ -2,6 +2,28 @@
 
 All notable changes to this project will be documented in this file.
 
+## 0.4.1 - 2026-11-06
+
+### Fixed
+
+- Literal text longer than the OS path limit is no longer misreported as "File name too long"; path probing falls back to literal text.
+- `gradient -` no longer crashes with a traceback on non-UTF-8 stdin; it reports a clean error like files and URLs.
+- `--width` and `--max-width` can be combined: the maximum now clamps the width.
+- A bad `--export-svg`/`--export-html` destination is now detected before rendering, and I/O errors name the file.
+- Exporting both `--export-svg` and `--export-html` in one run no longer writes an empty HTML file (the SVG export cleared the recording).
+- URL downloads are capped at 10 MB.
+- `--head`/`--tail`, `--text-*` and `--vertical-align` now warn when they are ignored for the selected mode.
+- `--tree .` labels the root with the real directory name instead of `.` (ported from the pre-rewrite `tree` fix). The pre-rewrite stdin-routing and missing-syntax-file fixes no longer apply: the subcommands they patched were removed in 0.4.0.
+
+### Changed
+
+- `--inspect` help and docs warn that it imports/evaluates its argument (never pass untrusted text).
+- Removed unused `Align`/`TextAlign` enums and a redundant `--hues` clamp.
+
+### Added
+
+- Tests for `render.py` and `export.py`, plus regression tests for the fixes above.
+
 ## 0.4.0 - 2026-11-06
 
 ### Changed

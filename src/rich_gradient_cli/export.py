@@ -37,7 +37,9 @@ def export_renderable(
     recorder.print(renderable)
     if svg:
         Path(svg).write_text(
-            recorder.export_svg(title="rich-gradient", theme=GRADIENT_TERMINAL_THEME),
+            recorder.export_svg(
+                title="rich-gradient", theme=GRADIENT_TERMINAL_THEME, clear=False
+            ),
             encoding="utf-8",
         )
     if html:
