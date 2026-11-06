@@ -12,6 +12,12 @@ gradient [OPTIONS] [PATH,TEXT,URL, or '-']
 uv tool install rich-gradient-cli   # or: pip install rich-gradient-cli
 ```
 
+Or with [Homebrew](https://brew.sh):
+
+```shell
+brew install maxludden/tap/rich-gradient-cli
+```
+
 Requires Python 3.11+.
 
 ## Usage
