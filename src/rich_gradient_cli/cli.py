@@ -1,6 +1,7 @@
 """The ``gradient`` command: one command, modeled on Textualize/rich-cli."""
 
 import sys
+from pathlib import Path
 from enum import Enum
 from importlib.metadata import PackageNotFoundError, version
 from typing import Annotated, Optional
@@ -27,24 +28,6 @@ ANIMATION = "Animation"
 LAYOUT = "Layout"
 CONTENT = "Content"
 OUTPUT = "Output"
-
-
-class Align(str, Enum):
-    """Horizontal alignment."""
-
-    LEFT = "left"
-    CENTER = "center"
-    RIGHT = "right"
-
-
-class TextAlign(str, Enum):
-    """Text justification within its block."""
-
-    DEFAULT = "default"
-    LEFT = "left"
-    CENTER = "center"
-    RIGHT = "right"
-    FULL = "full"
 
 
 class VerticalAlign(str, Enum):
@@ -122,6 +105,27 @@ def _fail(message: str) -> "typer.Exit":
     return typer.Exit(EXIT_ERROR)
 
 
+#: Modes that honor ``--head``/``--tail`` and ``--text-*`` respectively.
+_HEAD_TAIL_MODES = {Mode.SYNTAX, Mode.CSV, Mode.IPYNB}
+_TEXT_ALIGN_MODES = {Mode.TEXT, Mode.MARKDOWN}
+
+
+def _warn_ignored(mode: Mode, *, head_tail: bool, text_align: bool, vertical: bool, panel: bool) -> None:
+    """Warn on stderr about layout options that have no effect for ``mode``."""
+    ignored: list[str] = []
+    if head_tail and mode not in _HEAD_TAIL_MODES:
+        ignored.append("--head/--tail")
+    if text_align and mode not in _TEXT_ALIGN_MODES:
+        ignored.append("--text-left/-center/-right/-full")
+    if vertical and panel:
+        ignored.append("--vertical-align (panels are top-aligned)")
+    if ignored:
+        Console(stderr=True).print(
+            f"[yellow]Warning:[/] {', '.join(ignored)} ignored in {mode.value} mode.",
+            highlight=False,
+        )
+
+
 @app.command()
 def main(
     resource: Annotated[
@@ -141,7 +145,7 @@ def main(
     csv_: Annotated[bool, typer.Option("--csv", help="Display CSV/TSV as a table.", rich_help_panel=RENDERABLE)] = False,
     ipynb: Annotated[bool, typer.Option("--ipynb", help="Display a Jupyter notebook.", rich_help_panel=RENDERABLE)] = False,
     syntax: Annotated[bool, typer.Option("--syntax", help="Syntax highlighting.", rich_help_panel=RENDERABLE)] = False,
-    inspect: Annotated[bool, typer.Option("--inspect", help="Inspect a Python object, e.g. 'str' or 'rich.console.Console'.", rich_help_panel=RENDERABLE)] = False,
+    inspect: Annotated[bool, typer.Option("--inspect", help="Inspect a Python object, e.g. 'str' or 'rich.console.Console'. Imports/evals RESOURCE: never pass untrusted text.", rich_help_panel=RENDERABLE)] = False,
     tree: Annotated[bool, typer.Option("--tree", help="Display a directory (or lines of text) as a tree.", rich_help_panel=RENDERABLE)] = False,
     columns: Annotated[bool, typer.Option("--columns", help="Lay out each line as a column cell.", rich_help_panel=RENDERABLE)] = False,
     spectrum: Annotated[bool, typer.Option("--spectrum", help="Show the rich-gradient color spectrum.", rich_help_panel=RENDERABLE)] = False,
@@ -179,8 +183,8 @@ def main(
     hyperlinks: Annotated[bool, typer.Option("--hyperlinks", "-y", help="Render hyperlinks in Markdown.", rich_help_panel=CONTENT)] = False,
     no_wrap: Annotated[bool, typer.Option("--no-wrap", help="Don't word wrap text or code.", rich_help_panel=CONTENT)] = False,
     tab_size: Annotated[int, typer.Option("--tab-size", min=1, help="Tab width.", rich_help_panel=CONTENT)] = 4,
-    head: Annotated[Optional[int], typer.Option("--head", "-h", min=1, metavar="LINES", help="Display the first LINES (--syntax, --csv, --ipynb).", rich_help_panel=CONTENT)] = None,
-    tail: Annotated[Optional[int], typer.Option("--tail", "-t", min=1, metavar="LINES", help="Display the last LINES (--syntax, --csv, --ipynb).", rich_help_panel=CONTENT)] = None,
+    head: Annotated[Optional[int], typer.Option("--head", "-h", min=1, metavar="LINES", help="Display the first LINES (--syntax, --csv, --ipynb; ignored elsewhere).", rich_help_panel=CONTENT)] = None,
+    tail: Annotated[Optional[int], typer.Option("--tail", "-t", min=1, metavar="LINES", help="Display the last LINES (--syntax, --csv, --ipynb; ignored elsewhere).", rich_help_panel=CONTENT)] = None,
     lexer: Annotated[Optional[str], typer.Option("--lexer", "-x", metavar="LEXER", help="Pygments lexer for --syntax.", rich_help_panel=CONTENT)] = None,
     theme: Annotated[str, typer.Option("--theme", envvar="RICH_THEME", metavar="THEME", help="Pygments theme for code.", rich_help_panel=CONTENT)] = "monokai",
     line_numbers: Annotated[bool, typer.Option("--line-numbers", "-n", help="Show line numbers.", rich_help_panel=CONTENT)] = False,
@@ -247,6 +251,10 @@ def main(
     except ValueError as exc:
         raise typer.BadParameter(str(exc)) from exc
 
+    for dest in (export_svg, export_html):
+        if dest and not Path(dest).expanduser().resolve().parent.is_dir():
+            raise typer.BadParameter(f"Cannot write {dest}: directory does not exist.")
+
     cfg = RenderConfig(
         colors=colors, bgcolors=bgcolors, rainbow=rainbow, hues=hues, repeat_scale=repeat_scale,
         highlight_words=list(highlight_word or []), highlight_regex=list(highlight_regex or []),
@@ -265,7 +273,7 @@ def main(
     console = Console(force_terminal=True if force_terminal else None)
     if width is not None:
         console.width = width
-    elif max_width is not None:
+    if max_width is not None:
         console.width = min(console.width, max_width)
 
     try:
@@ -285,6 +293,13 @@ def main(
                 data = read_resource(resource, allow_directory=chosen == [Mode.TREE])
             mode = chosen[0] if chosen else detect_mode(data)
             invoked_mode = mode.value
+            _warn_ignored(
+                mode,
+                head_tail=head is not None or tail is not None,
+                text_align=text_align_value != "default",
+                vertical=vertical_align is not VerticalAlign.MIDDLE,
+                panel=panel_on,
+            )
             animated = animate and console.is_terminal
             built = build_output(mode, data, cfg, console, animated=animated)
             if isinstance(built, Runnable):
@@ -308,7 +323,8 @@ def main(
     except ValueError as exc:
         raise _fail(str(exc)) from exc
     except OSError as exc:
-        raise _fail(f"{exc.strerror or exc}") from exc
+        where = f"{exc.filename}: " if exc.filename else ""
+        raise _fail(f"{where}{exc.strerror or exc}") from exc
 
 
 __all__ = ["VERSION", "app", "invoked_mode", "main"]

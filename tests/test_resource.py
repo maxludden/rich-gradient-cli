@@ -43,8 +43,37 @@ def test_binary_rejected(tmp_path: Path) -> None:
 
 def test_stdin(monkeypatch: pytest.MonkeyPatch) -> None:
     """'-' reads stdin."""
-    monkeypatch.setattr("sys.stdin", io.StringIO("piped"))
+    monkeypatch.setattr("sys.stdin", io.TextIOWrapper(io.BytesIO(b"piped")))
     assert read_resource("-").text == "piped"
+
+
+def test_stdin_binary_rejected(monkeypatch: pytest.MonkeyPatch) -> None:
+    """Non-UTF-8 stdin raises ResourceError rather than a traceback."""
+    monkeypatch.setattr("sys.stdin", io.TextIOWrapper(io.BytesIO(b"\xff\xfe\x00")))
+    with pytest.raises(ResourceError, match="UTF-8"):
+        read_resource("-")
+
+
+def test_long_literal_is_text() -> None:
+    """A literal longer than the OS path limit is still literal text."""
+    text = "word " * 200
+    res = read_resource(text)
+    assert res.is_literal and res.text == text
+
+
+def test_url_too_large(monkeypatch: pytest.MonkeyPatch) -> None:
+    """Oversized responses are rejected."""
+    class Response(io.BytesIO):
+        def __enter__(self) -> "Response":
+            return self
+
+        def __exit__(self, *args: object) -> None:
+            self.close()
+
+    monkeypatch.setattr(resource, "MAX_DOWNLOAD_BYTES", 4)
+    monkeypatch.setattr(resource.urllib.request, "urlopen", lambda *a, **k: Response(b"12345"))
+    with pytest.raises(ResourceError, match="larger than"):
+        read_resource("https://example.com/big")
 
 
 def test_url_ok(monkeypatch: pytest.MonkeyPatch) -> None:
