@@ -19,61 +19,61 @@
         font-weight: 700;
     }
 
-    .terminal-1882154862-matrix {
+    .terminal-3888015388-matrix {
         font-family: Fira Code, monospace;
         font-size: 20px;
         line-height: 24.4px;
         font-variant-east-asian: full-width;
     }
 
-    .terminal-1882154862-title {
+    .terminal-3888015388-title {
         font-size: 18px;
         font-weight: bold;
         font-family: arial;
     }
 
-    .terminal-1882154862-r1 { fill: #ff00e3;font-weight: bold }
-.terminal-1882154862-r2 { fill: #ff00a1;font-weight: bold }
-.terminal-1882154862-r3 { fill: #ff0061;font-weight: bold }
-.terminal-1882154862-r4 { fill: #ff0033;font-weight: bold }
-.terminal-1882154862-r5 { fill: #ff3900;font-weight: bold }
-.terminal-1882154862-r6 { fill: #ff6600;font-weight: bold }
-.terminal-1882154862-r7 { fill: #ff9600;font-weight: bold }
-.terminal-1882154862-r8 { fill: #ffbf00;font-weight: bold }
-.terminal-1882154862-r9 { fill: #ffe500;font-weight: bold }
-.terminal-1882154862-r10 { fill: #eeff00;font-weight: bold }
-.terminal-1882154862-r11 { fill: #aaff00;font-weight: bold }
-.terminal-1882154862-r12 { fill: #58ff00;font-weight: bold }
-.terminal-1882154862-r13 { fill: #00ff72;font-weight: bold }
-.terminal-1882154862-r14 { fill: #00ffbd;font-weight: bold }
-.terminal-1882154862-r15 { fill: #00fcff;font-weight: bold }
-.terminal-1882154862-r16 { fill: #00d6ff;font-weight: bold }
-.terminal-1882154862-r17 { fill: #00b1ff;font-weight: bold }
-.terminal-1882154862-r18 { fill: #308aff;font-weight: bold }
-.terminal-1882154862-r19 { fill: #5664ff;font-weight: bold }
-.terminal-1882154862-r20 { fill: #7a57ff;font-weight: bold }
-.terminal-1882154862-r21 { fill: #9f42ff;font-weight: bold }
-.terminal-1882154862-r22 { fill: #ffffff }
+    .terminal-3888015388-r1 { fill: #ff0044;font-weight: bold }
+.terminal-3888015388-r2 { fill: #ff2300;font-weight: bold }
+.terminal-3888015388-r3 { fill: #ff5100;font-weight: bold }
+.terminal-3888015388-r4 { fill: #ff8600;font-weight: bold }
+.terminal-3888015388-r5 { fill: #ffb100;font-weight: bold }
+.terminal-3888015388-r6 { fill: #ffd600;font-weight: bold }
+.terminal-3888015388-r7 { fill: #fffc00;font-weight: bold }
+.terminal-3888015388-r8 { fill: #c6ff00;font-weight: bold }
+.terminal-3888015388-r9 { fill: #7eff00;font-weight: bold }
+.terminal-3888015388-r10 { fill: #00ff4f;font-weight: bold }
+.terminal-3888015388-r11 { fill: #00ff99;font-weight: bold }
+.terminal-3888015388-r12 { fill: #00ffeb;font-weight: bold }
+.terminal-3888015388-r13 { fill: #00e5ff;font-weight: bold }
+.terminal-3888015388-r14 { fill: #00bfff;font-weight: bold }
+.terminal-3888015388-r15 { fill: #1497ff;font-weight: bold }
+.terminal-3888015388-r16 { fill: #4871ff;font-weight: bold }
+.terminal-3888015388-r17 { fill: #6e5cff;font-weight: bold }
+.terminal-3888015388-r18 { fill: #924bff;font-weight: bold }
+.terminal-3888015388-r19 { fill: #b930ff;font-weight: bold }
+.terminal-3888015388-r20 { fill: #f515ff;font-weight: bold }
+.terminal-3888015388-r21 { fill: #ff00cf;font-weight: bold }
+.terminal-3888015388-r22 { fill: #ffffff }
     </style>
 
     <defs>
-    <clipPath id="terminal-1882154862-clip-terminal">
+    <clipPath id="terminal-3888015388-clip-terminal">
       <rect x="0" y="0" width="877.4" height="23.4" />
     </clipPath>
     
     </defs>
 
-    <rect fill="#000000" stroke="rgba(255,255,255,0.35)" stroke-width="1" x="1" y="1" width="895" height="72.4" rx="8"/><text class="terminal-1882154862-title" fill="#ffffff" text-anchor="middle" x="447" y="27">gradient&#160;--rainbow&#160;-s&#160;bold&#160;&#x27;Rainbow&#160;gradient&#160;text&#x27;</text>
+    <rect fill="#000000" stroke="rgba(255,255,255,0.35)" stroke-width="1" x="1" y="1" width="895" height="72.4" rx="8"/><text class="terminal-3888015388-title" fill="#ffffff" text-anchor="middle" x="447" y="27">gradient&#160;--rainbow&#160;-s&#160;bold&#160;&#x27;Rainbow&#160;gradient&#160;text&#x27;</text>
             <g transform="translate(26,22)">
             <circle cx="0" cy="0" r="7" fill="#ff5f57"/>
             <circle cx="22" cy="0" r="7" fill="#febc2e"/>
             <circle cx="44" cy="0" r="7" fill="#28c840"/>
             </g>
         
-    <g transform="translate(9, 41)" clip-path="url(#terminal-1882154862-clip-terminal)">
+    <g transform="translate(9, 41)" clip-path="url(#terminal-3888015388-clip-terminal)">
     
-    <g class="terminal-1882154862-matrix">
-    <text class="terminal-1882154862-r1" x="0" y="20" textLength="12.2" clip-path="url(#terminal-1882154862-line-0)">R</text><text class="terminal-1882154862-r2" x="12.2" y="20" textLength="12.2" clip-path="url(#terminal-1882154862-line-0)">a</text><text class="terminal-1882154862-r3" x="24.4" y="20" textLength="12.2" clip-path="url(#terminal-1882154862-line-0)">i</text><text class="terminal-1882154862-r4" x="36.6" y="20" textLength="12.2" clip-path="url(#terminal-1882154862-line-0)">n</text><text class="terminal-1882154862-r5" x="48.8" y="20" textLength="12.2" clip-path="url(#terminal-1882154862-line-0)">b</text><text class="terminal-1882154862-r6" x="61" y="20" textLength="12.2" clip-path="url(#terminal-1882154862-line-0)">o</text><text class="terminal-1882154862-r7" x="73.2" y="20" textLength="12.2" clip-path="url(#terminal-1882154862-line-0)">w</text><text class="terminal-1882154862-r9" x="97.6" y="20" textLength="12.2" clip-path="url(#terminal-1882154862-line-0)">g</text><text class="terminal-1882154862-r10" x="109.8" y="20" textLength="12.2" clip-path="url(#terminal-1882154862-line-0)">r</text><text class="terminal-1882154862-r11" x="122" y="20" textLength="12.2" clip-path="url(#terminal-1882154862-line-0)">a</text><text class="terminal-1882154862-r12" x="134.2" y="20" textLength="12.2" clip-path="url(#terminal-1882154862-line-0)">d</text><text class="terminal-1882154862-r13" x="146.4" y="20" textLength="12.2" clip-path="url(#terminal-1882154862-line-0)">i</text><text class="terminal-1882154862-r14" x="158.6" y="20" textLength="12.2" clip-path="url(#terminal-1882154862-line-0)">e</text><text class="terminal-1882154862-r15" x="170.8" y="20" textLength="12.2" clip-path="url(#terminal-1882154862-line-0)">n</text><text class="terminal-1882154862-r16" x="183" y="20" textLength="12.2" clip-path="url(#terminal-1882154862-line-0)">t</text><text class="terminal-1882154862-r18" x="207.4" y="20" textLength="12.2" clip-path="url(#terminal-1882154862-line-0)">t</text><text class="terminal-1882154862-r19" x="219.6" y="20" textLength="12.2" clip-path="url(#terminal-1882154862-line-0)">e</text><text class="terminal-1882154862-r20" x="231.8" y="20" textLength="12.2" clip-path="url(#terminal-1882154862-line-0)">x</text><text class="terminal-1882154862-r21" x="244" y="20" textLength="12.2" clip-path="url(#terminal-1882154862-line-0)">t</text><text class="terminal-1882154862-r22" x="878.4" y="20" textLength="12.2" clip-path="url(#terminal-1882154862-line-0)">
+    <g class="terminal-3888015388-matrix">
+    <text class="terminal-3888015388-r1" x="0" y="20" textLength="12.2" clip-path="url(#terminal-3888015388-line-0)">R</text><text class="terminal-3888015388-r2" x="12.2" y="20" textLength="12.2" clip-path="url(#terminal-3888015388-line-0)">a</text><text class="terminal-3888015388-r3" x="24.4" y="20" textLength="12.2" clip-path="url(#terminal-3888015388-line-0)">i</text><text class="terminal-3888015388-r4" x="36.6" y="20" textLength="12.2" clip-path="url(#terminal-3888015388-line-0)">n</text><text class="terminal-3888015388-r5" x="48.8" y="20" textLength="12.2" clip-path="url(#terminal-3888015388-line-0)">b</text><text class="terminal-3888015388-r6" x="61" y="20" textLength="12.2" clip-path="url(#terminal-3888015388-line-0)">o</text><text class="terminal-3888015388-r7" x="73.2" y="20" textLength="12.2" clip-path="url(#terminal-3888015388-line-0)">w</text><text class="terminal-3888015388-r9" x="97.6" y="20" textLength="12.2" clip-path="url(#terminal-3888015388-line-0)">g</text><text class="terminal-3888015388-r10" x="109.8" y="20" textLength="12.2" clip-path="url(#terminal-3888015388-line-0)">r</text><text class="terminal-3888015388-r11" x="122" y="20" textLength="12.2" clip-path="url(#terminal-3888015388-line-0)">a</text><text class="terminal-3888015388-r12" x="134.2" y="20" textLength="12.2" clip-path="url(#terminal-3888015388-line-0)">d</text><text class="terminal-3888015388-r13" x="146.4" y="20" textLength="12.2" clip-path="url(#terminal-3888015388-line-0)">i</text><text class="terminal-3888015388-r14" x="158.6" y="20" textLength="12.2" clip-path="url(#terminal-3888015388-line-0)">e</text><text class="terminal-3888015388-r15" x="170.8" y="20" textLength="12.2" clip-path="url(#terminal-3888015388-line-0)">n</text><text class="terminal-3888015388-r16" x="183" y="20" textLength="12.2" clip-path="url(#terminal-3888015388-line-0)">t</text><text class="terminal-3888015388-r18" x="207.4" y="20" textLength="12.2" clip-path="url(#terminal-3888015388-line-0)">t</text><text class="terminal-3888015388-r19" x="219.6" y="20" textLength="12.2" clip-path="url(#terminal-3888015388-line-0)">e</text><text class="terminal-3888015388-r20" x="231.8" y="20" textLength="12.2" clip-path="url(#terminal-3888015388-line-0)">x</text><text class="terminal-3888015388-r21" x="244" y="20" textLength="12.2" clip-path="url(#terminal-3888015388-line-0)">t</text><text class="terminal-3888015388-r22" x="878.4" y="20" textLength="12.2" clip-path="url(#terminal-3888015388-line-0)">
 </text>
     </g>
     </g>

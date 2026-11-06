@@ -630,21 +630,21 @@ wheels = [
 
 [[package]]
 name = "rich-gradient"
-version = "0.4.1"
+version = "0.4.3"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "loguru" },
     { name = "rich" },
     { name = "rich-color-ext" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/e7/55/5b5d87ce38c0e177cc903940e28e94bb4ba64f0e32528ddfb58fc6dd94ef/rich_gradient-0.4.1.tar.gz", hash = "sha256:026795728d4539f6776bdc64a5038a64f02f5ecc59e0eaa359dd18515a9d3ac1", size = 16841584, upload-time = "2026-11-01T15:33:31.493Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/e1/a8/a84f927a0abce6b3035e09f0964e61fe22631cef8fc32aaab36d43cded2b/rich_gradient-0.4.3.tar.gz", hash = "sha256:0548c48adeab202a439911d0a8a7420cdf66b95dc3c31ccf6c59e935144c802a", size = 16843365, upload-time = "2026-11-06T11:19:18.429Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/92/dd/9edeb08e7e5271a3105125ac6af2f156f0e7dd57a23e3c29fd5ebdc9cf35/rich_gradient-0.4.1-py3-none-any.whl", hash = "sha256:528d1d49263655df339dc17f038b0adbf632b4ebd9c9dbb64f12de48800c37df", size = 77247, upload-time = "2026-11-01T15:33:29.958Z" },
+    { url = "https://files.pythonhosted.org/packages/9e/af/7c4c59119f1313bf7ba58a388238f1a8a085abbca684ed486667285a80b5/rich_gradient-0.4.3-py3-none-any.whl", hash = "sha256:50aa88892c4a04b07f09eeb92e49ea17456fe7b03aed63f480e7f1e53b9c60dc", size = 77945, upload-time = "2026-11-06T11:19:16.525Z" },
 ]
 
 [[package]]
 name = "rich-gradient-cli"
-version = "0.4.2"
+version = "0.4.3"
 source = { editable = "." }
 dependencies = [
     { name = "amplitude-analytics" },
@@ -681,7 +681,7 @@ requires-dist = [
     { name = "pytest", marker = "extra == 'dev'", specifier = ">=8.4.2" },
     { name = "rich", specifier = ">=15.0.0" },
     { name = "rich-color-ext", specifier = ">=3.0.0" },
-    { name = "rich-gradient", specifier = ">=0.4.1" },
+    { name = "rich-gradient", specifier = ">=0.4.3" },
     { name = "rich-rst", specifier = ">=2.2.0" },
     { name = "ruff", marker = "extra == 'dev'", specifier = ">=0.15.0" },
     { name = "typer", specifier = ">=0.21.1" },

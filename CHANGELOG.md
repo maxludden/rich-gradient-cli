@@ -2,12 +2,16 @@
 
 All notable changes to this project will be documented in this file.
 
-## Unreleased
+## 0.4.3 - 2026-11-06
 
 ### Fixed
 
 - Syntax-highlighted output (`--lexer`, source files, notebook code cells) keeps its token colors instead of being flattened to the gradient; only plain code, line numbers and the panel border take the gradient.
-- An expanding `--panel` now fills the full width, so the border and its content share one gradient ramp (rich-gradient shrank the panel, leaving the gradient spread over empty space).
+- An expanding `--panel` fills the full width, so the border and its content share one gradient ramp (needs `rich-gradient` 0.4.3, which fixes the panel measuring).
+
+### Changed
+
+- Requires `rich-gradient>=0.4.3`.
 
 ## 0.4.2 - 2026-11-06
 

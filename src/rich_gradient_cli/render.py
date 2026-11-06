@@ -477,11 +477,6 @@ def build_output(
         }
         if padding is not None:
             panel_kwargs["padding"] = padding
-        if expand:
-            # rich-gradient measures an expanding Rich panel at its content width
-            # and shrinks it, leaving the gradient spread over empty space; pin
-            # the panel to the full width so border and content share one ramp.
-            panel_kwargs["width"] = console.width
         if animated:
             return cast(
                 Runnable,
