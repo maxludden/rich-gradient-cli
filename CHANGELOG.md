@@ -2,6 +2,22 @@
 
 All notable changes to this project will be documented in this file.
 
+## Unreleased
+
+### Added
+
+- `.github/workflows/docs.yml` builds the docs with Zensical and deploys them to GitHub Pages on every push to `master` (or by manual dispatch).
+
+### Changed
+
+- The docs site now uses [`zensical-gradient-theme`](https://pypi.org/project/zensical-gradient-theme/) (`name = "gradient"`), the same theme as the rich-gradient docs. It supplies the variant, fonts, gradient-dark/light palette and feature list, so `zensical.toml` no longer sets them.
+- The `docs` extra now requires `zensical>=0.1.3` and adds `zensical-gradient-theme>=0.1.1`.
+- `[tool.uv]` now sets `exclude-newer = "3 days"` in the project (so CI resolves like local) and exempts `zensical-gradient-theme` via `exclude-newer-package`, so new theme releases are picked up immediately.
+
+### Removed
+
+- The custom `docs/styles/style.css` and `docs/styles/extra.css` overrides (astral palette, local font paths); the theme replaces them.
+
 ## 0.4.3 - 2026-11-06
 
 ### Fixed
