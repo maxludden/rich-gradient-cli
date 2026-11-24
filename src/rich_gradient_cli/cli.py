@@ -10,7 +10,7 @@ import typer
 from rich.console import Console, RenderableType
 
 from .export import export_renderable
-from .options import parse_mapping, parse_padding, parse_style
+from .options import parse_padding, parse_style, validate_colors, validate_highlights
 from .render import RenderConfig, Runnable, build_output, spectrum_output
 from .resource import Mode, Resource, ResourceError, detect_mode, read_resource
 from .telemetry import run_telemetry_action
@@ -108,11 +108,28 @@ def _fail(message: str) -> "typer.Exit":
 #: Modes that honor ``--head``/``--tail`` and ``--text-*`` respectively.
 _HEAD_TAIL_MODES = {Mode.SYNTAX, Mode.CSV, Mode.IPYNB}
 _TEXT_ALIGN_MODES = {Mode.TEXT, Mode.MARKDOWN}
+#: Modes that use ``--title``/``--caption`` even without ``--panel``.
+_TITLE_MODES = {Mode.CSV, Mode.RULE}
 
 
-def _warn_ignored(mode: Mode, *, head_tail: bool, text_align: bool, vertical: bool, panel: bool) -> None:
+def _warn_ignored(
+    mode: Mode,
+    *,
+    head_tail: bool,
+    text_align: bool,
+    vertical: bool,
+    panel: bool,
+    title_caption: bool = False,
+    border_only: bool = False,
+) -> None:
     """Warn on stderr about layout options that have no effect for ``mode``."""
     ignored: list[str] = []
+    if border_only and not panel:
+        ignored.append("--border-only (add --panel)")
+    if panel and mode is Mode.RULE:
+        ignored.append("--panel")
+    elif title_caption and not panel and mode not in _TITLE_MODES:
+        ignored.append("--title/--caption (add --panel)")
     if head_tail and mode not in _HEAD_TAIL_MODES:
         ignored.append("--head/--tail")
     if text_align and mode not in _TEXT_ALIGN_MODES:
@@ -174,6 +191,7 @@ def main(
     padding: Annotated[Optional[str], typer.Option("--padding", "-d", metavar="TOP,RIGHT,BOTTOM,LEFT", help="Padding around output: 1, 2 or 4 comma-separated integers.", rich_help_panel=LAYOUT)] = None,
     panel: Annotated[Optional[Box], typer.Option("--panel", "-a", metavar="BOX", help="Wrap the output in a gradient panel: ascii, ascii2, square, rounded, heavy, double, none.", rich_help_panel=LAYOUT)] = None,
     panel_style: Annotated[str, typer.Option("--panel-style", "-S", metavar="STYLE", help="Panel border style.", rich_help_panel=LAYOUT)] = "",
+    border_only: Annotated[bool, typer.Option("--border-only", help="With --panel, paint only the border with the gradient; the content keeps its own colors.", rich_help_panel=LAYOUT)] = False,
     title: Annotated[Optional[str], typer.Option("--title", metavar="TEXT", help="Panel (or table) title.", rich_help_panel=LAYOUT)] = None,
     caption: Annotated[Optional[str], typer.Option("--caption", metavar="TEXT", help="Panel (or table) caption.", rich_help_panel=LAYOUT)] = None,
     # --- Content --------------------------------------------------------------
@@ -242,17 +260,29 @@ def main(
         raise typer.BadParameter("--animate cannot be combined with --pager.")
     if head is not None and tail is not None:
         raise typer.BadParameter("--head and --tail cannot be combined.")
+    if rule_char is not None and len(rule_char) != 1:
+        raise typer.BadParameter("--rule-char must be a single character.")
+    # Validate free-form values up front so mistakes are usage errors (exit 2)
+    # instead of tracebacks from deep inside rich / rich-gradient.
     try:
         parse_padding(padding)
         parse_style(style)
         parse_style(panel_style)
-        parse_mapping(highlight_word)
-        parse_mapping(highlight_regex)
+        parse_style(rule_style)
+        validate_colors(colors)
+        validate_colors(bgcolors)
+        validate_highlights(highlight_word)
+        validate_highlights(highlight_regex, regex=True)
     except ValueError as exc:
         raise typer.BadParameter(str(exc)) from exc
 
     for dest in (export_svg, export_html):
-        if dest and not Path(dest).expanduser().resolve().parent.is_dir():
+        if not dest:
+            continue
+        target = Path(dest).expanduser().resolve()
+        if target.is_dir():
+            raise typer.BadParameter(f"Cannot write {dest}: it is a directory.")
+        if not target.parent.is_dir():
             raise typer.BadParameter(f"Cannot write {dest}: directory does not exist.")
 
     cfg = RenderConfig(
@@ -262,7 +292,7 @@ def main(
         align=align_value, text_align=text_align_value, vertical_align=vertical_align.value,
         expand=expand, padding=padding, panel=panel_on,
         box=panel.value if panel_on and panel is not None else "rounded", panel_style=panel_style,
-        rule_style=rule_style,
+        border_only=border_only, rule_style=rule_style,
         title=title, caption=caption, style=style, markup=markup, emoji=emoji,
         hyperlinks=hyperlinks, no_wrap=no_wrap, tab_size=tab_size, head=head, tail=tail,
         lexer=lexer, theme=theme, line_numbers=line_numbers, guides=guides, rule_char=rule_char,
@@ -293,14 +323,25 @@ def main(
                 data = read_resource(resource, allow_directory=chosen == [Mode.TREE])
             mode = chosen[0] if chosen else detect_mode(data)
             invoked_mode = mode.value
+            if mode is Mode.RULE and not aligns:
+                # Rich and rich-gradient center rule titles unless told otherwise.
+                cfg.align = "center"
             _warn_ignored(
                 mode,
                 head_tail=head is not None or tail is not None,
                 text_align=text_align_value != "default",
                 vertical=vertical_align is not VerticalAlign.MIDDLE,
                 panel=panel_on,
+                title_caption=title is not None or caption is not None,
+                border_only=border_only,
             )
             animated = animate and console.is_terminal
+            if animated and panel_on and not border_only and parse_style(panel_style).color:
+                Console(stderr=True).print(
+                    "[yellow]Warning:[/] --panel-style color is replaced by the gradient "
+                    "when animating.",
+                    highlight=False,
+                )
             built = build_output(mode, data, cfg, console, animated=animated)
             if isinstance(built, Runnable):
                 runner = built

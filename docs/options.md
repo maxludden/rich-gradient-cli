@@ -1,33 +1,47 @@
 # Options
 
-`gradient [OPTIONS] [PATH,TEXT,URL, or '-']` - the argument is a file, an `http(s)` URL, `-` for stdin, or literal text.
-Run `gradient --help` for the grouped, always-current list. Shared flags use the same spelling as `rich-cli`; `-h` is `--head` (use `--help` for help).
+```text
+gradient [OPTIONS] [PATH,TEXT,URL, or '-']
+```
+
+The argument is a file, an `http(s)` URL, `-` for stdin, or literal text. Run `gradient --help` for the always-current list.
+
+Options shared with `rich-cli` use the same spelling. Gradient options are long-only. `-h` means `--head`, so use `--help` for help.
 
 ## Renderable
 
-Pick at most one (two is a usage error, exit code 2). With none, the renderable is chosen from the extension:
-`.md`: Markdown, `.rst`: reStructuredText, `.ipynb`: notebook, `.json`: JSON, `.csv`/`.tsv`: table, other known files: syntax, literal text and stdin: text.
+Pick at most one of these. Giving two is a usage error. With none, the file extension decides: `.md` is Markdown, `.rst` is reStructuredText, `.ipynb` is a notebook, `.json` is JSON, `.csv`/`.tsv` is a table, and any other file is syntax-highlighted. Literal text, stdin and `.txt` files are printed as gradient text.
 
 | Flag | Renders |
 |---|---|
-| `-p, --print` | Gradient text with Rich console markup |
-| `-u, --rule` | A rule titled with the text |
-| `-J, --json` | Pretty-printed JSON |
-| `-m, --markdown` | Markdown |
+| `-p`, `--print` | Gradient text with Rich console markup |
+| `-u`, `--rule` | A rule titled with the text |
+| `-J`, `--json` | Pretty-printed JSON |
+| `-m`, `--markdown` | Markdown |
 | `--rst` | reStructuredText |
 | `--csv` | CSV/TSV as a table |
 | `--ipynb` | Jupyter notebook |
 | `--syntax` | Syntax-highlighted code |
-| `--inspect` | A Python object, e.g. `str` or `rich.console.Console` |
+| `--inspect` | A Python object, e.g. `str` or `rich.console.Console` (imports/evaluates its argument: never pass untrusted text) |
 | `--tree` | A directory (or lines of text) as a tree |
 | `--columns` | Each line as a column cell |
-| `--spectrum` | The rich-gradient palette (`--spectrum-output table\|names\|hex\|csv`) |
+| `--spectrum` | The rich-gradient color palette |
 
 ## Gradient
 
-`--colors` (env `GRADIENT_COLORS`), `--bgcolors`, `--rainbow`, `--hues`, `--repeat-scale`,
-`--highlight-word WORD=STYLE`, `--highlight-regex PATTERN=STYLE` (the last two repeatable),
-`--animate`, `--duration SECONDS`. Colors accept Rich names, hex (including `#abc`) and CSS names via rich-color-ext.
+Colors can be Rich color names, hex codes (including the short `#abc` form) or CSS color names. An invalid color is a usage error.
+
+| Option | Description |
+|---|---|
+| `--colors COLORS` | Comma-separated gradient colors. Can also be set with the `GRADIENT_COLORS` environment variable. |
+| `--bgcolors COLORS` | Comma-separated background colors. |
+| `--rainbow` | Use the full rainbow spectrum (ignores `--colors`). |
+| `--hues N` | Number of spectrum hues (2-17) used by `--rainbow`, by `--spectrum`, and when no colors are given. Default `5`. |
+| `--repeat-scale N` | How many times the gradient repeats across the output. |
+| `--highlight-word WORD=STYLE` | Style every occurrence of a word. Repeatable. |
+| `--highlight-regex PATTERN=STYLE` | Style every regex match. Repeatable. |
+| `--animate` | Animate the gradient (interactive terminals only). |
+| `--duration SECONDS` | Stop animating after this many seconds. |
 
 ![colors](img/options/colors.svg)
 
@@ -47,9 +61,20 @@ Pick at most one (two is a usage error, exit code 2). With none, the renderable 
 
 ## Layout
 
-`-l/--left`, `-c/--center`, `-r/--right` (block alignment); `-L/-C/-R/-F` (`--text-left/-center/-right/-full`) justify text;
-`--vertical-align`; `-w/--width`, `-W/--max-width`; `-e/--expand` (default: auto - panels, Markdown and code fill the width, everything else shrinks to its content);
-`-d/--padding T,R,B,L`; `-a/--panel BOX`, `-S/--panel-style`, `--title`, `--caption`.
+| Option | Description |
+|---|---|
+| `-l`, `--left` / `-c`, `--center` / `-r`, `--right` | Align the whole block (default left). Rule titles default to center. |
+| `-L`, `--text-left` / `-C`, `--text-center` / `-R`, `--text-right` / `-F`, `--text-full` | Justify the text inside the block (text and Markdown). |
+| `--vertical-align top\|middle\|bottom` | Vertically align the block. Panels are always top-aligned. |
+| `-w`, `--width SIZE` | Fit the output to SIZE characters. |
+| `-W`, `--max-width SIZE` | Never be wider than SIZE characters. |
+| `-e`, `--expand` / `--no-expand` | Fill the full width. By default panels, Markdown and code expand; everything else shrinks to its content. |
+| `-d`, `--padding T,R,B,L` | Padding as 1, 2 or 4 comma-separated integers. |
+| `-a`, `--panel BOX` | Wrap the output in a gradient panel: `ascii`, `ascii2`, `square`, `rounded`, `heavy`, `double` or `none`. |
+| `-S`, `--panel-style STYLE` | Style of the panel border. A color (e.g. `red` or `bold white`) gives a solid border with the gradient on the content only; attributes alone (e.g. `bold`) keep the gradient border. |
+| `--border-only` | With `--panel`, paint only the border (and its title) with the gradient. The content keeps its own colors. |
+| `--title TEXT` | Panel title. Also used as a CSV table title, and as the rule title when no text is given. |
+| `--caption TEXT` | Panel subtitle, or CSV table caption. |
 
 ![align](img/options/align.svg)
 
@@ -69,9 +94,26 @@ Pick at most one (two is a usage error, exit code 2). With none, the renderable 
 
 ## Content
 
-`-s/--style`, `--markup/--no-markup`, `-j/--emoji`, `-y/--hyperlinks`, `--no-wrap`, `--tab-size`,
-`-h/--head N`, `-t/--tail N` (syntax, CSV, notebook), `-x/--lexer`, `--theme` (env `RICH_THEME`), `-n/--line-numbers`,
-`-g/--guides`, `--rule-style`, `--rule-char`, `--thickness 0-3`, `--delimiter`, `--no-header`, `--max-depth` (tree).
+| Option | Description |
+|---|---|
+| `-s`, `--style STYLE` | Rich style applied to the text, e.g. `bold` or `italic underline`. |
+| `--markup` / `--no-markup` | Parse Rich console markup (on by default). |
+| `-j`, `--emoji` | Replace emoji codes such as `:sparkles:`. |
+| `-y`, `--hyperlinks` | Render hyperlinks in Markdown. |
+| `--no-wrap` | Don't word-wrap text or code. |
+| `--tab-size N` | Tab width. Default `4`. |
+| `-h`, `--head LINES` / `-t`, `--tail LINES` | Show only the first or last LINES (syntax, CSV and notebooks). |
+| `-x`, `--lexer LEXER` | Pygments lexer for code. |
+| `--theme THEME` | Pygments theme for code. Can also be set with `RICH_THEME`. Default `monokai`. |
+| `-n`, `--line-numbers` | Show line numbers in code. |
+| `-g`, `--guides` | Show indentation guides in code and JSON. |
+| `--rule-style STYLE` | Style for `--rule`. |
+| `--rule-char CHARACTER` | Single character to draw `--rule` with (overrides `--thickness`). |
+| `--thickness 0-3` | Rule thickness. Default `2`. |
+| `--delimiter CHAR` | CSV delimiter. Auto-detected by default. |
+| `--no-header` | Treat the first CSV row as data. |
+| `--max-depth N` | How many directory levels `--tree` shows. Default `2`. |
+| `--spectrum-output table\|names\|hex\|csv` | Output format for `--spectrum`. |
 
 ![style](img/options/style.svg)
 
@@ -99,8 +141,23 @@ Pick at most one (two is a usage error, exit code 2). With none, the renderable 
 
 ## Output
 
-`-o/--export-html PATH`, `--export-svg PATH`, `--pager`, `--force-terminal`, `--telemetry enable|disable|status`, `-v/--version`.
+| Option | Description |
+|---|---|
+| `-o`, `--export-html PATH` | Also write the output to PATH as HTML. |
+| `--export-svg PATH` | Also write the output to PATH as SVG. |
+| `--pager` | Show the output in an interactive pager. |
+| `--force-terminal` | Keep colors (ANSI codes) even when not writing to a terminal. |
+| `--telemetry enable\|disable\|status` | Manage opt-in anonymous usage telemetry, then exit. |
+| `-v`, `--version` | Print the version and exit. |
+
+## Warnings
+
+Some options only apply to certain renderables. When an option has no effect, `gradient` prints a warning to stderr and carries on. For example, `--head` with Markdown, `--title` without `--panel`, or `--panel` with `--rule`.
 
 ## Exit codes
 
-`0` success, `1` runtime error (unreadable file, HTTP failure, invalid JSON/markup, ...), `2` usage error.
+| Code | Meaning |
+|---|---|
+| `0` | Success. |
+| `1` | Runtime error: unreadable file, HTTP failure, invalid JSON or markup, and so on. |
+| `2` | Usage error: conflicting flags, or an invalid color, style, regex or padding. |

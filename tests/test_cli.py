@@ -115,6 +115,13 @@ def test_exports(tmp_path: Path) -> None:
         ["x", "--padding", "1,2,3"],
         ["x", "--highlight-word", "bad"],
         ["x", "--style", "not-a-style-$$"],
+        ["x", "--colors", "notacolor,red"],
+        ["x", "--bgcolors", "zzz"],
+        ["x", "--highlight-word", "x=notastyle"],
+        ["x", "--highlight-regex", "[=red"],
+        ["x", "--highlight-regex", "x=boldd"],
+        ["x", "-u", "--rule-style", "not-a-style-$$"],
+        ["x", "-u", "--rule-char", "ab"],
     ],
 )
 def test_usage_errors_exit_2(args: list[str]) -> None:
@@ -212,3 +219,76 @@ def test_ignored_option_warns() -> None:
     result = run("hello", "--head", "1")
     assert result.exit_code == 0
     assert "ignored" in result.output
+
+
+def test_export_to_directory_is_usage_error(tmp_path: Path) -> None:
+    """Exporting onto an existing directory fails before anything is rendered."""
+    result = run("hi", "--export-svg", str(tmp_path))
+    assert result.exit_code == 2 and "hi" not in result.stdout
+
+
+def test_css_and_short_hex_colors_are_valid() -> None:
+    """CSS names and #abc shorthand pass validation."""
+    assert run("hi", "--colors", "tomato,#abc,rebeccapurple").exit_code == 0
+
+
+@pytest.mark.parametrize(
+    ("args", "warned"),
+    [
+        (["x", "--title", "T"], True),
+        (["x", "--title", "T", "--panel", "rounded"], False),
+        (["x", "-u", "--title", "T"], False),
+        (["x", "-u", "--panel", "rounded"], True),
+    ],
+)
+def test_ignored_title_and_panel_warn(args: list[str], warned: bool) -> None:
+    """--title without a panel, and --panel on a rule, warn that they are ignored."""
+    result = run(*args)
+    assert result.exit_code == 0
+    assert ("Warning:" in result.stderr) is warned
+
+
+def test_border_only_keeps_content_colors() -> None:
+    """--border-only leaves the panel content's own markup colors untouched."""
+    result = run("plain [red]red[/red]", "--panel", "rounded", "--border-only",
+                 "--colors", "blue,cyan", "--force-terminal", "-w", "30")
+    assert result.exit_code == 0
+    assert "\x1b[31mr" in result.stdout
+
+
+def test_border_only_without_panel_warns() -> None:
+    result = run("hi", "--border-only")
+    assert result.exit_code == 0 and "--border-only" in result.stderr
+
+
+def test_inspect_uses_gradient_inspect_and_panel_options() -> None:
+    """--inspect renders rich-gradient's report and honors --panel/--title."""
+    result = run("str", "--inspect", "--panel", "heavy", "--title", "Strings", "-w", "60")
+    assert result.exit_code == 0
+    assert "Strings" in result.stdout and "┏" in result.stdout
+
+
+@pytest.mark.parametrize(
+    ("flag", "expected"),
+    [(None, "center"), ("-l", "left"), ("-r", "right")],
+)
+def test_rule_title_centered_by_default(flag: str | None, expected: str) -> None:
+    """Rule titles are centered like Rich's Rule unless -l/-r is given."""
+    args = ["Title", "-u", "-w", "30"] + ([flag] if flag else [])
+    line = run(*args).stdout.splitlines()[0]
+    before, after = line.split("Title")
+    if expected == "center":
+        assert abs(len(before) - len(after)) <= 1
+    elif expected == "left":
+        assert before.strip() == ""
+    else:
+        assert after.strip() == ""
+
+
+def test_colored_panel_style_colors_the_border() -> None:
+    """A foreground color in --panel-style is used for the border, not replaced."""
+    result = run("hi", "--panel", "rounded", "-S", "red", "--colors", "blue,cyan",
+                 "--force-terminal", "-w", "12")
+    assert result.exit_code == 0
+    top = result.stdout.splitlines()[0]
+    assert top.startswith("\x1b[31m╭") and "\x1b[34m" not in top

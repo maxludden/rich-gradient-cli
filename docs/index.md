@@ -1,6 +1,10 @@
-# rich-gradient-cli
+---
+title: rich-gradient-cli
+---
 
-`gradient` is a single-command CLI for [`rich-gradient`](https://github.com/maxludden/rich-gradient), modeled on [`rich-cli`](https://github.com/Textualize/rich-cli). Give it a file, a URL, `-` for stdin, or literal text and it renders the content with a gradient.
+![rich-gradient-cli](img/rich-gradient-cli.svg)
+
+`gradient` prints text, files, URLs and stdin in your terminal with a color gradient. It is the command-line tool for [`rich-gradient`](https://github.com/maxludden/rich-gradient) and works like [`rich-cli`](https://github.com/Textualize/rich-cli): give it something to show and it picks how to render it.
 
 ```bash
 uv tool install rich-gradient-cli
@@ -11,9 +15,13 @@ gradient --colors 'red,#ff9900,#ffff00' "Hello gradient"
 
 ## How it works
 
-- One command: `gradient [OPTIONS] [PATH,TEXT,URL, or '-']`.
-- The renderable is auto-detected from the extension, or forced with a flag (`--markdown`, `--rst`, `--ipynb`, `--json`, `--csv`, `--syntax`, `--rule`, `--tree`, `--columns`, `--spectrum`, `--inspect`).
-- Layout, styling and export flags use the same short options as `rich-cli`.
-- Gradient flags (`--colors`, `--bgcolors`, `--rainbow`, `--animate`, ...) apply to whatever is rendered.
+- **One command.** Everything is `gradient [OPTIONS] [PATH,TEXT,URL, or '-']`. There are no subcommands.
+- **Automatic rendering.** The file extension decides how a file is shown: Markdown, reStructuredText, a notebook, JSON, a CSV table, or syntax-highlighted code. A mode flag such as `--markdown` or `--tree` overrides it.
+- **Familiar flags.** Layout, styling and export options use the same short flags as `rich-cli`.
+- **Gradients everywhere.** `--colors`, `--bgcolors`, `--rainbow` and `--animate` work with every renderable.
 
-See [Usage](usage.md) for examples and [Options](options.md) for every flag.
+## Next steps
+
+- [Usage](usage.md) installs the tool and walks through an example of each renderable.
+- [Options](options.md) lists every flag, with a screenshot of each one.
+- [API](api.md) documents the Python modules behind the command.

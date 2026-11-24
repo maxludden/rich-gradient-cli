@@ -24,6 +24,7 @@ from rich.table import Table as RichTable
 from rich.text import Text as RichText
 from rich.tree import Tree as RichTree
 from rich_gradient import Gradient, Panel, Pretty, Rule, Spectrum
+from rich_gradient.inspect import Inspect as GradientInspect
 from rich_gradient.animated_gradient import AnimatedGradient
 from rich_gradient.animated_panel import AnimatedPanel
 from rich_gradient.animated_rule import AnimatedRule
@@ -32,7 +33,7 @@ from rich.style import Style
 from rich.syntax import Syntax as RichSyntax
 from pygments.token import Token
 
-from .options import BOXES, parse_colors, parse_mapping, parse_padding
+from .options import BOXES, parse_colors, parse_mapping, parse_padding, parse_style
 from .resource import Mode, Resource, ResourceError
 
 
@@ -68,6 +69,7 @@ class RenderConfig:
     panel: bool = False
     box: str = "rounded"
     panel_style: str = ""
+    border_only: bool = False
     title: str | None = None
     caption: str | None = None
     # Content
@@ -325,7 +327,11 @@ def resolve_object(expression: str) -> Any:
 
 
 def _inspect(resource: Resource, cfg: RenderConfig) -> RenderableType:
-    """Inspect the Python object named by the resource text."""
+    """Inspect the Python object named by the resource text (Rich's plain report).
+
+    Only used for ``--animate``; static output uses rich-gradient's ``Inspect``
+    (see :func:`build_output`), which keeps attribute and value colors.
+    """
     return Inspect(resolve_object(resource.text), help=False, dunder=False, all=False, methods=True)
 
 
@@ -437,6 +443,44 @@ def _syntax_base_color(cfg: RenderConfig) -> Color | None:
     return RichSyntax.get_theme(cfg.theme).get_style_for_token(Token).color
 
 
+def panel_border_color(cfg: RenderConfig) -> bool:
+    """Return whether ``--panel-style`` sets a foreground color for the border.
+
+    rich-gradient's ``Panel`` replaces a border foreground color with the
+    gradient, so a colored ``--panel-style`` needs a plain Rich panel instead.
+    """
+    return parse_style(cfg.panel_style).color is not None
+
+
+def _solid_border_panel(
+    inner: RenderableType,
+    cfg: RenderConfig,
+    expand: bool,
+    padding: Any,
+    gradient_cls: type[Gradient],
+    common: dict[str, Any],
+) -> RenderableType:
+    """Build a Rich panel whose border uses ``--panel-style`` around gradient content."""
+    content = gradient_cls(
+        cast(Any, inner),
+        repeat_scale=cfg.repeat_scale,
+        expand=expand,
+        justify=cast(Any, cfg.align),
+        **common,
+    )
+    if gradient_cls is _KeepTokensGradient:
+        content.base_color = _syntax_base_color(cfg)  # type: ignore[attr-defined]
+    return RichPanel(
+        content,
+        title=cfg.title,
+        subtitle=cfg.caption,
+        border_style=cfg.panel_style,
+        box=BOXES[cfg.box],
+        expand=expand,
+        padding=padding if padding is not None else (0, 1),
+    )
+
+
 def build_output(
     mode: Mode,
     resource: Resource,
@@ -455,10 +499,26 @@ def build_output(
     if mode is Mode.RULE:
         return build_rule(resource, cfg, animated=animated)
 
-    inner = build_inner(mode, resource, cfg)
     expand = resolve_expand(mode, cfg)
     padding = parse_padding(cfg.padding)
     common = {**_gradient_kwargs(cfg), **_highlights(cfg)}
+
+    if mode is Mode.INSPECT and not animated:
+        # rich-gradient's Inspect is already a gradient panel that keeps Rich's
+        # colors for names, values and signatures, so it is not wrapped again.
+        report = GradientInspect(
+            resolve_object(resource.text),
+            methods=True,
+            title=cfg.title,
+            border_style=cfg.panel_style,
+            box=BOXES[cfg.box],
+            expand=expand,
+            justify=cast(Any, cfg.align),
+            **common,
+        )
+        return _fit_width(report, expand, console, cfg)
+
+    inner = build_inner(mode, resource, cfg)
     keep_tokens = mode in {Mode.SYNTAX, Mode.IPYNB}
     panel_cls = _KeepTokensPanel if keep_tokens and not animated else Panel
     gradient_cls = _KeepTokensGradient if keep_tokens and not animated else Gradient
@@ -473,6 +533,7 @@ def build_output(
             "justify": cfg.align,
             "vertical_justify": "top",
             "text_justify": cfg.align if cfg.text_align == "default" else cfg.text_align,
+            "border_only": cfg.border_only,
             **common,
         }
         if padding is not None:
@@ -486,6 +547,13 @@ def build_output(
                     duration=cfg.duration,
                     **panel_kwargs,
                 ),
+            )
+        if panel_border_color(cfg) and not cfg.border_only:
+            return _fit_width(
+                _solid_border_panel(inner, cfg, expand, padding, gradient_cls, common),
+                expand,
+                console,
+                cfg,
             )
         panel_out = panel_cls(inner, **panel_kwargs)
         if keep_tokens:

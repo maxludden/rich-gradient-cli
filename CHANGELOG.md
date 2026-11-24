@@ -6,10 +6,23 @@ All notable changes to this project will be documented in this file.
 
 ### Added
 
+- `--border-only` (with `--panel`) paints only the panel border and title with the gradient, leaving the content's own colors alone (rich-gradient 0.4.4's `border_only`).
+- Warnings when `--title`/`--caption` are given without `--panel` (outside CSV and rule mode), when `--panel` is used with `--rule`, and when `--border-only` is used without `--panel`; these were silently ignored.
 - `.github/workflows/docs.yml` builds the docs with Zensical and deploys them to GitHub Pages on every push to `master` (or by manual dispatch).
+
+### Fixed
+
+- An invalid `--colors`/`--bgcolors` color, an invalid `--highlight-regex` pattern, or an invalid style in `--highlight-word`/`--highlight-regex`/`--rule-style` is now a usage error (exit 2) instead of a traceback.
+- `--panel-style` with a foreground color (e.g. `-S red`, `-S 'bold white'`) now colors the panel border. rich-gradient replaces a border color with the gradient, so the color was silently dropped and only attributes such as bold applied. The content still gets the gradient. With `--animate` the gradient border is kept and a warning is printed.
+- `--rule` titles are centered by default, matching Rich's and rich-gradient's `Rule`; `-l`/`-r` still align them left or right.
+- `--rule-char` with more than one character is a usage error (exit 2) instead of a runtime error.
+- `--export-svg`/`--export-html` pointing at an existing directory fails before rendering, instead of printing the output and then erroring.
 
 ### Changed
 
+- Requires `rich-gradient>=0.4.4` (locked to 0.4.5). 0.4.4 fixes `--panel --animate` (`AnimatedPanel` rejected `text_justify`) and full-width animated panels. `rich-gradient` is exempt from `exclude-newer`, like the docs theme.
+- `--inspect` uses rich-gradient's `Inspect`, so attribute names, values and signatures keep Rich's colors inside the gradient frame, and `--panel BOX`, `--title` and `--panel-style` style that frame. `--inspect --animate` still uses Rich's report.
+- Rewrote the README and docs for readability: install options per tool, a "what gets rendered" table, an options-at-a-glance table, option tables with descriptions on the Options page, the missing notebook/columns/spectrum/markup screenshots on the Usage page, and a link to the published docs. Regenerated the doc screenshots (panel style, rule, inspect, and the rich-gradient 0.4.5 spectrum). The README header image uses an absolute URL so it shows on PyPI.
 - The docs site now uses [`zensical-gradient-theme`](https://pypi.org/project/zensical-gradient-theme/) (`name = "gradient"`), the same theme as the rich-gradient docs. It supplies the variant, fonts, gradient-dark/light palette and feature list, so `zensical.toml` no longer sets them.
 - The `docs` extra now requires `zensical>=0.1.3` and adds `zensical-gradient-theme>=0.1.1`.
 - `[tool.uv]` now sets `exclude-newer = "3 days"` in the project (so CI resolves like local) and exempts `zensical-gradient-theme` via `exclude-newer-package`, so new theme releases are picked up immediately.

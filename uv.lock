@@ -7,6 +7,7 @@ exclude-newer = "0001-01-01T00:00:00Z" # This has no effect and is included for 
 exclude-newer-span = "P3D"
 
 [options.exclude-newer-package]
+rich-gradient = false
 zensical-gradient-theme = false
 
 [[package]]
@@ -628,16 +629,16 @@ wheels = [
 
 [[package]]
 name = "rich-gradient"
-version = "0.4.3"
+version = "0.4.5"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "loguru" },
     { name = "rich" },
     { name = "rich-color-ext" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/e1/a8/a84f927a0abce6b3035e09f0964e61fe22631cef8fc32aaab36d43cded2b/rich_gradient-0.4.3.tar.gz", hash = "sha256:0548c48adeab202a439911d0a8a7420cdf66b95dc3c31ccf6c59e935144c802a", size = 16843365, upload-time = "2026-11-06T11:19:18.429Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/9b/4d/c718a532dc2168a7ad258cab0ea9cfe8c3daf385fb31c44db6d0802e4a1e/rich_gradient-0.4.5.tar.gz", hash = "sha256:ac618748456f496c862fcb78337636f400115491d8a96a2d139567249b106bd1", size = 19318107, upload-time = "2026-11-24T22:30:25.362Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/9e/af/7c4c59119f1313bf7ba58a388238f1a8a085abbca684ed486667285a80b5/rich_gradient-0.4.3-py3-none-any.whl", hash = "sha256:50aa88892c4a04b07f09eeb92e49ea17456fe7b03aed63f480e7f1e53b9c60dc", size = 77945, upload-time = "2026-11-06T11:19:16.525Z" },
+    { url = "https://files.pythonhosted.org/packages/dc/ac/f38a2972734bdf9322f72d3bc53a339d321c3a35e4b67b0a778e728e1213/rich_gradient-0.4.5-py3-none-any.whl", hash = "sha256:fa11bf9db89d6a19ebe46ce67b1750e6270930a73d5f9f69865ec8bb79a762fb", size = 115859, upload-time = "2026-11-24T22:30:23.701Z" },
 ]
 
 [[package]]
@@ -680,7 +681,7 @@ requires-dist = [
     { name = "pytest", marker = "extra == 'dev'", specifier = ">=8.4.2" },
     { name = "rich", specifier = ">=15.0.0" },
     { name = "rich-color-ext", specifier = ">=3.0.0" },
-    { name = "rich-gradient", specifier = ">=0.4.3" },
+    { name = "rich-gradient", specifier = ">=0.4.4" },
     { name = "rich-rst", specifier = ">=2.2.0" },
     { name = "ruff", marker = "extra == 'dev'", specifier = ">=0.15.0" },
     { name = "typer", specifier = ">=0.21.1" },

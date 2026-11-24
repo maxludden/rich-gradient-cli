@@ -8,6 +8,8 @@ from rich_gradient_cli.options import (
     parse_mapping,
     parse_padding,
     parse_style,
+    validate_colors,
+    validate_highlights,
 )
 
 
@@ -53,3 +55,26 @@ def test_parse_padding_invalid(raw: str) -> None:
 def test_boxes() -> None:
     """Every documented box name is available."""
     assert set(BOXES) == {"ascii", "ascii2", "square", "rounded", "heavy", "double"}
+
+
+def test_validate_colors() -> None:
+    """Rich names, hex, #abc and CSS names pass; unknown names raise ValueError."""
+    assert validate_colors("red,#abc,tomato") == ["red", "#abc", "tomato"]
+    assert validate_colors(None) is None
+    with pytest.raises(ValueError, match="notacolor"):
+        validate_colors("red,notacolor")
+
+
+@pytest.mark.parametrize(
+    ("values", "regex"),
+    [(["w=notastyle"], False), (["[=red"], True), (["x=boldd"], True)],
+)
+def test_validate_highlights_invalid(values: list[str], regex: bool) -> None:
+    """Bad styles and bad patterns raise ValueError."""
+    with pytest.raises(ValueError):
+        validate_highlights(values, regex=regex)
+
+
+def test_validate_highlights_valid() -> None:
+    """Valid highlights return the parsed mapping."""
+    assert validate_highlights([r"\d+=bold red"], regex=True) == {r"\d+": "bold red"}

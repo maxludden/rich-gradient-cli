@@ -2,10 +2,15 @@
 
 from __future__ import annotations
 
+import re
 from collections.abc import Mapping, Sequence
 
+# Importing rich_gradient patches ``Color.parse`` (via rich-color-ext) so it also
+# accepts CSS color names and ``#abc`` shorthand, matching what the gradients use.
+import rich_gradient  # noqa: F401
 from rich import box
 from rich.box import Box
+from rich.color import Color, ColorParseError
 from rich.style import Style
 
 #: Panel box names accepted by ``--box``, mapped to Rich boxes.
@@ -32,6 +37,21 @@ def parse_colors(colors: str | None) -> list[str] | None:
         return None
     parsed = [token.strip() for token in colors.split(",") if token.strip()]
     return parsed or None
+
+
+def validate_colors(colors: str | None) -> list[str] | None:
+    """Split a comma-separated color list and check every color parses.
+
+    Raises:
+        ValueError: If any token is not a Rich color, hex code, or CSS name.
+    """
+    parsed = parse_colors(colors)
+    for token in parsed or []:
+        try:
+            Color.parse(token)
+        except ColorParseError as exc:
+            raise ValueError(f"Invalid color {token!r}.") from exc
+    return parsed
 
 
 def parse_style(style: str | None) -> Style:
@@ -66,6 +86,25 @@ def parse_mapping(values: Sequence[str] | None) -> Mapping[str, str] | None:
     return parsed
 
 
+def validate_highlights(
+    values: Sequence[str] | None, *, regex: bool = False
+) -> Mapping[str, str] | None:
+    """Parse ``KEY=STYLE`` highlights, checking each style (and pattern if ``regex``).
+
+    Raises:
+        ValueError: On a malformed item, an invalid style, or an invalid regex.
+    """
+    mapping = parse_mapping(values)
+    for key, value in (mapping or {}).items():
+        parse_style(value)
+        if regex:
+            try:
+                re.compile(key)
+            except re.error as exc:
+                raise ValueError(f"Invalid regex {key!r}: {exc}") from exc
+    return mapping
+
+
 def parse_padding(padding: str | None) -> int | tuple[int, int] | tuple[int, int, int, int] | None:
     """Parse CSS-style padding such as ``"1"``, ``"1,2"`` or ``"1,2,3,4"``.
 
@@ -89,4 +128,12 @@ def parse_padding(padding: str | None) -> int | tuple[int, int] | tuple[int, int
     raise ValueError("Padding must contain 1, 2, or 4 comma-separated integers.")
 
 
-__all__ = ["BOXES", "parse_colors", "parse_mapping", "parse_padding", "parse_style"]
+__all__ = [
+    "BOXES",
+    "parse_colors",
+    "parse_mapping",
+    "parse_padding",
+    "parse_style",
+    "validate_colors",
+    "validate_highlights",
+]

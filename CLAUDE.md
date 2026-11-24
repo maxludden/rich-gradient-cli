@@ -31,7 +31,7 @@ Use `uv` for everything.
 
 ## Notes
 
-- Python 3.11+ (required by `rich-gradient` 0.4).
+- Python 3.11+ (required by `rich-gradient` 0.4). Requires `rich-gradient>=0.4.4`.
 - The CLI used to have subcommands (`print`, `panel`, `view`, ...) up to 0.3; they were replaced by flags on the one command. Don't reintroduce subcommands.
 - `docs/` + `zensical.toml` back the published docs site; `site/` is a generated build artifact.
 - Add a `CHANGELOG.md` entry with every change.
