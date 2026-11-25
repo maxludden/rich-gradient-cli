@@ -1,0 +1,119 @@
+# Update the rich-gradient-cli formula in maxludden/homebrew-tap.
+#
+# Runs after a release is published to PyPI (called from publish.yml), or by
+# hand from the Actions tab for a version that is already on PyPI. It points the
+# formula at that version's sdist, regenerates the Python resources with
+# `brew bump-formula-pr --write-only`, builds and tests the formula from source,
+# then pushes the commit to the tap.
+#
+# Needs a `HOMEBREW_TAP_TOKEN` secret: a fine-grained token with
+# "Contents: read and write" on maxludden/homebrew-tap.
+name: Update Homebrew tap
+
+on:
+  workflow_call:
+    inputs:
+      version:
+        description: Version on PyPI to put in the formula (e.g. 0.4.7 or v0.4.7)
+        required: true
+        type: string
+    secrets:
+      HOMEBREW_TAP_TOKEN:
+        required: true
+  workflow_dispatch:
+    inputs:
+      version:
+        description: Version on PyPI to put in the formula (e.g. 0.4.7)
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+concurrency:
+  group: homebrew-tap
+  cancel-in-progress: false
+
+jobs:
+  update-formula:
+    name: Update rich-gradient-cli formula
+    runs-on: macos-latest
+    env:
+      TAP: maxludden/tap
+      FORMULA: rich-gradient-cli
+      HOMEBREW_NO_AUTO_UPDATE: "1"
+      HOMEBREW_NO_ENV_HINTS: "1"
+      HOMEBREW_NO_INSTALL_CLEANUP: "1"
+      HOMEBREW_GITHUB_API_TOKEN: ${{ secrets.HOMEBREW_TAP_TOKEN }}
+    steps:
+      - name: Find the sdist on PyPI
+        id: pypi
+        env:
+          INPUT_VERSION: ${{ inputs.version }}
+        run: |
+          version="${INPUT_VERSION#v}"
+          # A fresh upload can take a minute or two to show up in the JSON API.
+          for attempt in $(seq 1 30); do
+            if json=$(curl -fsSL "https://pypi.org/pypi/${FORMULA}/${version}/json"); then
+              url=$(jq -r '.urls[] | select(.packagetype == "sdist") | .url' <<<"$json")
+              sha=$(jq -r '.urls[] | select(.packagetype == "sdist") | .digests.sha256' <<<"$json")
+              if [ -n "$url" ] && [ -n "$sha" ]; then
+                echo "version=${version}" >> "$GITHUB_OUTPUT"
+                echo "url=${url}" >> "$GITHUB_OUTPUT"
+                echo "sha256=${sha}" >> "$GITHUB_OUTPUT"
+                echo "Found ${url}"
+                exit 0
+              fi
+            fi
+            echo "Waiting for ${FORMULA} ${version} on PyPI (attempt ${attempt}/30)..."
+            sleep 10
+          done
+          echo "No sdist for ${FORMULA} ${version} on PyPI" >&2
+          exit 1
+
+      - name: Tap maxludden/homebrew-tap
+        env:
+          TOKEN: ${{ secrets.HOMEBREW_TAP_TOKEN }}
+        run: |
+          brew tap "$TAP"
+          tap_dir="$(brew --repository "$TAP")"
+          git -C "$tap_dir" remote set-url origin "https://x-access-token:${TOKEN}@github.com/maxludden/homebrew-tap.git"
+          git -C "$tap_dir" config user.name "github-actions[bot]"
+          git -C "$tap_dir" config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          echo "TAP_DIR=${tap_dir}" >> "$GITHUB_ENV"
+
+      - name: Update url, sha256 and Python resources
+        id: bump
+        env:
+          VERSION: ${{ steps.pypi.outputs.version }}
+          URL: ${{ steps.pypi.outputs.url }}
+          SHA256: ${{ steps.pypi.outputs.sha256 }}
+        run: |
+          if grep -qF "$URL" "$TAP_DIR/Formula/${FORMULA}.rb"; then
+            echo "Formula already points at ${VERSION}; nothing to do."
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          # --write-only edits the tap in place (no PR); for a
+          # Language::Python::Virtualenv formula it also regenerates the
+          # resource blocks from the new sdist's dependencies.
+          brew bump-formula-pr --write-only --no-audit --no-browse \
+            --url "$URL" --sha256 "$SHA256" "${TAP}/${FORMULA}"
+          git -C "$TAP_DIR" diff --stat
+          echo "changed=true" >> "$GITHUB_OUTPUT"
+
+      - name: Build and test the formula
+        if: steps.bump.outputs.changed == 'true'
+        run: |
+          brew install --build-from-source "${TAP}/${FORMULA}"
+          brew test "${TAP}/${FORMULA}"
+          brew audit --formula "${TAP}/${FORMULA}"
+
+      - name: Commit and push to the tap
+        if: steps.bump.outputs.changed == 'true'
+        env:
+          VERSION: ${{ steps.pypi.outputs.version }}
+        run: |
+          git -C "$TAP_DIR" add "Formula/${FORMULA}.rb"
+          git -C "$TAP_DIR" commit -m "${FORMULA} ${VERSION}"
+          git -C "$TAP_DIR" push origin HEAD:main
