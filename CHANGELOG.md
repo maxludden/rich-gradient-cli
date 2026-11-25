@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## Unreleased
+
+### Changed
+
+- The build backend is now [hatchling](https://hatch.pypa.io/) (`hatchling>=1.27`) instead of `uv_build`. The wheel has the same files, entry point and metadata; the sdist now also includes `CHANGELOG.md`.
+
 ## 0.4.6 - 2026-11-24
 
 ### Changed

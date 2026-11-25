@@ -41,8 +41,15 @@ Changelog = "https://github.com/maxludden/rich-gradient-cli/blob/master/CHANGELO
 gradient = "rich_gradient_cli:entrypoint"
 
 [build-system]
-requires = ["uv_build>=0.13.9,<0.14.0"]
-build-backend = "uv_build"
+requires = ["hatchling>=1.27"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/rich_gradient_cli"]
+
+[tool.hatch.build.targets.sdist]
+# Ship only what's needed to build the wheel, like uv_build did.
+include = ["/src/rich_gradient_cli", "/README.md", "/LICENSE", "/CHANGELOG.md"]
 
 [tool.uv]
 # Ignore releases newer than 3 days (supply-chain safety). Set here, not only in
