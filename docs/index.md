@@ -8,10 +8,13 @@ title: rich-gradient-cli
 
 ```bash
 uv tool install rich-gradient-cli
-gradient --colors 'red,#ff9900,#ffff00' "Hello gradient"
 ```
 
-![Gradient text](img/commands/text-example.svg)
+```bash
+--8<-- "docs/snippets/commands/text.sh"
+```
+
+![text](img/commands/text.svg)
 
 ## How it works
 

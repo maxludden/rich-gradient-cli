@@ -23,24 +23,27 @@ Check that it works with `gradient --version`.
 
 ## Text
 
-Literal text and stdin are printed as gradient text. Rich console markup such as `[b]bold[/b]` is parsed unless you pass `--no-markup`.
+Literal text and stdin (`echo "piped text" | gradient -`) are printed as gradient text. Rich console markup such as `[b]bold[/b]` is parsed unless you pass `--no-markup`.
 
 ```bash
-gradient --colors 'red,#ff9900,#ffff00' "Hello [b]gradient[/b]"
-echo "piped text" | gradient - --colors cyan,magenta
+--8<-- "docs/snippets/commands/text.sh"
 ```
 
-![Gradient text](img/commands/text-example.svg)
+![text](img/commands/text.svg)
 
-![Console markup](img/commands/print-example.svg)
+```bash
+--8<-- "docs/snippets/commands/print.sh"
+```
+
+![print](img/commands/print.svg)
 
 To style particular words or patterns, use `--highlight-word WORD=STYLE` or `--highlight-regex PATTERN=STYLE`. Both can be repeated.
 
 ```bash
-gradient --colors magenta,cyan --highlight-word 'error=bold white on red' "Highlight error text"
+--8<-- "docs/snippets/commands/highlight.sh"
 ```
 
-![Highlight](img/commands/highlight-example.svg)
+![highlight](img/commands/highlight.svg)
 
 ## Files and URLs
 
@@ -68,17 +71,41 @@ gradient pyproject.toml -n -g --head 20
 gradient https://example.com/page.md
 ```
 
-![Markdown](img/commands/markdown-example.svg)
+```bash
+--8<-- "docs/snippets/commands/markdown.sh"
+```
 
-![reStructuredText](img/commands/rst-example.svg)
+![markdown](img/commands/markdown.svg)
 
-![Notebook](img/commands/ipynb-example.svg)
+```bash
+--8<-- "docs/snippets/commands/rst.sh"
+```
 
-![JSON](img/commands/json-example.svg)
+![rst](img/commands/rst.svg)
 
-![CSV](img/commands/csv-example.svg)
+```bash
+--8<-- "docs/snippets/commands/ipynb.sh"
+```
 
-![Syntax](img/commands/syntax-example.svg)
+![ipynb](img/commands/ipynb.svg)
+
+```bash
+--8<-- "docs/snippets/commands/json.sh"
+```
+
+![json](img/commands/json.svg)
+
+```bash
+--8<-- "docs/snippets/commands/csv.sh"
+```
+
+![csv](img/commands/csv.svg)
+
+```bash
+--8<-- "docs/snippets/commands/syntax.sh"
+```
+
+![syntax](img/commands/syntax.svg)
 
 ## Panels and rules
 
@@ -87,30 +114,44 @@ gradient https://example.com/page.md
 `--rule` draws a horizontal rule with the text as its title.
 
 ```bash
-gradient "Something went wrong" --panel rounded --title Error --colors red,'#ff9999'
-gradient "Section" --rule --colors blue,cyan
+--8<-- "docs/snippets/commands/panel.sh"
 ```
 
-![Panel](img/commands/panel-example.svg)
+![panel](img/commands/panel.svg)
 
-![Rule](img/commands/rule-example.svg)
+```bash
+--8<-- "docs/snippets/commands/rule.sh"
+```
+
+![rule](img/commands/rule.svg)
 
 ## Trees, columns, spectrum and inspect
 
+`--tree` shows a directory (or lines of text) as a tree, `--columns` lays each line out as a column cell, `--spectrum` shows the color palette, and `--inspect` reports on a Python object.
+
 ```bash
-gradient --tree src                                 # a directory as a tree
-printf 'a\nb\nc\n' | gradient - --columns           # each line as a column cell
-gradient --spectrum --hues 7 --spectrum-output hex  # the color palette
-gradient str --inspect                              # a Python object
+--8<-- "docs/snippets/commands/tree.sh"
 ```
 
-![Tree](img/commands/tree-example.svg)
+![tree](img/commands/tree.svg)
 
-![Columns](img/commands/columns-example.svg)
+```bash
+--8<-- "docs/snippets/commands/columns.sh"
+```
 
-![Spectrum](img/commands/spectrum-example.svg)
+![columns](img/commands/columns.svg)
 
-![Inspect](img/commands/inspect-example.svg)
+```bash
+--8<-- "docs/snippets/commands/spectrum.sh"
+```
+
+![spectrum](img/commands/spectrum.svg)
+
+```bash
+--8<-- "docs/snippets/commands/inspect.sh"
+```
+
+![inspect](img/commands/inspect.svg)
 
 !!! warning
     `--inspect` imports or evaluates its argument as Python. Never pass it text you don't trust.

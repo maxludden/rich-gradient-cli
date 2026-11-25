@@ -6,6 +6,12 @@ gradient [OPTIONS] [PATH,TEXT,URL, or '-']
 
 The argument is a file, an `http(s)` URL, `-` for stdin, or literal text. Run `gradient --help` for the always-current list.
 
+```bash
+--8<-- "docs/snippets/commands/help.sh"
+```
+
+![help](img/commands/help.svg)
+
 Options shared with `rich-cli` use the same spelling. Gradient options are long-only. `-h` means `--head`, so use `--help` for help.
 
 ## Renderable
@@ -43,17 +49,45 @@ Colors can be Rich color names, hex codes (including the short `#abc` form) or C
 | `--animate` | Animate the gradient (interactive terminals only). |
 | `--duration SECONDS` | Stop animating after this many seconds. |
 
+```bash
+--8<-- "docs/snippets/options/colors.sh"
+```
+
 ![colors](img/options/colors.svg)
+
+```bash
+--8<-- "docs/snippets/options/bgcolors.sh"
+```
 
 ![bgcolors](img/options/bgcolors.svg)
 
+```bash
+--8<-- "docs/snippets/options/rainbow.sh"
+```
+
 ![rainbow](img/options/rainbow.svg)
+
+```bash
+--8<-- "docs/snippets/options/hues.sh"
+```
 
 ![hues](img/options/hues.svg)
 
+```bash
+--8<-- "docs/snippets/options/repeat-scale.sh"
+```
+
 ![repeat-scale](img/options/repeat-scale.svg)
 
+```bash
+--8<-- "docs/snippets/options/highlight-word.sh"
+```
+
 ![highlight-word](img/options/highlight-word.svg)
+
+```bash
+--8<-- "docs/snippets/options/highlight-regex.sh"
+```
 
 ![highlight-regex](img/options/highlight-regex.svg)
 
@@ -76,19 +110,51 @@ Colors can be Rich color names, hex codes (including the short `#abc` form) or C
 | `--title TEXT` | Panel title. Also used as a CSV table title, and as the rule title when no text is given. |
 | `--caption TEXT` | Panel subtitle, or CSV table caption. |
 
+```bash
+--8<-- "docs/snippets/options/align.sh"
+```
+
 ![align](img/options/align.svg)
+
+```bash
+--8<-- "docs/snippets/options/text-align.sh"
+```
 
 ![text-align](img/options/text-align.svg)
 
+```bash
+--8<-- "docs/snippets/options/width.sh"
+```
+
 ![width](img/options/width.svg)
+
+```bash
+--8<-- "docs/snippets/options/expand.sh"
+```
 
 ![expand](img/options/expand.svg)
 
+```bash
+--8<-- "docs/snippets/options/padding.sh"
+```
+
 ![padding](img/options/padding.svg)
+
+```bash
+--8<-- "docs/snippets/options/panel-boxes.sh"
+```
 
 ![panel-boxes](img/options/panel-boxes.svg)
 
+```bash
+--8<-- "docs/snippets/options/panel-style.sh"
+```
+
 ![panel-style](img/options/panel-style.svg)
+
+```bash
+--8<-- "docs/snippets/options/title-caption.sh"
+```
 
 ![title-caption](img/options/title-caption.svg)
 
@@ -115,27 +181,75 @@ Colors can be Rich color names, hex codes (including the short `#abc` form) or C
 | `--max-depth N` | How many directory levels `--tree` shows. Default `2`. |
 | `--spectrum-output table\|names\|hex\|csv` | Output format for `--spectrum`. |
 
+```bash
+--8<-- "docs/snippets/options/style.sh"
+```
+
 ![style](img/options/style.svg)
+
+```bash
+--8<-- "docs/snippets/options/no-markup.sh"
+```
 
 ![no-markup](img/options/no-markup.svg)
 
+```bash
+--8<-- "docs/snippets/options/emoji.sh"
+```
+
 ![emoji](img/options/emoji.svg)
+
+```bash
+--8<-- "docs/snippets/options/head-tail.sh"
+```
 
 ![head-tail](img/options/head-tail.svg)
 
+```bash
+--8<-- "docs/snippets/options/lexer-theme.sh"
+```
+
 ![lexer-theme](img/options/lexer-theme.svg)
+
+```bash
+--8<-- "docs/snippets/options/line-numbers.sh"
+```
 
 ![line-numbers](img/options/line-numbers.svg)
 
+```bash
+--8<-- "docs/snippets/options/guides.sh"
+```
+
 ![guides](img/options/guides.svg)
+
+```bash
+--8<-- "docs/snippets/options/rule-style.sh"
+```
 
 ![rule-style](img/options/rule-style.svg)
 
+```bash
+--8<-- "docs/snippets/options/delimiter.sh"
+```
+
 ![delimiter](img/options/delimiter.svg)
+
+```bash
+--8<-- "docs/snippets/options/no-header.sh"
+```
 
 ![no-header](img/options/no-header.svg)
 
+```bash
+--8<-- "docs/snippets/options/max-depth.sh"
+```
+
 ![max-depth](img/options/max-depth.svg)
+
+```bash
+--8<-- "docs/snippets/options/spectrum-output.sh"
+```
 
 ![spectrum-output](img/options/spectrum-output.svg)
 

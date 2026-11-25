@@ -6,7 +6,11 @@
 gradient [OPTIONS] [PATH,TEXT,URL, or '-']
 ```
 
-![Gradient text](https://raw.githubusercontent.com/maxludden/rich-gradient-cli/master/docs/img/commands/text-example.svg)
+```bash
+gradient --colors 'red,#ff9900,#ffff00,lime,cyan' -s bold 'Hello gradient'
+```
+
+![text](https://raw.githubusercontent.com/maxludden/rich-gradient-cli/master/docs/img/commands/text.svg)
 
 ## Installation
 
