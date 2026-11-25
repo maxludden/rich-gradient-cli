@@ -6,7 +6,7 @@ All notable changes to this project will be documented in this file.
 
 ### Added
 
-- `.github/workflows/homebrew.yml` updates the `rich-gradient-cli` formula in [`maxludden/homebrew-tap`](https://github.com/maxludden/homebrew-tap) after each PyPI release (it runs as the last job of `publish.yml`, or by hand with a version). It points the formula at the new sdist, regenerates the Python resources with `brew bump-formula-pr --write-only`, builds and tests the formula from source, and pushes the commit. It needs a `HOMEBREW_TAP_TOKEN` secret with write access to the tap.
+- `.github/workflows/homebrew.yml` updates the `rich-gradient-cli` formula in [`maxludden/homebrew-tap`](https://github.com/maxludden/homebrew-tap). It runs daily (or by hand with a version), and once the latest PyPI release is a day old (Homebrew resolves Python resources with a 1-day upload cooldown) it points the formula at the new sdist, regenerates the Python resources with `brew bump-formula-pr --write-only`, builds and tests the formula from source, and pushes the commit. It needs a `HOMEBREW_TAP_TOKEN` secret with write access to the tap.
 
 ## 0.4.7 - 2026-11-24
 
