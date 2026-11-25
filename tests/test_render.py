@@ -127,6 +127,12 @@ def test_spectrum_output_formats() -> None:
         assert len([line for line in out.splitlines() if line.strip()]) == 5
 
 
+
+def test_spectrum_defaults_to_all_hues() -> None:
+    """Without --hues, --spectrum lists the full 17-color palette."""
+    out = _render(spectrum_output(RenderConfig(spectrum_output="hex")))
+    assert len([line for line in out.splitlines() if line.strip()]) == 17
+
 def test_tree_dot_uses_real_directory_name(tmp_path, monkeypatch) -> None:
     """``--tree .`` labels the root with the real directory name, not ``.``."""
     (tmp_path / "f.txt").write_text("x")

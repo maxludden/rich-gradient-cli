@@ -170,7 +170,7 @@ def main(
     colors: Annotated[Optional[str], typer.Option("--colors", envvar="GRADIENT_COLORS", metavar="COLORS", help="Comma-separated gradient colors (names, hex, CSS names).", rich_help_panel=GRADIENT)] = None,
     bgcolors: Annotated[Optional[str], typer.Option("--bgcolors", metavar="COLORS", help="Comma-separated background colors.", rich_help_panel=GRADIENT)] = None,
     rainbow: Annotated[bool, typer.Option("--rainbow", help="Use the rainbow spectrum (ignores --colors).", rich_help_panel=GRADIENT)] = False,
-    hues: Annotated[int, typer.Option("--hues", min=2, max=17, help="Number of spectrum hues for --rainbow / no colors.", rich_help_panel=GRADIENT)] = 5,
+    hues: Annotated[int | None, typer.Option("--hues", min=2, max=17, help="Number of spectrum hues for --rainbow / no colors (default 5), or for --spectrum (default all 17).", rich_help_panel=GRADIENT)] = None,
     repeat_scale: Annotated[Optional[float], typer.Option("--repeat-scale", min=0.01, help="How many times the gradient repeats across the output.", rich_help_panel=GRADIENT)] = None,
     highlight_word: Annotated[Optional[list[str]], typer.Option("--highlight-word", metavar="WORD=STYLE", help="Style a word (repeatable).", rich_help_panel=GRADIENT)] = None,
     highlight_regex: Annotated[Optional[list[str]], typer.Option("--highlight-regex", metavar="PATTERN=STYLE", help="Style regex matches (repeatable).", rich_help_panel=GRADIENT)] = None,

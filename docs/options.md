@@ -36,7 +36,7 @@ Colors can be Rich color names, hex codes (including the short `#abc` form) or C
 | `--colors COLORS` | Comma-separated gradient colors. Can also be set with the `GRADIENT_COLORS` environment variable. |
 | `--bgcolors COLORS` | Comma-separated background colors. |
 | `--rainbow` | Use the full rainbow spectrum (ignores `--colors`). |
-| `--hues N` | Number of spectrum hues (2-17) used by `--rainbow`, by `--spectrum`, and when no colors are given. Default `5`. |
+| `--hues N` | Number of spectrum hues (2-17) used by `--rainbow` and when no colors are given (default `5`), or shown by `--spectrum` (default all `17`). |
 | `--repeat-scale N` | How many times the gradient repeats across the output. |
 | `--highlight-word WORD=STYLE` | Style every occurrence of a word. Repeatable. |
 | `--highlight-regex PATTERN=STYLE` | Style every regex match. Repeatable. |

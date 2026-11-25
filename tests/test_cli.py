@@ -95,6 +95,9 @@ def test_columns() -> None:
 def test_spectrum_outputs() -> None:
     result = run("--spectrum", "--spectrum-output", "hex")
     assert result.exit_code == 0 and "#" in result.output
+    assert len([line for line in result.output.splitlines() if line.startswith("#")]) == 17
+    result = run("--spectrum", "--hues", "7", "--spectrum-output", "hex")
+    assert len([line for line in result.output.splitlines() if line.startswith("#")]) == 7
 
 
 def test_exports(tmp_path: Path) -> None:

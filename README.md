@@ -67,7 +67,7 @@ gradient "Title" --rule --colors blue,cyan    # a gradient rule
 gradient "Heads up" --panel rounded --title Notice
 gradient --tree src                           # a directory tree
 gradient str --inspect                        # inspect a Python object
-gradient --spectrum --hues 7                  # show the palette
+gradient --spectrum                           # show the full palette
 gradient README.md --export-svg readme.svg    # also save as SVG (or -o file.html)
 ```
 

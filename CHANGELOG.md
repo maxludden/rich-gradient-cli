@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## 0.4.5 - 2026-11-24
+
+### Changed
+
+- `--spectrum` shows the full 17-color palette by default instead of 5 hues. `--hues N` still limits it; gradients from `--rainbow` or no `--colors` keep the default of 5.
+- Regenerated the `--help` and `--spectrum-output` doc screenshots for the new `--hues` help text and the 17-color palette.
+
 ## 0.4.4 - 2026-11-24
 
 ### Added

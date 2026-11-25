@@ -45,6 +45,12 @@ class Runnable(Protocol):
         """Run the animation until it finishes or is interrupted."""
 
 
+DEFAULT_HUES = 5
+"""Hues used by ``--rainbow`` / no ``--colors`` when ``--hues`` isn't given."""
+SPECTRUM_HUES = 17
+"""Hues shown by ``--spectrum`` when ``--hues`` isn't given: the full palette."""
+
+
 @dataclass
 class RenderConfig:
     """Every option that influences rendering, independent of the CLI layer."""
@@ -53,7 +59,7 @@ class RenderConfig:
     colors: str | None = None
     bgcolors: str | None = None
     rainbow: bool = False
-    hues: int = 5
+    hues: int | None = None  # None: 5 for gradients, all 17 for --spectrum
     repeat_scale: float | None = None
     highlight_words: list[str] = field(default_factory=list)
     highlight_regex: list[str] = field(default_factory=list)
@@ -385,7 +391,7 @@ def _gradient_kwargs(cfg: RenderConfig) -> dict[str, Any]:
         "colors": parse_colors(cfg.colors),
         "bg_colors": parse_colors(cfg.bgcolors),
         "rainbow": cfg.rainbow,
-        "hues": cfg.hues,
+        "hues": cfg.hues if cfg.hues is not None else DEFAULT_HUES,
     }
 
 
@@ -607,8 +613,8 @@ def _fit_width(
 
 
 def spectrum_output(cfg: RenderConfig) -> RenderableType:
-    """Render the palette as a table, or as plain ``names``/``hex``/``csv`` text."""
-    spectrum = Spectrum(hues=cfg.hues)
+    """Render the palette (all 17 hues unless ``--hues`` is given) as a table, or as plain ``names``/``hex``/``csv`` text."""
+    spectrum = Spectrum(hues=cfg.hues if cfg.hues is not None else SPECTRUM_HUES)
     if cfg.spectrum_output == "names":
         return RichText("\n".join(spectrum.names))
     if cfg.spectrum_output == "hex":
