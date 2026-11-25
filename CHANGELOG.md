@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## Unreleased
+
+### Changed
+
+- Regenerated all doc screenshots with 0.4.5.
+
 ## 0.4.5 - 2026-11-24
 
 ### Changed
