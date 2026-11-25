@@ -76,6 +76,8 @@ jobs:
           TOKEN: ${{ secrets.HOMEBREW_TAP_TOKEN }}
         run: |
           brew tap "$TAP"
+          # Homebrew refuses to load formulae from third-party taps until they're trusted.
+          brew trust "$TAP"
           tap_dir="$(brew --repository "$TAP")"
           git -C "$tap_dir" remote set-url origin "https://x-access-token:${TOKEN}@github.com/maxludden/homebrew-tap.git"
           git -C "$tap_dir" config user.name "github-actions[bot]"
