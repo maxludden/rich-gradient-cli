@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## 0.4.6 - 2026-11-24
+
+### Changed
+
+- The build backend requirement is now `uv_build>=0.13.9,<0.14.0` (was `>=0.10.0,<0.11.0`), matching current uv and silencing its version warning.
+
 ## 0.4.5 - 2026-11-24
 
 ### Changed

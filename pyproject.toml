@@ -1,6 +1,6 @@
 [project]
 name = "rich-gradient-cli"
-version = "0.4.5"
+version = "0.4.6"
 description = "Render files, URLs, stdin, and text with rich-gradient from the command line."
 readme = "README.md"
 license = "MIT"
@@ -41,7 +41,7 @@ Changelog = "https://github.com/maxludden/rich-gradient-cli/blob/master/CHANGELO
 gradient = "rich_gradient_cli:entrypoint"
 
 [build-system]
-requires = ["uv_build>=0.10.0,<0.11.0"]
+requires = ["uv_build>=0.13.9,<0.14.0"]
 build-backend = "uv_build"
 
 [tool.uv]
