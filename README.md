@@ -24,11 +24,15 @@ With [pip](https://pip.pypa.io/):
 pip install rich-gradient-cli
 ```
 
-With [Homebrew](https://brew.sh):
+With [Homebrew](https://brew.sh), trust the tap first (Homebrew won't load formulae from a third-party tap until you do):
 
 ```shell
+brew tap maxludden/tap
+brew trust maxludden/tap
 brew install maxludden/tap/rich-gradient-cli
 ```
+
+New releases reach the Homebrew tap about a day after PyPI.
 
 ## Usage
 

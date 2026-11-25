@@ -7,8 +7,17 @@
 ```bash
 uv tool install rich-gradient-cli               # uv
 pip install rich-gradient-cli                   # pip
-brew install maxludden/tap/rich-gradient-cli    # Homebrew
 ```
+
+With Homebrew, trust the tap first. Homebrew won't load formulae from a third-party tap until you do:
+
+```bash
+brew tap maxludden/tap
+brew trust maxludden/tap
+brew install maxludden/tap/rich-gradient-cli
+```
+
+New releases reach the Homebrew tap about a day after PyPI.
 
 Check that it works with `gradient --version`.
 
