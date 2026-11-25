@@ -6,6 +6,7 @@ All notable changes to this project will be documented in this file.
 
 ### Changed
 
+- Removed the project's `[tool.uv]` `exclude-newer = "3 days"` setting and its `exclude-newer-package` exemptions, so `uv lock` and CI resolve the latest releases.
 - Every doc screenshot now follows a code block with the exact command(s) that produced it. `scripts/generate_command_svgs.py` writes each command to `docs/snippets/<group>/<name>.sh` beside its SVG, and the docs include it with `--8<--`, so the sample code and the screenshot can't drift apart.
 - Screenshots are titled `rich-gradient-cli` (instead of the command line), have `1,2` padding around the output, and are named after the mode or option they show: `docs/img/commands/<mode>-example.svg` is now `docs/img/commands/<mode>.svg`. The Options page now also shows `gradient --help`.
 

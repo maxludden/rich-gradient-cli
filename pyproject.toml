@@ -51,14 +51,6 @@ packages = ["src/rich_gradient_cli"]
 # Ship only what's needed to build the wheel, like uv_build did.
 include = ["/src/rich_gradient_cli", "/README.md", "/LICENSE", "/CHANGELOG.md"]
 
-[tool.uv]
-# Ignore releases newer than 3 days (supply-chain safety). Set here, not only in
-# the user-level uv.toml, so CI resolves with the same option and `--locked` passes.
-exclude-newer = "3 days"
-# Our own packages (the docs theme and rich-gradient) are exempt so their new
-# releases are picked up immediately.
-exclude-newer-package = { zensical-gradient-theme = false, rich-gradient = false }
-
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 
